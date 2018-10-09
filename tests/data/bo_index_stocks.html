@@ -1,0 +1,1431 @@
+<div class="col-xs-12" id="index-list-container">
+	<h1 class="box">
+		Enthaltene Werte im DAX
+	</h1>
+	<ul class="tab_menu scroll_tabs_theme_light scroll_tabs_container" id="index-list-nav"><div class="scroll_tab_left_button" style="position: absolute; left: 0px; top: 0px; width: 26px; cursor: pointer; display: none;"></div><div class="scroll_tab_inner" style="margin: 0px; overflow: hidden; white-space: nowrap; text-overflow: clip; font-size: 0px; position: absolute; top: 0px; left: 0px; right: 0px;"><span class="scroll_tab_left_finisher" style="display: inline-block;">&nbsp;</span>
+			<li class="active scroll_tab_first" style="display: inline-block; -moz-user-select: none;">
+				<a href="dax">DAX</a>
+			</li>
+			<li class="" style="display: inline-block; -moz-user-select: none;">
+				<a href="euro_stoxx_50">ESTOXX</a>
+			</li>
+			<li class="" style="display: inline-block; -moz-user-select: none;">
+				<a href="dow_jones">Dow Jones</a>
+			</li>
+			<li class="" style="display: inline-block; -moz-user-select: none;">
+				<a href="s&amp;p_500">S&amp;P 500</a>
+			</li>
+			<li class="" style="display: inline-block; -moz-user-select: none;">
+				<a href="nasdaq_100">NASDAQ 100</a>
+			</li>
+			<li class="" style="display: inline-block; -moz-user-select: none;">
+				<a href="nikkei_225">Nikkei 225</a>
+			</li>
+			<li class="" style="display: inline-block; -moz-user-select: none;">
+				<a href="atx">ATX</a>
+			</li>
+			<li class="" style="display: inline-block; -moz-user-select: none;">
+				<a href="atx_prime">ATX Prime</a>
+			</li>
+			<li class="" style="display: inline-block; -moz-user-select: none;">
+				<a href="cece_eur">CECE-EUR</a>
+			</li>
+			<li class="" style="display: inline-block; -moz-user-select: none;">
+				<a href="bux">BUX</a>
+			</li>
+			<li class="" style="display: inline-block; -moz-user-select: none;">
+				<a href="sofix">SOFIX</a>
+			</li>
+			<li class="" style="display: inline-block; -moz-user-select: none;">
+				<a href="px">PX</a>
+			</li>
+			<li class="scroll_tab_last" style="display: inline-block; -moz-user-select: none;">
+				<a href="wig-20">WIG20</a>
+			</li>
+	<span class="scroll_tab_right_finisher" style="display: inline-block;">&nbsp;</span></div><div class="scroll_tab_right_button" style="position: absolute; right: -12px; top: 0px; width: 26px; cursor: pointer; display: none;"></div></ul>
+	<table class="table table-hover">
+		<tbody><tr>
+				<th width="26%">
+						<a href="javascript:void(0);" id="IndexShareListSortName" onclick="__handleSortingClick('IndexShareList', 'SortName', $(this).hasClass('order_asc') ? 'asc' : 'desc')">
+							Name
+						</a>
+						<script type="text/javascript">
+
+									function __handleSortingClick(componentName, fieldName, sortOrder) {
+
+										$.ajax({
+											url: "/Ajax/IndexShareList/dax",
+											type: "post",
+											data: "orderBy=" + componentName + ":" + fieldName + ":" + sortOrder,
+											success: function (v, x) {
+												$('#index-list-container').replaceWith(v);
+
+												try {
+													trackPI();
+												} catch (e) {
+												}
+											},
+											error: function () {
+											}
+										});
+									}
+
+						</script>
+						<br>
+ISIN
+				</th>
+				<th class="text-right" width="7%">
+						<a href="javascript:void(0);" id="IndexShareListCurrentPrice" onclick="__handleSortingClick('IndexShareList', 'CurrentPrice', $(this).hasClass('order_asc') ? 'asc' : 'desc')">
+							Letzter
+						</a>
+						<script type="text/javascript">
+
+									function __handleSortingClick(componentName, fieldName, sortOrder) {
+
+										$.ajax({
+											url: "/Ajax/IndexShareList/dax",
+											type: "post",
+											data: "orderBy=" + componentName + ":" + fieldName + ":" + sortOrder,
+											success: function (v, x) {
+												$('#index-list-container').replaceWith(v);
+
+												try {
+													trackPI();
+												} catch (e) {
+												}
+											},
+											error: function () {
+											}
+										});
+									}
+
+						</script>
+						<br>
+						<a href="javascript:void(0);" id="IndexShareListPreviousDayPrice" onclick="__handleSortingClick('IndexShareList', 'PreviousDayPrice', $(this).hasClass('order_asc') ? 'asc' : 'desc')">
+							Vortag
+						</a>
+						<script type="text/javascript">
+
+									function __handleSortingClick(componentName, fieldName, sortOrder) {
+
+										$.ajax({
+											url: "/Ajax/IndexShareList/dax",
+											type: "post",
+											data: "orderBy=" + componentName + ":" + fieldName + ":" + sortOrder,
+											success: function (v, x) {
+												$('#index-list-container').replaceWith(v);
+
+												try {
+													trackPI();
+												} catch (e) {
+												}
+											},
+											error: function () {
+											}
+										});
+									}
+
+						</script>
+
+				</th>
+				<th class="text-right" width="7%">
+						<a href="javascript:void(0);" id="IndexShareListDailyLow" onclick="__handleSortingClick('IndexShareList', 'DailyLow', $(this).hasClass('order_asc') ? 'asc' : 'desc')">
+							Tief
+						</a>
+						<script type="text/javascript">
+
+									function __handleSortingClick(componentName, fieldName, sortOrder) {
+
+										$.ajax({
+											url: "/Ajax/IndexShareList/dax",
+											type: "post",
+											data: "orderBy=" + componentName + ":" + fieldName + ":" + sortOrder,
+											success: function (v, x) {
+												$('#index-list-container').replaceWith(v);
+
+												try {
+													trackPI();
+												} catch (e) {
+												}
+											},
+											error: function () {
+											}
+										});
+									}
+
+						</script>
+						<br>
+						<a href="javascript:void(0);" id="IndexShareListDailyHigh" onclick="__handleSortingClick('IndexShareList', 'DailyHigh', $(this).hasClass('order_asc') ? 'asc' : 'desc')">
+							Hoch
+						</a>
+						<script type="text/javascript">
+
+									function __handleSortingClick(componentName, fieldName, sortOrder) {
+
+										$.ajax({
+											url: "/Ajax/IndexShareList/dax",
+											type: "post",
+											data: "orderBy=" + componentName + ":" + fieldName + ":" + sortOrder,
+											success: function (v, x) {
+												$('#index-list-container').replaceWith(v);
+
+												try {
+													trackPI();
+												} catch (e) {
+												}
+											},
+											error: function () {
+											}
+										});
+									}
+
+						</script>
+
+				</th>
+				<th class="text-right" width="4%">
+
+				</th>
+				<th class="text-right" width="6%">
+						<a href="javascript:void(0);" id="IndexShareListPriceChangeAbsolute" onclick="__handleSortingClick('IndexShareList', 'PriceChangeAbsolute', $(this).hasClass('order_asc') ? 'asc' : 'desc')">
+							+/-
+						</a>
+						<script type="text/javascript">
+
+									function __handleSortingClick(componentName, fieldName, sortOrder) {
+
+										$.ajax({
+											url: "/Ajax/IndexShareList/dax",
+											type: "post",
+											data: "orderBy=" + componentName + ":" + fieldName + ":" + sortOrder,
+											success: function (v, x) {
+												$('#index-list-container').replaceWith(v);
+
+												try {
+													trackPI();
+												} catch (e) {
+												}
+											},
+											error: function () {
+											}
+										});
+									}
+
+						</script>
+						<br>
+						<a href="javascript:void(0);" id="IndexShareListPriceChangePercent" onclick="__handleSortingClick('IndexShareList', 'PriceChangePercent', $(this).hasClass('order_asc') ? 'asc' : 'desc')">
+							%
+						</a>
+						<script type="text/javascript">
+
+									function __handleSortingClick(componentName, fieldName, sortOrder) {
+
+										$.ajax({
+											url: "/Ajax/IndexShareList/dax",
+											type: "post",
+											data: "orderBy=" + componentName + ":" + fieldName + ":" + sortOrder,
+											success: function (v, x) {
+												$('#index-list-container').replaceWith(v);
+
+												try {
+													trackPI();
+												} catch (e) {
+												}
+											},
+											error: function () {
+											}
+										});
+									}
+
+						</script>
+
+				</th>
+				<th width="8%">
+
+				</th>
+				<th class="text-right" width="10%">
+						<a href="javascript:void(0);" id="IndexShareListTime" onclick="__handleSortingClick('IndexShareList', 'Time', $(this).hasClass('order_asc') ? 'asc' : 'desc')">
+							Zeit
+						</a>
+						<script type="text/javascript">
+
+									function __handleSortingClick(componentName, fieldName, sortOrder) {
+
+										$.ajax({
+											url: "/Ajax/IndexShareList/dax",
+											type: "post",
+											data: "orderBy=" + componentName + ":" + fieldName + ":" + sortOrder,
+											success: function (v, x) {
+												$('#index-list-container').replaceWith(v);
+
+												try {
+													trackPI();
+												} catch (e) {
+												}
+											},
+											error: function () {
+											}
+										});
+									}
+
+						</script>
+						<br>
+						<a href="javascript:void(0);" id="IndexShareListDate" onclick="__handleSortingClick('IndexShareList', 'Date', $(this).hasClass('order_asc') ? 'asc' : 'desc')">
+							Datum
+						</a>
+						<script type="text/javascript">
+
+									function __handleSortingClick(componentName, fieldName, sortOrder) {
+
+										$.ajax({
+											url: "/Ajax/IndexShareList/dax",
+											type: "post",
+											data: "orderBy=" + componentName + ":" + fieldName + ":" + sortOrder,
+											success: function (v, x) {
+												$('#index-list-container').replaceWith(v);
+
+												try {
+													trackPI();
+												} catch (e) {
+												}
+											},
+											error: function () {
+											}
+										});
+									}
+
+						</script>
+
+				</th>
+				<th class="text-right" width="8%">
+3 Mon.						<br>
+						<a href="javascript:void(0);" id="IndexShareListPerformance3MonthsAbsolute" onclick="__handleSortingClick('IndexShareList', 'Performance3MonthsAbsolute', $(this).hasClass('order_asc') ? 'asc' : 'desc')">
+							+/-
+						</a>
+						<script type="text/javascript">
+
+									function __handleSortingClick(componentName, fieldName, sortOrder) {
+
+										$.ajax({
+											url: "/Ajax/IndexShareList/dax",
+											type: "post",
+											data: "orderBy=" + componentName + ":" + fieldName + ":" + sortOrder,
+											success: function (v, x) {
+												$('#index-list-container').replaceWith(v);
+
+												try {
+													trackPI();
+												} catch (e) {
+												}
+											},
+											error: function () {
+											}
+										});
+									}
+
+						</script>
+						<br>
+						<a href="javascript:void(0);" id="IndexShareListPerformance3Months" onclick="__handleSortingClick('IndexShareList', 'Performance3Months', $(this).hasClass('order_asc') ? 'asc' : 'desc')">
+							%
+						</a>
+						<script type="text/javascript">
+
+									function __handleSortingClick(componentName, fieldName, sortOrder) {
+
+										$.ajax({
+											url: "/Ajax/IndexShareList/dax",
+											type: "post",
+											data: "orderBy=" + componentName + ":" + fieldName + ":" + sortOrder,
+											success: function (v, x) {
+												$('#index-list-container').replaceWith(v);
+
+												try {
+													trackPI();
+												} catch (e) {
+												}
+											},
+											error: function () {
+											}
+										});
+									}
+
+						</script>
+
+				</th>
+				<th class="text-right" width="8%">
+6 Mon.						<br>
+						<a href="javascript:void(0);" id="IndexShareListPerformance6MonthsAbsolute" onclick="__handleSortingClick('IndexShareList', 'Performance6MonthsAbsolute', $(this).hasClass('order_asc') ? 'asc' : 'desc')">
+							+/-
+						</a>
+						<script type="text/javascript">
+
+									function __handleSortingClick(componentName, fieldName, sortOrder) {
+
+										$.ajax({
+											url: "/Ajax/IndexShareList/dax",
+											type: "post",
+											data: "orderBy=" + componentName + ":" + fieldName + ":" + sortOrder,
+											success: function (v, x) {
+												$('#index-list-container').replaceWith(v);
+
+												try {
+													trackPI();
+												} catch (e) {
+												}
+											},
+											error: function () {
+											}
+										});
+									}
+
+						</script>
+						<br>
+						<a href="javascript:void(0);" id="IndexShareListPerformance6Months" onclick="__handleSortingClick('IndexShareList', 'Performance6Months', $(this).hasClass('order_asc') ? 'asc' : 'desc')">
+							%
+						</a>
+						<script type="text/javascript">
+
+									function __handleSortingClick(componentName, fieldName, sortOrder) {
+
+										$.ajax({
+											url: "/Ajax/IndexShareList/dax",
+											type: "post",
+											data: "orderBy=" + componentName + ":" + fieldName + ":" + sortOrder,
+											success: function (v, x) {
+												$('#index-list-container').replaceWith(v);
+
+												try {
+													trackPI();
+												} catch (e) {
+												}
+											},
+											error: function () {
+											}
+										});
+									}
+
+						</script>
+
+				</th>
+				<th class="text-right" width="8%">
+1 Jahr						<br>
+						<a href="javascript:void(0);" id="IndexShareListPerformance12MonthsAbsolute" onclick="__handleSortingClick('IndexShareList', 'Performance12MonthsAbsolute', $(this).hasClass('order_asc') ? 'asc' : 'desc')">
+							+/-
+						</a>
+						<script type="text/javascript">
+
+									function __handleSortingClick(componentName, fieldName, sortOrder) {
+
+										$.ajax({
+											url: "/Ajax/IndexShareList/dax",
+											type: "post",
+											data: "orderBy=" + componentName + ":" + fieldName + ":" + sortOrder,
+											success: function (v, x) {
+												$('#index-list-container').replaceWith(v);
+
+												try {
+													trackPI();
+												} catch (e) {
+												}
+											},
+											error: function () {
+											}
+										});
+									}
+
+						</script>
+						<br>
+						<a href="javascript:void(0);" id="IndexShareListPerformance12Months" onclick="__handleSortingClick('IndexShareList', 'Performance12Months', $(this).hasClass('order_asc') ? 'asc' : 'desc')">
+							%
+						</a>
+						<script type="text/javascript">
+
+									function __handleSortingClick(componentName, fieldName, sortOrder) {
+
+										$.ajax({
+											url: "/Ajax/IndexShareList/dax",
+											type: "post",
+											data: "orderBy=" + componentName + ":" + fieldName + ":" + sortOrder,
+											success: function (v, x) {
+												$('#index-list-container').replaceWith(v);
+
+												try {
+													trackPI();
+												} catch (e) {
+												}
+											},
+											error: function () {
+											}
+										});
+									}
+
+						</script>
+
+				</th>
+				<th class="text-right" width="8%">
+1 Jahr						<br>
+Chart
+				</th>
+		</tr>
+			<tr>
+					<td>
+<a href="/aktie/adidas-Aktie" title="adidas">adidas</a><br>
+DE000A1EWWW0					</td>
+					<td class="text-right">
+204,40<br>
+206,30					</td>
+					<td class="text-right">
+200,00<br>
+205,90					</td>
+					<td class="text-right">
+<div class="image_icon_price_red"></div>					</td>
+					<td class="text-right">
+<span class="colorRed">-1,90</span><br>
+<span class="colorRed">-0,92</span>					</td>
+					<td>
+<div style="width:18px;" class="performanceBarNegative"></div>					</td>
+					<td class="text-right">
+17:35:15<br>
+09.10.2018					</td>
+					<td class="text-right">
+<span class="colorGreen">27,15</span><br>
+<span class="colorGreen">14,93</span>					</td>
+					<td class="text-right">
+<span class="colorGreen">4,80</span><br>
+<span class="colorGreen">2,35</span>					</td>
+					<td class="text-right">
+<span class="colorGreen">14,80</span><br>
+<span class="colorGreen">7,62</span>					</td>
+					<td class="text-right">
+<img src="https://pproxy.boerse-online.de/cst/BoerseOnline/Share/chart.aspx?instruments=13,11730015,13,814&amp;style=miniweiss5025&amp;period=OneYear&amp;timezone=W. Europe Standard Time" alt="adidas" onclick="window.location.href= '/chart/adidas'" style="cursor:pointer" title="adidas 1 Jahr Chart">					</td>
+			</tr>
+			<tr>
+					<td>
+<a href="/aktie/allianz-Aktie" title="Allianz">Allianz</a><br>
+DE0008404005					</td>
+					<td class="text-right">
+190,96<br>
+189,82					</td>
+					<td class="text-right">
+188,80<br>
+192,38					</td>
+					<td class="text-right">
+<div class="image_icon_price_green"></div>					</td>
+					<td class="text-right">
+<span class="colorGreen">1,14</span><br>
+<span class="colorGreen">0,60</span>					</td>
+					<td>
+<div style="width:3px;" class="performanceBarPositive"></div>					</td>
+					<td class="text-right">
+17:35:06<br>
+09.10.2018					</td>
+					<td class="text-right">
+<span class="colorGreen">14,50</span><br>
+<span class="colorGreen">8,05</span>					</td>
+					<td class="text-right">
+<span class="colorGreen">7,18</span><br>
+<span class="colorGreen">3,83</span>					</td>
+					<td class="text-right">
+<span class="colorGreen">1,33</span><br>
+<span class="colorGreen">0,69</span>					</td>
+					<td class="text-right">
+<img src="https://pproxy.boerse-online.de/cst/BoerseOnline/Share/chart.aspx?instruments=13,322646,13,814&amp;style=miniweiss5025&amp;period=OneYear&amp;timezone=W. Europe Standard Time" alt="Allianz" onclick="window.location.href= '/chart/Allianz'" style="cursor:pointer" title="Allianz 1 Jahr Chart">					</td>
+			</tr>
+			<tr>
+					<td>
+<a href="/aktie/basf-Aktie" title="BASF">BASF</a><br>
+DE000BASF111					</td>
+					<td class="text-right">
+73,29<br>
+74,22					</td>
+					<td class="text-right">
+72,30<br>
+74,19					</td>
+					<td class="text-right">
+<div class="image_icon_price_red"></div>					</td>
+					<td class="text-right">
+<span class="colorRed">-0,93</span><br>
+<span class="colorRed">-1,25</span>					</td>
+					<td>
+<div style="width:24px;" class="performanceBarNegative"></div>					</td>
+					<td class="text-right">
+17:35:13<br>
+09.10.2018					</td>
+					<td class="text-right">
+<span class="colorRed">-6,74</span><br>
+<span class="colorRed">-8,21</span>					</td>
+					<td class="text-right">
+<span class="colorRed">-9,06</span><br>
+<span class="colorRed">-10,73</span>					</td>
+					<td class="text-right">
+<span class="colorRed">-14,99</span><br>
+<span class="colorRed">-16,59</span>					</td>
+					<td class="text-right">
+<img src="https://pproxy.boerse-online.de/cst/BoerseOnline/Share/chart.aspx?instruments=13,11450563,13,814&amp;style=miniweiss5025&amp;period=OneYear&amp;timezone=W. Europe Standard Time" alt="BASF" onclick="window.location.href= '/chart/BASF'" style="cursor:pointer" title="BASF 1 Jahr Chart">					</td>
+			</tr>
+			<tr>
+					<td>
+<a href="/aktie/bayer-Aktie" title="Bayer">Bayer</a><br>
+DE000BAY0017					</td>
+					<td class="text-right">
+74,95<br>
+74,75					</td>
+					<td class="text-right">
+73,41<br>
+75,28					</td>
+					<td class="text-right">
+<div class="image_icon_price_green"></div>					</td>
+					<td class="text-right">
+<span class="colorGreen">0,20</span><br>
+<span class="colorGreen">0,27</span>					</td>
+					<td>
+<div style="width:1px;" class="performanceBarPositive"></div>					</td>
+					<td class="text-right">
+17:35:07<br>
+09.10.2018					</td>
+					<td class="text-right">
+<span class="colorRed">-19,06</span><br>
+<span class="colorRed">-20,22</span>					</td>
+					<td class="text-right">
+<span class="colorRed">-17,49</span><br>
+<span class="colorRed">-18,87</span>					</td>
+					<td class="text-right">
+<span class="colorRed">-39,56</span><br>
+<span class="colorRed">-34,47</span>					</td>
+					<td class="text-right">
+<img src="https://pproxy.boerse-online.de/cst/BoerseOnline/Share/chart.aspx?instruments=13,10367293,13,814&amp;style=miniweiss5025&amp;period=OneYear&amp;timezone=W. Europe Standard Time" alt="Bayer" onclick="window.location.href= '/chart/Bayer'" style="cursor:pointer" title="Bayer 1 Jahr Chart">					</td>
+			</tr>
+			<tr>
+					<td>
+<a href="/aktie/beiersdorf-Aktie" title="Beiersdorf">Beiersdorf</a><br>
+DE0005200000					</td>
+					<td class="text-right">
+93,52<br>
+93,76					</td>
+					<td class="text-right">
+93,02<br>
+94,04					</td>
+					<td class="text-right">
+<div class="image_icon_price_red"></div>					</td>
+					<td class="text-right">
+<span class="colorRed">-0,24</span><br>
+<span class="colorRed">-0,26</span>					</td>
+					<td>
+<div style="width:5px;" class="performanceBarNegative"></div>					</td>
+					<td class="text-right">
+17:35:26<br>
+09.10.2018					</td>
+					<td class="text-right">
+<span class="colorRed">-1,94</span><br>
+<span class="colorRed">-2,00</span>					</td>
+					<td class="text-right">
+<span class="colorGreen">1,48</span><br>
+<span class="colorGreen">1,58</span>					</td>
+					<td class="text-right">
+<span class="colorGreen">3,38</span><br>
+<span class="colorGreen">3,69</span>					</td>
+					<td class="text-right">
+<img src="https://pproxy.boerse-online.de/cst/BoerseOnline/Share/chart.aspx?instruments=13,324660,13,814&amp;style=miniweiss5025&amp;period=OneYear&amp;timezone=W. Europe Standard Time" alt="Beiersdorf" onclick="window.location.href= '/chart/Beiersdorf'" style="cursor:pointer" title="Beiersdorf 1 Jahr Chart">					</td>
+			</tr>
+			<tr>
+					<td>
+<a href="/aktie/bmw-Aktie" title="BMW">BMW</a><br>
+DE0005190003					</td>
+					<td class="text-right">
+76,39<br>
+76,87					</td>
+					<td class="text-right">
+75,66<br>
+76,81					</td>
+					<td class="text-right">
+<div class="image_icon_price_red"></div>					</td>
+					<td class="text-right">
+<span class="colorRed">-0,48</span><br>
+<span class="colorRed">-0,62</span>					</td>
+					<td>
+<div style="width:12px;" class="performanceBarNegative"></div>					</td>
+					<td class="text-right">
+17:35:18<br>
+09.10.2018					</td>
+					<td class="text-right">
+<span class="colorRed">-2,40</span><br>
+<span class="colorRed">-2,98</span>					</td>
+					<td class="text-right">
+<span class="colorRed">-10,44</span><br>
+<span class="colorRed">-11,77</span>					</td>
+					<td class="text-right">
+<span class="colorRed">-10,45</span><br>
+<span class="colorRed">-11,78</span>					</td>
+					<td class="text-right">
+<img src="https://pproxy.boerse-online.de/cst/BoerseOnline/Share/chart.aspx?instruments=13,324410,13,814&amp;style=miniweiss5025&amp;period=OneYear&amp;timezone=W. Europe Standard Time" alt="BMW" onclick="window.location.href= '/chart/BMW'" style="cursor:pointer" title="BMW 1 Jahr Chart">					</td>
+			</tr>
+			<tr>
+					<td>
+<a href="/aktie/continental-Aktie" title="Continental">Continental</a><br>
+DE0005439004					</td>
+					<td class="text-right">
+143,10<br>
+143,85					</td>
+					<td class="text-right">
+142,35<br>
+145,15					</td>
+					<td class="text-right">
+<div class="image_icon_price_red"></div>					</td>
+					<td class="text-right">
+<span class="colorRed">-0,75</span><br>
+<span class="colorRed">-0,52</span>					</td>
+					<td>
+<div style="width:10px;" class="performanceBarNegative"></div>					</td>
+					<td class="text-right">
+17:35:22<br>
+09.10.2018					</td>
+					<td class="text-right">
+<span class="colorRed">-52,85</span><br>
+<span class="colorRed">-26,45</span>					</td>
+					<td class="text-right">
+<span class="colorRed">-75,85</span><br>
+<span class="colorRed">-34,04</span>					</td>
+					<td class="text-right">
+<span class="colorRed">-69,55</span><br>
+<span class="colorRed">-32,12</span>					</td>
+					<td class="text-right">
+<img src="https://pproxy.boerse-online.de/cst/BoerseOnline/Share/chart.aspx?instruments=13,327800,13,814&amp;style=miniweiss5025&amp;period=OneYear&amp;timezone=W. Europe Standard Time" alt="Continental" onclick="window.location.href= '/chart/Continental'" style="cursor:pointer" title="Continental 1 Jahr Chart">					</td>
+			</tr>
+			<tr>
+					<td>
+<a href="/aktie/covestro-Aktie" title="Covestro">Covestro</a><br>
+DE0006062144					</td>
+					<td class="text-right">
+65,36<br>
+66,76					</td>
+					<td class="text-right">
+65,22<br>
+67,22					</td>
+					<td class="text-right">
+<div class="image_icon_price_red"></div>					</td>
+					<td class="text-right">
+<span class="colorRed">-1,40</span><br>
+<span class="colorRed">-2,10</span>					</td>
+					<td>
+<div style="width:41px;" class="performanceBarNegative"></div>					</td>
+					<td class="text-right">
+17:35:10<br>
+09.10.2018					</td>
+					<td class="text-right">
+<span class="colorRed">-6,24</span><br>
+<span class="colorRed">-8,34</span>					</td>
+					<td class="text-right">
+<span class="colorRed">-12,66</span><br>
+<span class="colorRed">-15,58</span>					</td>
+					<td class="text-right">
+<span class="colorRed">-3,37</span><br>
+<span class="colorRed">-4,68</span>					</td>
+					<td class="text-right">
+<img src="https://pproxy.boerse-online.de/cst/BoerseOnline/Share/chart.aspx?instruments=13,29178035,13,814&amp;style=miniweiss5025&amp;period=OneYear&amp;timezone=W. Europe Standard Time" alt="Covestro" onclick="window.location.href= '/chart/covestro'" style="cursor:pointer" title="Covestro 1 Jahr Chart">					</td>
+			</tr>
+			<tr>
+					<td>
+<a href="/aktie/daimler-Aktie" title="Daimler">Daimler</a><br>
+DE0007100000					</td>
+					<td class="text-right">
+54,42<br>
+54,60					</td>
+					<td class="text-right">
+53,63<br>
+54,72					</td>
+					<td class="text-right">
+<div class="image_icon_price_red"></div>					</td>
+					<td class="text-right">
+<span class="colorRed">-0,18</span><br>
+<span class="colorRed">-0,33</span>					</td>
+					<td>
+<div style="width:6px;" class="performanceBarNegative"></div>					</td>
+					<td class="text-right">
+17:35:19<br>
+09.10.2018					</td>
+					<td class="text-right">
+<span class="colorRed">-2,06</span><br>
+<span class="colorRed">-3,52</span>					</td>
+					<td class="text-right">
+<span class="colorRed">-13,17</span><br>
+<span class="colorRed">-18,92</span>					</td>
+					<td class="text-right">
+<span class="colorRed">-12,00</span><br>
+<span class="colorRed">-17,53</span>					</td>
+					<td class="text-right">
+<img src="https://pproxy.boerse-online.de/cst/BoerseOnline/Share/chart.aspx?instruments=13,945657,13,814&amp;style=miniweiss5025&amp;period=OneYear&amp;timezone=W. Europe Standard Time" alt="Daimler" onclick="window.location.href= '/chart/Daimler'" style="cursor:pointer" title="Daimler 1 Jahr Chart">					</td>
+			</tr>
+			<tr>
+					<td>
+<a href="/aktie/deutsche_bank-Aktie" title="Deutsche Bank">Deutsche Bank</a><br>
+DE0005140008					</td>
+					<td class="text-right">
+9,61<br>
+9,55					</td>
+					<td class="text-right">
+9,42<br>
+9,64					</td>
+					<td class="text-right">
+<div class="image_icon_price_green"></div>					</td>
+					<td class="text-right">
+<span class="colorGreen">0,06</span><br>
+<span class="colorGreen">0,62</span>					</td>
+					<td>
+<div style="width:3px;" class="performanceBarPositive"></div>					</td>
+					<td class="text-right">
+17:35:17<br>
+09.10.2018					</td>
+					<td class="text-right">
+<span class="colorGreen">0,23</span><br>
+<span class="colorGreen">2,39</span>					</td>
+					<td class="text-right">
+<span class="colorRed">-1,91</span><br>
+<span class="colorRed">-16,38</span>					</td>
+					<td class="text-right">
+<span class="colorRed">-4,95</span><br>
+<span class="colorRed">-33,67</span>					</td>
+					<td class="text-right">
+<img src="https://pproxy.boerse-online.de/cst/BoerseOnline/Share/chart.aspx?instruments=13,829257,13,814&amp;style=miniweiss5025&amp;period=OneYear&amp;timezone=W. Europe Standard Time" alt="Deutsche Bank" onclick="window.location.href= '/chart/Deutsche_Bank'" style="cursor:pointer" title="Deutsche Bank 1 Jahr Chart">					</td>
+			</tr>
+			<tr>
+					<td>
+<a href="/aktie/deutsche_boerse-Aktie" title="Deutsche Börse">Deutsche Börse</a><br>
+DE0005810055					</td>
+					<td class="text-right">
+114,35<br>
+113,65					</td>
+					<td class="text-right">
+112,45<br>
+114,45					</td>
+					<td class="text-right">
+<div class="image_icon_price_green"></div>					</td>
+					<td class="text-right">
+<span class="colorGreen">0,70</span><br>
+<span class="colorGreen">0,62</span>					</td>
+					<td>
+<div style="width:3px;" class="performanceBarPositive"></div>					</td>
+					<td class="text-right">
+17:35:11<br>
+09.10.2018					</td>
+					<td class="text-right">
+<span class="colorGreen">1,20</span><br>
+<span class="colorGreen">1,03</span>					</td>
+					<td class="text-right">
+<span class="colorGreen">4,90</span><br>
+<span class="colorGreen">4,35</span>					</td>
+					<td class="text-right">
+<span class="colorGreen">24,36</span><br>
+<span class="colorGreen">26,14</span>					</td>
+					<td class="text-right">
+<img src="https://pproxy.boerse-online.de/cst/BoerseOnline/Share/chart.aspx?instruments=13,1177233,13,814&amp;style=miniweiss5025&amp;period=OneYear&amp;timezone=W. Europe Standard Time" alt="Deutsche Börse" onclick="window.location.href= '/chart/Deutsche_Boerse'" style="cursor:pointer" title="Deutsche Börse 1 Jahr Chart">					</td>
+			</tr>
+			<tr>
+					<td>
+<a href="/aktie/deutsche_post-Aktie" title="Deutsche Post">Deutsche Post</a><br>
+DE0005552004					</td>
+					<td class="text-right">
+29,10<br>
+29,12					</td>
+					<td class="text-right">
+28,79<br>
+29,23					</td>
+					<td class="text-right">
+<div class="image_icon_price_red"></div>					</td>
+					<td class="text-right">
+<span class="colorRed">-0,02</span><br>
+<span class="colorRed">-0,07</span>					</td>
+					<td>
+<div style="width:1px;" class="performanceBarNegative"></div>					</td>
+					<td class="text-right">
+17:35:19<br>
+09.10.2018					</td>
+					<td class="text-right">
+<span class="colorGreen">2,48</span><br>
+<span class="colorGreen">8,97</span>					</td>
+					<td class="text-right">
+<span class="colorRed">-5,98</span><br>
+<span class="colorRed">-16,56</span>					</td>
+					<td class="text-right">
+<span class="colorRed">-7,46</span><br>
+<span class="colorRed">-19,83</span>					</td>
+					<td class="text-right">
+<img src="https://pproxy.boerse-online.de/cst/BoerseOnline/Share/chart.aspx?instruments=13,1124244,13,814&amp;style=miniweiss5025&amp;period=OneYear&amp;timezone=W. Europe Standard Time" alt="Deutsche Post" onclick="window.location.href= '/chart/Deutsche_Post'" style="cursor:pointer" title="Deutsche Post 1 Jahr Chart">					</td>
+			</tr>
+			<tr>
+					<td>
+<a href="/aktie/deutsche_telekom-Aktie" title="Deutsche Telekom">Deutsche Telekom</a><br>
+DE0005557508					</td>
+					<td class="text-right">
+13,91<br>
+13,95					</td>
+					<td class="text-right">
+13,76<br>
+13,96					</td>
+					<td class="text-right">
+<div class="image_icon_price_red"></div>					</td>
+					<td class="text-right">
+<span class="colorRed">-0,04</span><br>
+<span class="colorRed">-0,29</span>					</td>
+					<td>
+<div style="width:5px;" class="performanceBarNegative"></div>					</td>
+					<td class="text-right">
+17:35:09<br>
+09.10.2018					</td>
+					<td class="text-right">
+<span class="colorGreen">0,29</span><br>
+<span class="colorGreen">2,07</span>					</td>
+					<td class="text-right">
+<span class="colorGreen">0,62</span><br>
+<span class="colorGreen">4,57</span>					</td>
+					<td class="text-right">
+<span class="colorRed">-1,63</span><br>
+<span class="colorRed">-10,35</span>					</td>
+					<td class="text-right">
+<img src="https://pproxy.boerse-online.de/cst/BoerseOnline/Share/chart.aspx?instruments=13,1026592,13,814&amp;style=miniweiss5025&amp;period=OneYear&amp;timezone=W. Europe Standard Time" alt="Deutsche Telekom" onclick="window.location.href= '/chart/Deutsche_Telekom'" style="cursor:pointer" title="Deutsche Telekom 1 Jahr Chart">					</td>
+			</tr>
+			<tr>
+					<td>
+<a href="/aktie/eon-Aktie" title="EON">EON</a><br>
+DE000ENAG999					</td>
+					<td class="text-right">
+8,60<br>
+8,53					</td>
+					<td class="text-right">
+8,47<br>
+8,63					</td>
+					<td class="text-right">
+<div class="image_icon_price_green"></div>					</td>
+					<td class="text-right">
+<span class="colorGreen">0,07</span><br>
+<span class="colorGreen">0,81</span>					</td>
+					<td>
+<div style="width:4px;" class="performanceBarPositive"></div>					</td>
+					<td class="text-right">
+17:35:10<br>
+09.10.2018					</td>
+					<td class="text-right">
+<span class="colorRed">-1,13</span><br>
+<span class="colorRed">-11,55</span>					</td>
+					<td class="text-right">
+<span class="colorRed">-0,38</span><br>
+<span class="colorRed">-4,24</span>					</td>
+					<td class="text-right">
+<span class="colorRed">-0,83</span><br>
+<span class="colorRed">-8,75</span>					</td>
+					<td class="text-right">
+<img src="https://pproxy.boerse-online.de/cst/BoerseOnline/Share/chart.aspx?instruments=13,4334819,13,814&amp;style=miniweiss5025&amp;period=OneYear&amp;timezone=W. Europe Standard Time" alt="EON" onclick="window.location.href= '/chart/eon'" style="cursor:pointer" title="EON 1 Jahr Chart">					</td>
+			</tr>
+			<tr>
+					<td>
+<a href="/aktie/fresenius_medical_care-Aktie" title="Fresenius Medical Care">Fresenius Medical Care</a><br>
+DE0005785802					</td>
+					<td class="text-right">
+88,70<br>
+88,58					</td>
+					<td class="text-right">
+87,28<br>
+88,82					</td>
+					<td class="text-right">
+<div class="image_icon_price_green"></div>					</td>
+					<td class="text-right">
+<span class="colorGreen">0,12</span><br>
+<span class="colorGreen">0,14</span>					</td>
+					<td>
+<div style="width:1px;" class="performanceBarPositive"></div>					</td>
+					<td class="text-right">
+17:35:01<br>
+09.10.2018					</td>
+					<td class="text-right">
+<span class="colorGreen">6,38</span><br>
+<span class="colorGreen">7,72</span>					</td>
+					<td class="text-right">
+<span class="colorGreen">5,82</span><br>
+<span class="colorGreen">6,99</span>					</td>
+					<td class="text-right">
+<span class="colorGreen">5,40</span><br>
+<span class="colorGreen">6,46</span>					</td>
+					<td class="text-right">
+<img src="https://pproxy.boerse-online.de/cst/BoerseOnline/Share/chart.aspx?instruments=13,520878,13,814&amp;style=miniweiss5025&amp;period=OneYear&amp;timezone=W. Europe Standard Time" alt="Fresenius Medical Care" onclick="window.location.href= '/chart/Fresenius_Medical_Care'" style="cursor:pointer" title="Fresenius Medical Care 1 Jahr Chart">					</td>
+			</tr>
+			<tr>
+					<td>
+<a href="/aktie/fresenius-Aktie" title="Fresenius">Fresenius</a><br>
+DE0005785604					</td>
+					<td class="text-right">
+68,02<br>
+67,84					</td>
+					<td class="text-right">
+66,06<br>
+68,24					</td>
+					<td class="text-right">
+<div class="image_icon_price_green"></div>					</td>
+					<td class="text-right">
+<span class="colorGreen">0,18</span><br>
+<span class="colorGreen">0,27</span>					</td>
+					<td>
+<div style="width:1px;" class="performanceBarPositive"></div>					</td>
+					<td class="text-right">
+17:35:21<br>
+09.10.2018					</td>
+					<td class="text-right">
+<span class="colorGreen">1,06</span><br>
+<span class="colorGreen">1,55</span>					</td>
+					<td class="text-right">
+<span class="colorGreen">5,62</span><br>
+<span class="colorGreen">8,79</span>					</td>
+					<td class="text-right">
+<span class="colorRed">-1,09</span><br>
+<span class="colorRed">-1,54</span>					</td>
+					<td class="text-right">
+<img src="https://pproxy.boerse-online.de/cst/BoerseOnline/Share/chart.aspx?instruments=13,332902,13,814&amp;style=miniweiss5025&amp;period=OneYear&amp;timezone=W. Europe Standard Time" alt="Fresenius" onclick="window.location.href= '/chart/Fresenius'" style="cursor:pointer" title="Fresenius 1 Jahr Chart">					</td>
+			</tr>
+			<tr>
+					<td>
+<a href="/aktie/heidelbergcement-Aktie" title="HeidelbergCement">HeidelbergCement</a><br>
+DE0006047004					</td>
+					<td class="text-right">
+64,30<br>
+63,72					</td>
+					<td class="text-right">
+63,50<br>
+64,74					</td>
+					<td class="text-right">
+<div class="image_icon_price_green"></div>					</td>
+					<td class="text-right">
+<span class="colorGreen">0,58</span><br>
+<span class="colorGreen">0,91</span>					</td>
+					<td>
+<div style="width:4px;" class="performanceBarPositive"></div>					</td>
+					<td class="text-right">
+17:35:02<br>
+09.10.2018					</td>
+					<td class="text-right">
+<span class="colorRed">-4,76</span><br>
+<span class="colorRed">-6,55</span>					</td>
+					<td class="text-right">
+<span class="colorRed">-13,08</span><br>
+<span class="colorRed">-16,16</span>					</td>
+					<td class="text-right">
+<span class="colorRed">-18,07</span><br>
+<span class="colorRed">-21,02</span>					</td>
+					<td class="text-right">
+<img src="https://pproxy.boerse-online.de/cst/BoerseOnline/Share/chart.aspx?instruments=13,335740,13,814&amp;style=miniweiss5025&amp;period=OneYear&amp;timezone=W. Europe Standard Time" alt="HeidelbergCement" onclick="window.location.href= '/chart/HeidelbergCement'" style="cursor:pointer" title="HeidelbergCement 1 Jahr Chart">					</td>
+			</tr>
+			<tr>
+					<td>
+<a href="/aktie/henkel_vz-Aktie" title="Henkel vz">Henkel vz</a><br>
+DE0006048432					</td>
+					<td class="text-right">
+98,66<br>
+99,40					</td>
+					<td class="text-right">
+98,14<br>
+99,30					</td>
+					<td class="text-right">
+<div class="image_icon_price_red"></div>					</td>
+					<td class="text-right">
+<span class="colorRed">-0,74</span><br>
+<span class="colorRed">-0,74</span>					</td>
+					<td>
+<div style="width:14px;" class="performanceBarNegative"></div>					</td>
+					<td class="text-right">
+17:35:23<br>
+09.10.2018					</td>
+					<td class="text-right">
+<span class="colorRed">-8,45</span><br>
+<span class="colorRed">-7,83</span>					</td>
+					<td class="text-right">
+<span class="colorRed">-8,70</span><br>
+<span class="colorRed">-8,05</span>					</td>
+					<td class="text-right">
+<span class="colorRed">-17,80</span><br>
+<span class="colorRed">-15,19</span>					</td>
+					<td class="text-right">
+<img src="https://pproxy.boerse-online.de/cst/BoerseOnline/Share/chart.aspx?instruments=13,335910,13,814&amp;style=miniweiss5025&amp;period=OneYear&amp;timezone=W. Europe Standard Time" alt="Henkel vz" onclick="window.location.href= '/chart/Henkel_vz'" style="cursor:pointer" title="Henkel vz 1 Jahr Chart">					</td>
+			</tr>
+			<tr>
+					<td>
+<a href="/aktie/infineon-Aktie" title="Infineon">Infineon</a><br>
+DE0006231004					</td>
+					<td class="text-right">
+19,16<br>
+19,20					</td>
+					<td class="text-right">
+18,73<br>
+19,31					</td>
+					<td class="text-right">
+<div class="image_icon_price_red"></div>					</td>
+					<td class="text-right">
+<span class="colorRed">-0,04</span><br>
+<span class="colorRed">-0,21</span>					</td>
+					<td>
+<div style="width:4px;" class="performanceBarNegative"></div>					</td>
+					<td class="text-right">
+17:35:15<br>
+09.10.2018					</td>
+					<td class="text-right">
+<span class="colorRed">-1,31</span><br>
+<span class="colorRed">-6,10</span>					</td>
+					<td class="text-right">
+<span class="colorRed">-1,21</span><br>
+<span class="colorRed">-5,66</span>					</td>
+					<td class="text-right">
+<span class="colorRed">-1,45</span><br>
+<span class="colorRed">-6,71</span>					</td>
+					<td class="text-right">
+<img src="https://pproxy.boerse-online.de/cst/BoerseOnline/Share/chart.aspx?instruments=13,1038049,13,814&amp;style=miniweiss5025&amp;period=OneYear&amp;timezone=W. Europe Standard Time" alt="Infineon" onclick="window.location.href= '/chart/Infineon'" style="cursor:pointer" title="Infineon 1 Jahr Chart">					</td>
+			</tr>
+			<tr>
+					<td>
+<a href="/aktie/linde-Aktie" title="Linde">Linde</a><br>
+DE000A2E4L75					</td>
+					<td class="text-right">
+209,10<br>
+210,00					</td>
+					<td class="text-right">
+206,90<br>
+211,10					</td>
+					<td class="text-right">
+<div class="image_icon_price_red"></div>					</td>
+					<td class="text-right">
+<span class="colorRed">-0,90</span><br>
+<span class="colorRed">-0,43</span>					</td>
+					<td>
+<div style="width:8px;" class="performanceBarNegative"></div>					</td>
+					<td class="text-right">
+17:35:08<br>
+09.10.2018					</td>
+					<td class="text-right">
+<span class="colorDefault">0,00</span><br>
+<span class="colorDefault">0,00</span>					</td>
+					<td class="text-right">
+<span class="colorGreen">35,75</span><br>
+<span class="colorGreen">20,56</span>					</td>
+					<td class="text-right">
+<span class="colorGreen">32,50</span><br>
+<span class="colorGreen">18,35</span>					</td>
+					<td class="text-right">
+<img src="https://pproxy.boerse-online.de/cst/BoerseOnline/Share/chart.aspx?instruments=13,37939278,13,814&amp;style=miniweiss5025&amp;period=OneYear&amp;timezone=W. Europe Standard Time" alt="Linde" onclick="window.location.href= '/chart/Linde'" style="cursor:pointer" title="Linde 1 Jahr Chart">					</td>
+			</tr>
+			<tr>
+					<td>
+<a href="/aktie/lufthansa-Aktie" title="Lufthansa">Lufthansa</a><br>
+DE0008232125					</td>
+					<td class="text-right">
+19,65<br>
+19,45					</td>
+					<td class="text-right">
+19,24<br>
+19,82					</td>
+					<td class="text-right">
+<div class="image_icon_price_green"></div>					</td>
+					<td class="text-right">
+<span class="colorGreen">0,20</span><br>
+<span class="colorGreen">1,03</span>					</td>
+					<td>
+<div style="width:5px;" class="performanceBarPositive"></div>					</td>
+					<td class="text-right">
+17:35:02<br>
+09.10.2018					</td>
+					<td class="text-right">
+<span class="colorRed">-0,26</span><br>
+<span class="colorRed">-1,29</span>					</td>
+					<td class="text-right">
+<span class="colorRed">-5,87</span><br>
+<span class="colorRed">-22,73</span>					</td>
+					<td class="text-right">
+<span class="colorRed">-4,29</span><br>
+<span class="colorRed">-17,67</span>					</td>
+					<td class="text-right">
+<img src="https://pproxy.boerse-online.de/cst/BoerseOnline/Share/chart.aspx?instruments=13,667979,13,814&amp;style=miniweiss5025&amp;period=OneYear&amp;timezone=W. Europe Standard Time" alt="Lufthansa" onclick="window.location.href= '/chart/Lufthansa'" style="cursor:pointer" title="Lufthansa 1 Jahr Chart">					</td>
+			</tr>
+			<tr>
+					<td>
+<a href="/aktie/merck-Aktie" title="Merck">Merck</a><br>
+DE0006599905					</td>
+					<td class="text-right">
+88,94<br>
+88,04					</td>
+					<td class="text-right">
+87,82<br>
+89,14					</td>
+					<td class="text-right">
+<div class="image_icon_price_green"></div>					</td>
+					<td class="text-right">
+<span class="colorGreen">0,90</span><br>
+<span class="colorGreen">1,02</span>					</td>
+					<td>
+<div style="width:5px;" class="performanceBarPositive"></div>					</td>
+					<td class="text-right">
+17:35:16<br>
+09.10.2018					</td>
+					<td class="text-right">
+<span class="colorGreen">3,84</span><br>
+<span class="colorGreen">4,52</span>					</td>
+					<td class="text-right">
+<span class="colorGreen">8,10</span><br>
+<span class="colorGreen">10,04</span>					</td>
+					<td class="text-right">
+<span class="colorRed">-6,69</span><br>
+<span class="colorRed">-7,01</span>					</td>
+					<td class="text-right">
+<img src="https://pproxy.boerse-online.de/cst/BoerseOnline/Share/chart.aspx?instruments=13,412799,13,814&amp;style=miniweiss5025&amp;period=OneYear&amp;timezone=W. Europe Standard Time" alt="Merck" onclick="window.location.href= '/chart/Merck'" style="cursor:pointer" title="Merck 1 Jahr Chart">					</td>
+			</tr>
+			<tr>
+					<td>
+<a href="/aktie/munich_re-Aktie" title="Münchener Rückversicherungs-Gesellschaft">Münchener Rückversicherungs-Gesellschaft</a><br>
+DE0008430026					</td>
+					<td class="text-right">
+192,55<br>
+192,25					</td>
+					<td class="text-right">
+192,05<br>
+194,00					</td>
+					<td class="text-right">
+<div class="image_icon_price_green"></div>					</td>
+					<td class="text-right">
+<span class="colorGreen">0,30</span><br>
+<span class="colorGreen">0,16</span>					</td>
+					<td>
+<div style="width:1px;" class="performanceBarPositive"></div>					</td>
+					<td class="text-right">
+17:35:25<br>
+09.10.2018					</td>
+					<td class="text-right">
+<span class="colorGreen">9,65</span><br>
+<span class="colorGreen">5,24</span>					</td>
+					<td class="text-right">
+<span class="colorGreen">0,05</span><br>
+<span class="colorGreen">0,03</span>					</td>
+					<td class="text-right">
+<span class="colorGreen">9,90</span><br>
+<span class="colorGreen">5,38</span>					</td>
+					<td class="text-right">
+<img src="https://pproxy.boerse-online.de/cst/BoerseOnline/Share/chart.aspx?instruments=13,341960,13,814&amp;style=miniweiss5025&amp;period=OneYear&amp;timezone=W. Europe Standard Time" alt="Münchener Rückversicherungs-Gesellschaft" onclick="window.location.href= '/chart/Munich_Re'" style="cursor:pointer" title="Münchener Rückversicherungs-Gesellschaft 1 Jahr Chart">					</td>
+			</tr>
+			<tr>
+					<td>
+<a href="/aktie/rwe-Aktie" title="RWE">RWE</a><br>
+DE0007037129					</td>
+					<td class="text-right">
+17,67<br>
+18,13					</td>
+					<td class="text-right">
+17,59<br>
+18,17					</td>
+					<td class="text-right">
+<div class="image_icon_price_red"></div>					</td>
+					<td class="text-right">
+<span class="colorRed">-0,46</span><br>
+<span class="colorRed">-2,54</span>					</td>
+					<td>
+<div style="width:50px;" class="performanceBarNegative"></div>					</td>
+					<td class="text-right">
+17:35:16<br>
+09.10.2018					</td>
+					<td class="text-right">
+<span class="colorRed">-1,02</span><br>
+<span class="colorRed">-4,76</span>					</td>
+					<td class="text-right">
+<span class="colorGreen">0,33</span><br>
+<span class="colorGreen">1,64</span>					</td>
+					<td class="text-right">
+<span class="colorGreen">0,98</span><br>
+<span class="colorGreen">5,04</span>					</td>
+					<td class="text-right">
+<img src="https://pproxy.boerse-online.de/cst/BoerseOnline/Share/chart.aspx?instruments=13,1158883,13,814&amp;style=miniweiss5025&amp;period=OneYear&amp;timezone=W. Europe Standard Time" alt="RWE" onclick="window.location.href= '/chart/RWE'" style="cursor:pointer" title="RWE 1 Jahr Chart">					</td>
+			</tr>
+			<tr>
+					<td>
+<a href="/aktie/sap-Aktie" title="SAP">SAP</a><br>
+DE0007164600					</td>
+					<td class="text-right">
+103,80<br>
+102,04					</td>
+					<td class="text-right">
+101,98<br>
+104,30					</td>
+					<td class="text-right">
+<div class="image_icon_price_green"></div>					</td>
+					<td class="text-right">
+<span class="colorGreen">1,76</span><br>
+<span class="colorGreen">1,72</span>					</td>
+					<td>
+<div style="width:9px;" class="performanceBarPositive"></div>					</td>
+					<td class="text-right">
+17:35:09<br>
+09.10.2018					</td>
+					<td class="text-right">
+<span class="colorGreen">6,91</span><br>
+<span class="colorGreen">6,97</span>					</td>
+					<td class="text-right">
+<span class="colorGreen">19,42</span><br>
+<span class="colorGreen">22,41</span>					</td>
+					<td class="text-right">
+<span class="colorGreen">11,75</span><br>
+<span class="colorGreen">12,46</span>					</td>
+					<td class="text-right">
+<img src="https://pproxy.boerse-online.de/cst/BoerseOnline/Share/chart.aspx?instruments=13,345952,13,814&amp;style=miniweiss5025&amp;period=OneYear&amp;timezone=W. Europe Standard Time" alt="SAP" onclick="window.location.href= '/chart/SAP'" style="cursor:pointer" title="SAP 1 Jahr Chart">					</td>
+			</tr>
+			<tr>
+					<td>
+<a href="/aktie/siemens-Aktie" title="Siemens">Siemens</a><br>
+DE0007236101					</td>
+					<td class="text-right">
+104,52<br>
+104,78					</td>
+					<td class="text-right">
+103,24<br>
+105,16					</td>
+					<td class="text-right">
+<div class="image_icon_price_red"></div>					</td>
+					<td class="text-right">
+<span class="colorRed">-0,26</span><br>
+<span class="colorRed">-0,25</span>					</td>
+					<td>
+<div style="width:4px;" class="performanceBarNegative"></div>					</td>
+					<td class="text-right">
+17:35:23<br>
+09.10.2018					</td>
+					<td class="text-right">
+<span class="colorRed">-7,72</span><br>
+<span class="colorRed">-6,73</span>					</td>
+					<td class="text-right">
+<span class="colorGreen">2,28</span><br>
+<span class="colorGreen">2,18</span>					</td>
+					<td class="text-right">
+<span class="colorRed">-12,52</span><br>
+<span class="colorRed">-10,48</span>					</td>
+					<td class="text-right">
+<img src="https://pproxy.boerse-online.de/cst/BoerseOnline/Share/chart.aspx?instruments=13,827766,13,814&amp;style=miniweiss5025&amp;period=OneYear&amp;timezone=W. Europe Standard Time" alt="Siemens" onclick="window.location.href= '/chart/Siemens'" style="cursor:pointer" title="Siemens 1 Jahr Chart">					</td>
+			</tr>
+			<tr>
+					<td>
+<a href="/aktie/thyssenkrupp-Aktie" title="thyssenkrupp">thyssenkrupp</a><br>
+DE0007500001					</td>
+					<td class="text-right">
+20,86<br>
+20,67					</td>
+					<td class="text-right">
+20,49<br>
+21,04					</td>
+					<td class="text-right">
+<div class="image_icon_price_green"></div>					</td>
+					<td class="text-right">
+<span class="colorGreen">0,19</span><br>
+<span class="colorGreen">0,92</span>					</td>
+					<td>
+<div style="width:4px;" class="performanceBarPositive"></div>					</td>
+					<td class="text-right">
+17:35:03<br>
+09.10.2018					</td>
+					<td class="text-right">
+<span class="colorRed">-0,74</span><br>
+<span class="colorRed">-3,44</span>					</td>
+					<td class="text-right">
+<span class="colorRed">-1,17</span><br>
+<span class="colorRed">-5,34</span>					</td>
+					<td class="text-right">
+<span class="colorRed">-3,31</span><br>
+<span class="colorRed">-13,74</span>					</td>
+					<td class="text-right">
+<img src="https://pproxy.boerse-online.de/cst/BoerseOnline/Share/chart.aspx?instruments=13,412006,13,814&amp;style=miniweiss5025&amp;period=OneYear&amp;timezone=W. Europe Standard Time" alt="thyssenkrupp" onclick="window.location.href= '/chart/thyssenkrupp'" style="cursor:pointer" title="thyssenkrupp 1 Jahr Chart">					</td>
+			</tr>
+			<tr>
+					<td>
+<a href="/aktie/volkswagen_vz-Aktie" title="Volkswagen (VW) vz">Volkswagen (VW) vz</a><br>
+DE0007664039					</td>
+					<td class="text-right">
+146,54<br>
+147,00					</td>
+					<td class="text-right">
+144,54<br>
+148,20					</td>
+					<td class="text-right">
+<div class="image_icon_price_red"></div>					</td>
+					<td class="text-right">
+<span class="colorRed">-0,46</span><br>
+<span class="colorRed">-0,31</span>					</td>
+					<td>
+<div style="width:6px;" class="performanceBarNegative"></div>					</td>
+					<td class="text-right">
+17:35:01<br>
+09.10.2018					</td>
+					<td class="text-right">
+<span class="colorGreen">3,60</span><br>
+<span class="colorGreen">2,42</span>					</td>
+					<td class="text-right">
+<span class="colorRed">-15,04</span><br>
+<span class="colorRed">-9,00</span>					</td>
+					<td class="text-right">
+<span class="colorGreen">10,38</span><br>
+<span class="colorGreen">7,33</span>					</td>
+					<td class="text-right">
+<img src="https://pproxy.boerse-online.de/cst/BoerseOnline/Share/chart.aspx?instruments=13,352781,13,814&amp;style=miniweiss5025&amp;period=OneYear&amp;timezone=W. Europe Standard Time" alt="Volkswagen (VW) vz" onclick="window.location.href= '/chart/Volkswagen_vz'" style="cursor:pointer" title="Volkswagen (VW) vz 1 Jahr Chart">					</td>
+			</tr>
+			<tr>
+					<td>
+<a href="/aktie/vonovia-Aktie" title="Vonovia">Vonovia</a><br>
+DE000A1ML7J1					</td>
+					<td class="text-right">
+39,99<br>
+39,64					</td>
+					<td class="text-right">
+39,51<br>
+40,28					</td>
+					<td class="text-right">
+<div class="image_icon_price_green"></div>					</td>
+					<td class="text-right">
+<span class="colorGreen">0,35</span><br>
+<span class="colorGreen">0,88</span>					</td>
+					<td>
+<div style="width:4px;" class="performanceBarPositive"></div>					</td>
+					<td class="text-right">
+17:35:24<br>
+09.10.2018					</td>
+					<td class="text-right">
+<span class="colorRed">-0,46</span><br>
+<span class="colorRed">-1,13</span>					</td>
+					<td class="text-right">
+<span class="colorRed">-0,14</span><br>
+<span class="colorRed">-0,35</span>					</td>
+					<td class="text-right">
+<span class="colorGreen">3,54</span><br>
+<span class="colorGreen">9,68</span>					</td>
+					<td class="text-right">
+<img src="https://pproxy.boerse-online.de/cst/BoerseOnline/Share/chart.aspx?instruments=13,21644750,13,814&amp;style=miniweiss5025&amp;period=OneYear&amp;timezone=W. Europe Standard Time" alt="Vonovia" onclick="window.location.href= '/chart/Vonovia'" style="cursor:pointer" title="Vonovia 1 Jahr Chart">					</td>
+			</tr>
+			<tr>
+					<td>
+<a href="/aktie/wirecard-Aktie" title="Wirecard">Wirecard</a><br>
+DE0007472060					</td>
+					<td class="text-right">
+182,10<br>
+166,20					</td>
+					<td class="text-right">
+168,35<br>
+182,70					</td>
+					<td class="text-right">
+<div class="image_icon_price_green"></div>					</td>
+					<td class="text-right">
+<span class="colorGreen">15,90</span><br>
+<span class="colorGreen">9,57</span>					</td>
+					<td>
+<div style="width:50px;" class="performanceBarPositive"></div>					</td>
+					<td class="text-right">
+17:35:15<br>
+09.10.2018					</td>
+					<td class="text-right">
+<span class="colorGreen">46,70</span><br>
+<span class="colorGreen">32,42</span>					</td>
+					<td class="text-right">
+<span class="colorGreen">91,53</span><br>
+<span class="colorGreen">92,25</span>					</td>
+					<td class="text-right">
+<span class="colorGreen">112,11</span><br>
+<span class="colorGreen">142,56</span>					</td>
+					<td class="text-right">
+<img src="https://pproxy.boerse-online.de/cst/BoerseOnline/Share/chart.aspx?instruments=13,1514179,13,814&amp;style=miniweiss5025&amp;period=OneYear&amp;timezone=W. Europe Standard Time" alt="Wirecard" onclick="window.location.href= '/chart/Wirecard'" style="cursor:pointer" title="Wirecard 1 Jahr Chart">					</td>
+			</tr>
+	</tbody></table>
+		<div class="finando_paging">Seite: <a href="?p=1"><strong>1</strong></a></div>
+</div>
