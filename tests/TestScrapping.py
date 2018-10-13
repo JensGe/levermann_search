@@ -14,7 +14,7 @@ class TestScrapping(unittest.TestCase):
         content = scrap.get_content_from_file("data/bo_index_history.html")
         soup = scrap.create_soup_from_content(content)
         history_table = soup.find_all("div", {"id": "historic-price-list"})
-        table_list = ihs.extract_index_history_to_list(history_table)
+        table_list = ihs.extract_history_table_to_list(history_table)
         asserted_list = [['06.09.2018', '11.955,25', '11.995,81', '12.091,98', '11.944,50'],
                          ['07.09.2018', '11.959,63', '11.960,10', '11.990,81', '11.888,57'],
                          ['10.09.2018', '11.986,34', '11.950,55', '12.039,22', '11.930,30'],
@@ -33,6 +33,12 @@ class TestScrapping(unittest.TestCase):
                          ['Bayer', 'DE000BAY0017', 'bayer-Aktie'],
                          ['Beiersdorf', 'DE0005200000', 'beiersdorf-Aktie']]
         self.assertEqual(table_list[:5], asserted_list)
+
+    def test_pagination_getting(self):
+        content = scrap.get_content_from_file("data/bo_index_stocks_pagination.html")
+        soup = scrap.create_soup_from_content(content)
+        highest_pagination = ihs.get_max_page(soup)
+        self.assertEqual(highest_pagination, 3)
 
     def tearDown(self):
         pass

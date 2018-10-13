@@ -6,9 +6,10 @@ from Scrapper import index_history_scrapper as ihs
 
 index_history_url = "https://www.boerse-online.de/index/historisch/"
 index_stocks_url = "https://www.boerse-online.de/index/liste/"
+stock_history_url = "https://www.boerse-online.de/kurse/historisch/"
 
 
-def select_intervall(index_name):
+def select_index_intervall(index_name):
     """ calculate Intervall to be used in scrapping
         therefore uses latest date in DB + 1
         if DB is empty, the intervall will be one year ago to today
@@ -36,13 +37,13 @@ def refresh_index_history(index_name, start_date_str, end_date_str):
     """
 
     if date.string_to_date(start_date_str) >= date.string_to_date(end_date_str):
-        print("---- Enddate less or equal than start date --- Dont Scrap")
+        print("---- Enddate less or equal than start date --- Don't Scrap")
         return False
     # start scrapping with calculated intervall
     driver = ihs.init_driver()
     content = ihs.get_index_history_content(driver, index_history_url, index_name, start_date_str, end_date_str)
 
-    index_history = ihs.extract_index_history_to_list(content)
+    index_history = ihs.extract_history_table_to_list(content)
     ihs.save_index_history_to_db(index_history, index_name)
 
     driver.quit()
@@ -55,7 +56,60 @@ def refresh_index_stocks(index_name):
     """
     driver = ihs.init_driver()
     content = ihs.get_index_stocks_content(driver, index_stocks_url, index_name)
-    index_stocks = ihs.extract_index_stocks_to_list(content)
+    index_stocks = []
+    for index_stock_page in content:
+        index_stocks.extend(ihs.extract_index_stocks_to_list(index_stock_page))
+    # index_stocks = ihs.extract_index_stocks_to_list(content)
+
     ihs.update_index_stocks_db(index_stocks, index_name)
     driver.quit()
 
+
+def select_stock_intervall(stock_name):
+    """ calculate Intervall to be used in scrapping
+        therefore uses latest date in DB + 1
+        if DB is empty, the intervall will be one year ago to today
+    :param stock_name: the stocks name
+    :return: start_date_str, end_date_str: as strings
+    """
+    today_date = date.get_todays_date()
+    start_date = date.subtract_one_year(today_date)
+
+    max_db_date = db.get_max_date_of_stock_history(stock_name)
+
+    if max_db_date:
+        start_date = date.add_one_day(date.string_to_date(max_db_date))
+
+    start_date_str = date.date_to_string(start_date)
+    end_date_str = date.date_to_string(today_date)
+
+    print("Searching %s - Stock from %s to %s" % (stock_name, start_date_str, end_date_str))
+    return start_date_str, end_date_str
+
+
+def refresh_all_stocks_history(index_name):
+    all_stocks = db.get_all_stock_infos(index_name)
+    for stock in all_stocks:
+        start_date_str, end_date_str = select_stock_intervall(stock[0])
+        refresh_single_stock_history(stock, index_name, start_date_str, end_date_str)
+    return True
+
+
+def refresh_single_stock_history(stock, index_name, start_date_str, end_date_str):
+    stock_name, stock_isin, stock_url_part = stock
+    page_url = stock_history_url + stock_url_part
+
+    if date.string_to_date(start_date_str) >= date.string_to_date(end_date_str):
+        print("---- Enddate less or equal than start date --- Don't Scrap")
+        return False
+
+    # start scrapping with calculated intervall
+    driver = ihs.init_driver()
+    content = ihs.get_stock_history_content(driver, page_url, start_date_str, end_date_str)
+
+    stock_history = ihs.extract_history_table_to_list(content)
+    ihs.save_stock_history_to_db(stock_history, index_name, stock_name, stock_isin)
+
+    driver.quit()
+
+    return True

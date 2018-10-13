@@ -21,6 +21,8 @@ def init_driver():
     options.add_argument("--host-resolver-rules=MAP https://pagead2.googlesyndication.com 127.0.0.1")
     options.add_argument("--host-resolver-rules=MAP https://www.googletagservice.com 127.0.0.1")
     options.add_argument("--host-resolver-rules=MAP http://ioam.de 127.0.0.1")
+    options.add_argument("--host-resolver-rules=MAP http://ligatus.com 127.0.0.1")
+    options.add_argument("--host-resolver-rules=MAP https://a.ligatus.com 127.0.0.1")
     options.add_argument("--host-resolver-rules=MAP http://jwpcdn.com 127.0.0.1")
     options.add_argument("--host-resolver-rules=MAP https://ssl.p.jwpcdn.com 127.0.0.1")
     options.add_argument("--host-resolver-rules=MAP http://newrelic.com 127.0.0.1")
@@ -46,6 +48,12 @@ def get_element_content_by_id(driver, url, id_):
     return driver.find_element_by_id(id_)
 
 
+def get_max_page(soup):
+    pagination = soup.find('div', {'class': 'finando_paging'})
+    link_list = pagination.find_all('a')
+    return int(link_list[-1].text)
+
+
 # Index Histories
 def get_index_history_content(driver, url, index, start_date, end_date):
     driver.get(url + index + "/" + start_date + "_" + end_date)
@@ -54,7 +62,7 @@ def get_index_history_content(driver, url, index, start_date, end_date):
     return history_table
 
 
-def extract_index_history_to_list(input_table):
+def extract_history_table_to_list(input_table):
     index_history = []
     table_rows = []
 
@@ -87,7 +95,19 @@ def get_index_stocks_content(driver, url, index):
     driver.get(url + index)
     soup = BeautifulSoup(driver.page_source, 'html.parser')
     stock_list = soup.find_all('div', {'id': 'index-list-container'})
-    return stock_list
+    max_page = get_max_page(soup)
+
+    if max_page == 1:
+        return [stock_list]
+    else:
+        complete_stock_list = [stock_list]
+        for i in range(1,max_page):
+            time.sleep(5)
+            driver.get(url + index + '?p=' + str(i+1))
+            soup = BeautifulSoup(driver.page_source, 'html.parser')
+            stock_list = soup.find_all('div', {'id': 'index-list-container'})
+            complete_stock_list.append(stock_list)
+    return complete_stock_list
 
 
 def extract_index_stocks_to_list(input_table):
@@ -122,4 +142,23 @@ def update_index_stocks_db(input_table, name):
     return True
 
 
+# Stock Histories
+def get_stock_history_content(driver, url, start_date, end_date):
+    driver.get(url[:-6] + "/fse/" + start_date + "_" + end_date)
+    soup = BeautifulSoup(driver.page_source, "html.parser")
+    history_table = soup.find_all("div", {"id": "historic-price-list"})
+    return history_table
 
+
+def save_stock_history_to_db(input_table, index_name, stock_name, isin):
+    print('---- Writing %d items to table' % (len(input_table)))
+    for i in range(len(input_table)):
+        db.write_data('stock_histories', dict(stock=stock_name,
+                                              isin=isin,
+                                              index=index_name,
+                                              datum=input_table[i][0],
+                                              schluss=input_table[i][1],
+                                              eroeffnung=input_table[i][2],
+                                              tageshoch=input_table[i][3],
+                                              tagestief=input_table[i][3]))
+    return True

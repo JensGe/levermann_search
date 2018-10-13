@@ -16,7 +16,7 @@ class TestDate(unittest.TestCase):
         self.assertEqual(asserted_price, calc_price)
 
     def test_get_intervall(self):
-        start, end = db_refresher.select_intervall("dax")
+        start, end = db_refresher.select_index_intervall("dax")
         asserted_start = "06.10.2018"
         self.assertEqual(start, asserted_start)
 
