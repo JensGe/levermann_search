@@ -7,8 +7,6 @@ from Scrapper import index_history_scrapper as ihs
 index_history_url = "https://www.boerse-online.de/index/historisch/"
 index_stocks_url = "https://www.boerse-online.de/index/liste/"
 
-div_id = "historic-price-list"
-
 
 def select_intervall(index_name):
     """ calculate Intervall to be used in scrapping
@@ -44,8 +42,8 @@ def refresh_index_history(index_name, start_date_str, end_date_str):
     driver = ihs.init_driver()
     content = ihs.get_index_history_content(driver, index_history_url, index_name, start_date_str, end_date_str)
 
-    list_table = ihs.extract_index_history_to_list(content)
-    ihs.save_list_table_to_history_db(list_table, index_name)
+    index_history = ihs.extract_index_history_to_list(content)
+    ihs.save_index_history_to_db(index_history, index_name)
 
     driver.quit()
     return True
@@ -53,5 +51,11 @@ def refresh_index_history(index_name, start_date_str, end_date_str):
 
 def refresh_index_stocks(index_name):
     """
-    Updates the stocks in each index
+    Scraps the current Stocks inside selected Index
     """
+    driver = ihs.init_driver()
+    content = ihs.get_index_stocks_content(driver, index_stocks_url, index_name)
+    index_stocks = ihs.extract_index_stocks_to_list(content)
+    ihs.update_index_stocks_db(index_stocks, index_name)
+    driver.quit()
+

@@ -571,3 +571,217 @@ IPDL protocol error: Handler returned error code!
 1539114450754	Marionette	DEBUG	[2147483649] Received observer notification outer-window-destroyed for 2147483680
 1539114452315	Marionette	DEBUG	[2147483649] Received DOM event pageshow for https://www.boerse-online.de/index/historisch/straits%20times/09.10.2017_09.10.2018
 1539114452415	Marionette	INFO	Stopped listening on port 35829
+1539445201124	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofile.rcBYHtMiJFVw"
+
+(firefox:24325): Gtk-WARNING **: Theme parsing error: <data>:1:34: Expected ')' in color definition
+
+(firefox:24325): Gtk-WARNING **: Theme parsing error: <data>:1:78: Expected ')' in color definition
+1539445202739	Marionette	INFO	Listening on port 45839
+1539445202838	Marionette	WARN	TLS certificate errors will be ignored for this session
+1539445202872	Marionette	DEBUG	[2147483649] Frame script loaded
+1539445202873	Marionette	DEBUG	[2147483649] Frame script registered
+1539445202884	Marionette	DEBUG	[2147483649] Received DOM event beforeunload for about:blank
+1539445203516	Marionette	DEBUG	[2147483649] Received DOM event pagehide for about:blank
+1539445214185	Marionette	DEBUG	[2147483649] Received DOM event DOMContentLoaded for https://www.boerse-online.de/index/historisch/dax/09.10.2018_13.10.2018
+
+(/usr/lib/firefox/firefox:24405): dconf-WARNING **: Unable to open /var/lib/flatpak/exports/share/dconf/profile/user: Keine Berechtigung
+1539445221137	Marionette	DEBUG	[2147483649] Received observer notification outer-window-destroyed for 2147483695
+1539445221197	Marionette	DEBUG	[2147483649] Received observer notification outer-window-destroyed for 2147483697
+1539445221697	Marionette	DEBUG	[2147483649] Received DOM event pageshow for https://www.boerse-online.de/index/historisch/dax/09.10.2018_13.10.2018
+1539445221837	Marionette	INFO	Stopped listening on port 45839
+[Child 24405, Chrome_ChildThread] WARNING: pipe error: Datenübergabe unterbrochen (broken pipe): file /build/firefox-pQ6x41/firefox-62.0.3+linuxmint1+sylvia/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 726
+[Child 24405, Chrome_ChildThread] WARNING: pipe error: Datenübergabe unterbrochen (broken pipe): file /build/firefox-pQ6x41/firefox-62.0.3+linuxmint1+sylvia/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 726
+[Child 24405, Chrome_ChildThread] WARNING: pipe error: Datenübergabe unterbrochen (broken pipe): file /build/firefox-pQ6x41/firefox-62.0.3+linuxmint1+sylvia/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 726
+[Child 24405, Chrome_ChildThread] WARNING: pipe error: Datenübergabe unterbrochen (broken pipe): file /build/firefox-pQ6x41/firefox-62.0.3+linuxmint1+sylvia/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 726
+[Child 24405, Chrome_ChildThread] WARNING: pipe error: Datenübergabe unterbrochen (broken pipe): file /build/firefox-pQ6x41/firefox-62.0.3+linuxmint1+sylvia/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 726
+[Parent 24325, Gecko_IOThread] WARNING: pipe error (97): Die Verbindung wurde vom Kommunikationspartner zurückgesetzt: file /build/firefox-pQ6x41/firefox-62.0.3+linuxmint1+sylvia/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+1539445233350	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofile.3qE0LL297Uoj"
+
+(firefox:24566): Gtk-WARNING **: Theme parsing error: <data>:1:34: Expected ')' in color definition
+
+(firefox:24566): Gtk-WARNING **: Theme parsing error: <data>:1:78: Expected ')' in color definition
+1539445234813	Marionette	INFO	Listening on port 37057
+1539445234855	Marionette	WARN	TLS certificate errors will be ignored for this session
+1539445234891	Marionette	DEBUG	[2147483649] Frame script loaded
+1539445234895	Marionette	DEBUG	[2147483649] Frame script registered
+1539445234910	Marionette	DEBUG	[2147483649] Received DOM event beforeunload for about:blank
+1539445235751	Marionette	DEBUG	[2147483649] Received DOM event pagehide for about:blank
+1539445247191	Marionette	DEBUG	[2147483649] Received DOM event DOMContentLoaded for https://www.boerse-online.de/index/historisch/dow_jones/09.10.2018_13.10.2018
+1539445262246	Marionette	DEBUG	[2147483649] Received observer notification outer-window-destroyed for 2147483696
+1539445263350	Marionette	DEBUG	[2147483649] Received DOM event pageshow for https://www.boerse-online.de/index/historisch/dow_jones/09.10.2018_13.10.2018
+1539445263490	Marionette	INFO	Stopped listening on port 37057
+1539445275707	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofile.8XDCnq67maIA"
+
+(firefox:24789): Gtk-WARNING **: Theme parsing error: <data>:1:34: Expected ')' in color definition
+
+(firefox:24789): Gtk-WARNING **: Theme parsing error: <data>:1:78: Expected ')' in color definition
+1539445277165	Marionette	INFO	Listening on port 38613
+1539445277215	Marionette	WARN	TLS certificate errors will be ignored for this session
+1539445277251	Marionette	DEBUG	[2147483649] Frame script loaded
+1539445277251	Marionette	DEBUG	[2147483649] Frame script registered
+1539445277262	Marionette	DEBUG	[2147483649] Received DOM event beforeunload for about:blank
+1539445277756	Marionette	DEBUG	[2147483649] Received DOM event pagehide for about:blank
+1539445283999	Marionette	DEBUG	[2147483649] Received DOM event DOMContentLoaded for https://www.boerse-online.de/index/historisch/nasdaq_100/09.10.2018_13.10.2018
+1539445288679	Marionette	DEBUG	[2147483649] Received observer notification outer-window-destroyed for 2147483696
+1539445288680	Marionette	DEBUG	[2147483649] Received observer notification outer-window-destroyed for 2147483698
+1539445290574	Marionette	DEBUG	[2147483649] Received DOM event pageshow for https://www.boerse-online.de/index/historisch/nasdaq_100/09.10.2018_13.10.2018
+1539445290703	Marionette	INFO	Stopped listening on port 38613
+[Child 24869, Chrome_ChildThread] WARNING: pipe error: Datenübergabe unterbrochen (broken pipe): file /build/firefox-pQ6x41/firefox-62.0.3+linuxmint1+sylvia/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 726
+[Child 24869, Chrome_ChildThread] WARNING: pipe error: Datenübergabe unterbrochen (broken pipe): file /build/firefox-pQ6x41/firefox-62.0.3+linuxmint1+sylvia/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 726
+[Parent 24789, Gecko_IOThread] WARNING: pipe error (99): Die Verbindung wurde vom Kommunikationspartner zurückgesetzt: file /build/firefox-pQ6x41/firefox-62.0.3+linuxmint1+sylvia/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+1539457760978	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofile.w1jzitco76vO"
+
+(firefox:30309): Gtk-WARNING **: Theme parsing error: <data>:1:34: Expected ')' in color definition
+
+(firefox:30309): Gtk-WARNING **: Theme parsing error: <data>:1:78: Expected ')' in color definition
+1539457762604	Marionette	INFO	Listening on port 35965
+1539457762683	Marionette	WARN	TLS certificate errors will be ignored for this session
+1539457762717	Marionette	DEBUG	[2147483649] Frame script loaded
+1539457762718	Marionette	DEBUG	[2147483649] Frame script registered
+1539457762729	Marionette	DEBUG	[2147483649] Received DOM event beforeunload for about:blank
+1539457763363	Marionette	DEBUG	[2147483649] Received DOM event pagehide for about:blank
+1539457769850	Marionette	DEBUG	[2147483649] Received DOM event DOMContentLoaded for https://www.boerse-online.de/index/liste/dax
+1539457778822	Marionette	DEBUG	[2147483649] Received observer notification outer-window-destroyed for 2147483691
+1539457781985	Marionette	DEBUG	[2147483649] Received DOM event pageshow for https://www.boerse-online.de/index/liste/dax
+1539457818544	Marionette	INFO	Stopped listening on port 35965
+1539457939488	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofile.pVGTisfHRC30"
+
+(firefox:30621): Gtk-WARNING **: Theme parsing error: <data>:1:34: Expected ')' in color definition
+
+(firefox:30621): Gtk-WARNING **: Theme parsing error: <data>:1:78: Expected ')' in color definition
+1539457941040	Marionette	INFO	Listening on port 38253
+1539457941101	Marionette	WARN	TLS certificate errors will be ignored for this session
+1539457941135	Marionette	DEBUG	[2147483649] Frame script loaded
+1539457941136	Marionette	DEBUG	[2147483649] Frame script registered
+1539457941150	Marionette	DEBUG	[2147483649] Received DOM event beforeunload for about:blank
+1539457941637	Marionette	DEBUG	[2147483649] Received DOM event pagehide for about:blank
+1539457948442	Marionette	DEBUG	[2147483649] Received DOM event DOMContentLoaded for https://www.boerse-online.de/index/liste/dax
+1539457954637	Marionette	DEBUG	[2147483649] Received DOM event pageshow for https://www.boerse-online.de/index/liste/dax
+IPDL protocol error: Handler returned error code!
+
+###!!! [Parent][DispatchAsyncMessage] Error: PLayerTransaction::Msg_ReleaseLayer Processing error: message was deserialized, but the handler returned false (indicating failure)
+
+IPDL protocol error: Handler returned error code!
+
+###!!! [Parent][DispatchAsyncMessage] Error: PLayerTransaction::Msg_ReleaseLayer Processing error: message was deserialized, but the handler returned false (indicating failure)
+
+
+###!!! [Child][MessageChannel] Error: (msgtype=0x560027,name=PNecko::Msg_RemoveRequestContext) Channel closing: too late to send/recv, messages will be lost
+
+
+###!!! [Child][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+
+###!!! [Child][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+
+###!!! [Child][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+
+###!!! [Child][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+[Parent 30621, Gecko_IOThread] WARNING: pipe error (67): Die Verbindung wurde vom Kommunikationspartner zurückgesetzt: file /build/firefox-pQ6x41/firefox-62.0.3+linuxmint1+sylvia/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+1539458034234	Marionette	INFO	Stopped listening on port 38253
+1539458040466	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofile.SgkKD05sljP1"
+
+(firefox:30926): Gtk-WARNING **: Theme parsing error: <data>:1:34: Expected ')' in color definition
+
+(firefox:30926): Gtk-WARNING **: Theme parsing error: <data>:1:78: Expected ')' in color definition
+1539458041901	Marionette	INFO	Listening on port 41601
+1539458041977	Marionette	WARN	TLS certificate errors will be ignored for this session
+1539458042015	Marionette	DEBUG	[2147483649] Frame script loaded
+1539458042016	Marionette	DEBUG	[2147483649] Frame script registered
+1539458042032	Marionette	DEBUG	[2147483649] Received DOM event beforeunload for about:blank
+1539458042502	Marionette	DEBUG	[2147483649] Received DOM event pagehide for about:blank
+1539458050126	Marionette	DEBUG	[2147483649] Received DOM event DOMContentLoaded for https://www.boerse-online.de/index/liste/dax
+1539458055028	Marionette	DEBUG	[2147483649] Received observer notification outer-window-destroyed for 2147483698
+1539458056759	Marionette	DEBUG	[2147483649] Received DOM event pageshow for https://www.boerse-online.de/index/liste/dax
+1539458057369	Marionette	INFO	Stopped listening on port 41601
+[Parent 30926, Gecko_IOThread] WARNING: pipe error (90): Die Verbindung wurde vom Kommunikationspartner zurückgesetzt: file /build/firefox-pQ6x41/firefox-62.0.3+linuxmint1+sylvia/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+1539458067863	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofile.5jh2JNUu1Icx"
+
+(firefox:31142): Gtk-WARNING **: Theme parsing error: <data>:1:34: Expected ')' in color definition
+
+(firefox:31142): Gtk-WARNING **: Theme parsing error: <data>:1:78: Expected ')' in color definition
+1539458069321	Marionette	INFO	Listening on port 44593
+1539458069381	Marionette	WARN	TLS certificate errors will be ignored for this session
+1539458069418	Marionette	DEBUG	[2147483649] Frame script loaded
+1539458069424	Marionette	DEBUG	[2147483649] Frame script registered
+1539458069439	Marionette	DEBUG	[2147483649] Received DOM event beforeunload for about:blank
+1539458070022	Marionette	DEBUG	[2147483649] Received DOM event pagehide for about:blank
+1539458077634	Marionette	DEBUG	[2147483649] Received DOM event DOMContentLoaded for https://www.boerse-online.de/index/liste/dow_jones
+1539458086377	Marionette	DEBUG	[2147483649] Received observer notification outer-window-destroyed for 2147483694
+1539458086518	Marionette	DEBUG	[2147483649] Received DOM event pageshow for https://www.boerse-online.de/index/liste/dow_jones
+1539458087057	Marionette	INFO	Stopped listening on port 44593
+IPDL protocol error: Handler returned error code!
+
+###!!! [Parent][DispatchAsyncMessage] Error: PLayerTransaction::Msg_ReleaseLayer Processing error: message was deserialized, but the handler returned false (indicating failure)
+
+IPDL protocol error: Handler returned error code!
+
+###!!! [Parent][DispatchAsyncMessage] Error: PLayerTransaction::Msg_ReleaseLayer Processing error: message was deserialized, but the handler returned false (indicating failure)
+
+
+###!!! [Child][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+
+###!!! [Child][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+
+###!!! [Child][MessageChannel] Error: (msgtype=0x2E00B1,name=PContent::Msg_ScriptError) Channel closing: too late to send/recv, messages will be lost
+
+
+###!!! [Child][MessageChannel] Error: (msgtype=0x910006,name=PWebSocket::Msg_DeleteSelf) Channel closing: too late to send/recv, messages will be lost
+
+
+###!!! [Child][MessageChannel] Error: (msgtype=0x2E00B1,name=PContent::Msg_ScriptError) Channel closing: too late to send/recv, messages will be lost
+
+
+###!!! [Child][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+[Parent 31142, Gecko_IOThread] WARNING: pipe error (61): Die Verbindung wurde vom Kommunikationspartner zurückgesetzt: file /build/firefox-pQ6x41/firefox-62.0.3+linuxmint1+sylvia/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+1539458097562	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofile.MBZb2jYbF0pU"
+
+(firefox:31374): Gtk-WARNING **: Theme parsing error: <data>:1:34: Expected ')' in color definition
+
+(firefox:31374): Gtk-WARNING **: Theme parsing error: <data>:1:78: Expected ')' in color definition
+1539458099069	Marionette	INFO	Listening on port 39955
+1539458099173	Marionette	WARN	TLS certificate errors will be ignored for this session
+1539458099210	Marionette	DEBUG	[2147483649] Frame script loaded
+1539458099211	Marionette	DEBUG	[2147483649] Frame script registered
+1539458099221	Marionette	DEBUG	[2147483649] Received DOM event beforeunload for about:blank
+1539458099673	Marionette	DEBUG	[2147483649] Received DOM event pagehide for about:blank
+1539458109838	Marionette	DEBUG	[2147483649] Received DOM event DOMContentLoaded for https://www.boerse-online.de/index/liste/nasdaq_100
+1539458117288	Marionette	DEBUG	[2147483649] Received observer notification outer-window-destroyed for 2147483693
+1539458120248	Marionette	DEBUG	[2147483649] Received DOM event pageshow for https://www.boerse-online.de/index/liste/nasdaq_100
+1539458121072	Marionette	INFO	Stopped listening on port 39955
+IPDL protocol error: Handler returned error code!
+
+###!!! [Parent][DispatchAsyncMessage] Error: PLayerTransaction::Msg_ReleaseLayer Processing error: message was deserialized, but the handler returned false (indicating failure)
+
+IPDL protocol error: Handler returned error code!
+
+###!!! [Parent][DispatchAsyncMessage] Error: PLayerTransaction::Msg_ReleaseLayer Processing error: message was deserialized, but the handler returned false (indicating failure)
+
+
+###!!! [Child][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+1539458132330	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofile.hRNITzwiEYXq"
+
+(firefox:31603): Gtk-WARNING **: Theme parsing error: <data>:1:34: Expected ')' in color definition
+
+(firefox:31603): Gtk-WARNING **: Theme parsing error: <data>:1:78: Expected ')' in color definition
+1539458133755	Marionette	INFO	Listening on port 43299
+1539458133834	Marionette	WARN	TLS certificate errors will be ignored for this session
+1539458133871	Marionette	DEBUG	[2147483649] Frame script loaded
+1539458133871	Marionette	DEBUG	[2147483649] Frame script registered
+1539458133884	Marionette	DEBUG	[2147483649] Received DOM event beforeunload for about:blank
+1539458134419	Marionette	DEBUG	[2147483649] Received DOM event pagehide for about:blank
+1539458143089	Marionette	DEBUG	[2147483649] Received DOM event DOMContentLoaded for https://www.boerse-online.de/index/liste/ftse_100
+
+(/usr/lib/firefox/firefox:31681): dconf-WARNING **: Unable to open /var/lib/flatpak/exports/share/dconf/profile/user: Keine Berechtigung
+1539458144240	Marionette	DEBUG	[2147483649] Received observer notification outer-window-destroyed for 2147483681
+1539458146342	Marionette	DEBUG	[2147483649] Received DOM event pageshow for https://www.boerse-online.de/index/liste/ftse_100
+1539458147172	Marionette	INFO	Stopped listening on port 43299
+[Child 31681, Chrome_ChildThread] WARNING: pipe error: Datenübergabe unterbrochen (broken pipe): file /build/firefox-pQ6x41/firefox-62.0.3+linuxmint1+sylvia/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 726
+[Child 31681, Chrome_ChildThread] WARNING: pipe error: Datenübergabe unterbrochen (broken pipe): file /build/firefox-pQ6x41/firefox-62.0.3+linuxmint1+sylvia/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 726

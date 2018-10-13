@@ -4,9 +4,21 @@ from utils import date_op as date
 import dataset
 
 
-def write_data(dictionary):
+def write_data(table_name, dictionary):
     with dataset.connect('sqlite:///stockbase.db') as tx:
-        tx['index_histories'].insert(dictionary)
+        tx[table_name].insert(dictionary)
+
+
+def clear_index_contents(table_name, index_name):
+    """
+    Deletes all rows in a table with a given index_name
+    :param table_name: table, where the deletion has to be
+    :param index_name: filtering one index_name, which will be cleared
+    :return:
+    """
+    with dataset.connect('sqlite:///stockbase.db') as tx:
+        tx[table_name].delete(index=index_name)
+    return True
 
 
 def get_max_date_of_index_history(index_name):
