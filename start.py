@@ -7,6 +7,10 @@ index_names = ['DAX', 'Dow_Jones', 'Nasdaq_100', 'FTSE_100', 'Euro_Stoxx_50', 'S
                'IBEX_35', 'Shanghai_Composite', 'Nikkei_225', 'SENSEX', 'BOVESPA',
                'Hang_Seng', 'S&P_ASX_20', 'Straits_Times']
 
+large_caps_indizes = ['DAX', 'Dow_Jones', 'Euro_Stoxx_50', 'SMI',]
+
+medium_small_caps_indizes = ['']
+
 print('Skip*==== Index History Refresh ====')
 # for index in index_names[:4]:
 #     print('---- wait 10 s')
@@ -23,9 +27,14 @@ print('Skip*==== Index Stock Refresh ====')
 #     print('---- next Index: %s' % index)
 #     db_refresher.refresh_index_stocks(index)
 
-print('==== Stock Index Refresh ====')
+
+print('==== Stock History Refresh ====')
 for index in index_names[:4]:
     print('---- wait 10 s')
     time.sleep(10)
     print('---- next Index: %s' % index)
     db_refresher.refresh_all_stocks_history(index)
+
+
+print('==== Stock Info Refresh ====')
+

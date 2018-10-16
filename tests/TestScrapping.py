@@ -3,6 +3,7 @@ from utils import file_op as file
 from utils import local_scrap_op as scrap
 from Scrapper import index_history_scrapper as ihs
 from bs4 import BeautifulSoup
+import re
 
 
 class TestScrapping(unittest.TestCase):
@@ -39,6 +40,46 @@ class TestScrapping(unittest.TestCase):
         soup = scrap.create_soup_from_content(content)
         highest_pagination = ihs.get_max_page(soup)
         self.assertEqual(highest_pagination, 3)
+
+    def test_get_market_cap(self):
+        content = scrap.get_content_from_file("data/bo_tesla-aktie.html")
+        soup = scrap.create_soup_from_content(content)
+        market_cap_title = soup.find(text=re.compile('Marktkapitalisierung'))
+        market_cap_value = market_cap_title.find_next('td').contents[0].strip()
+        asserted_market_cap = '37,53 Mrd'
+        self.assertEqual(asserted_market_cap, market_cap_value)
+
+    def test_stock_in_which_index_single(self):
+        content = scrap.get_content_from_file("data/bo_tesla-aktie.html")
+        soup = scrap.create_soup_from_content(content)
+        index = soup.find('h2', text=re.compile('Zur Aktie'))
+        index_value = index.find_next('a').contents[0].strip()
+        asserted_index = 'NASDAQ 100'
+        self.assertEqual(asserted_index, index_value)
+
+    def test_stock_in_which_index_multiple(self):
+        content = scrap.get_content_from_file("data/bo_sap-aktie.html")
+        soup = scrap.create_soup_from_content(content)
+        indizes = soup.find_all('h2', text=re.compile('Zur Aktie'))
+        parent = []
+        for par in indizes:
+            parent.append(par.parent)
+
+        link_items = []
+        for items in parent:
+            links = items.find_all('a')
+            for link in links:
+                link_items.append(link.text)
+
+        asserted_indizes_values = ['TecDAX', 'DAX', 'STOXX 50', 'EURO STOXX 50', 'S&P 400 MidCap',
+                                   'EURO STOXX Technology', 'Prime All Share', 'LDAX', 'LTecDAX',
+                                   'HDAX', 'DivDAX','NYSE International 100','CDAX','EURO STOXX',
+                                   'TecDAX Kursindex', 'DAX Kursindex', 'BX Swiss -  EMEA', 'XDAX',
+                                   'DAXglobal Sarasin Sustainability Germany Index EUR', 'L&S DAX Indikation',
+                                   'QIX Deutschland', 'DAXglobal Sarasin Sustainability Germany',
+                                   'Schatten-Index-TecDAX']
+
+        self.assertEqual(asserted_indizes_values, link_items)
 
     def tearDown(self):
         pass
