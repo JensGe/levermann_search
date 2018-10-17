@@ -1,6 +1,5 @@
 import time
 
-from utils import local_scrap_op as scrap
 from utils import db_op as db
 from utils import date_op as date
 

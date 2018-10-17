@@ -25,7 +25,6 @@ class TestDate(unittest.TestCase):
         asserted_max_date = "05.10.2018"
         self.assertEqual(max_date, asserted_max_date)
 
-
     def tearDown(self):
         pass
 
