@@ -1,7 +1,6 @@
 import unittest
 from utils import scrap_op as scrap
-from Scrapper import index_history_scrapper as ihs
-from bs4 import BeautifulSoup
+from utils import parse_op as parse
 import re
 
 
@@ -13,7 +12,7 @@ class TestScrapping(unittest.TestCase):
     def test_index_history_list_extract(self):
         soup = scrap.get_soup_code_of_file('data/bo_index_history.html')
         history_table = soup.find_all('div', {'id': 'historic-price-list'})
-        table_list = ihs.extract_history_table_to_list(history_table)
+        table_list = parse.extract_history_table_to_list(history_table)
         asserted_list = [['06.09.2018', '11.955,25', '11.995,81', '12.091,98', '11.944,50'],
                          ['07.09.2018', '11.959,63', '11.960,10', '11.990,81', '11.888,57'],
                          ['10.09.2018', '11.986,34', '11.950,55', '12.039,22', '11.930,30'],
@@ -24,7 +23,7 @@ class TestScrapping(unittest.TestCase):
     def test_index_stocks_list_extract(self):
         soup = scrap.get_soup_code_of_file('data/bo_index_stocks.html')
         stocks_table = soup.find_all('div', {'id': 'index-list-container'})
-        table_list = ihs.extract_index_stocks_to_list(stocks_table)
+        table_list = parse.extract_index_stocks_to_list(stocks_table)
         asserted_list = [['adidas', 'DE000A1EWWW0', 'adidas-Aktie'],
                          ['Allianz', 'DE0008404005', 'allianz-Aktie'],
                          ['BASF', 'DE000BASF111', 'basf-Aktie'],
@@ -34,7 +33,7 @@ class TestScrapping(unittest.TestCase):
 
     def test_pagination_getting(self):
         soup = scrap.get_soup_code_of_file('data/bo_index_stocks_pagination.html')
-        highest_pagination = ihs.get_max_page(soup)
+        highest_pagination = parse.get_max_page(soup)
         self.assertEqual(highest_pagination, 3)
 
     def test_get_market_cap(self):

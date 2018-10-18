@@ -1,7 +1,7 @@
 import unittest
 from utils import date_op as date
 from utils import db_op as db
-from Scrapper import db_refresher
+from Parser import db_refresher
 
 
 class TestDate(unittest.TestCase):

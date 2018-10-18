@@ -1,4 +1,4 @@
-from Scrapper import db_refresher
+from Parser import db_refresher
 import time
 
 

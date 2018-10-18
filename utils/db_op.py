@@ -5,7 +5,7 @@ import dataset
 
 
 def write_data(table_name, dictionary):
-    with dataset.connect('sqlite:///stockbase.db') as tx:
+    with dataset.connect('sqlite:///data/stockbase.db') as tx:
         tx[table_name].insert(dictionary)
 
 
@@ -16,13 +16,13 @@ def clear_index_contents(table_name, index_name):
     :param index_name: filtering one index_name, which will be cleared
     :return:
     """
-    with dataset.connect('sqlite:///stockbase.db') as tx:
+    with dataset.connect('sqlite:///data/stockbase.db') as tx:
         tx[table_name].delete(index=index_name)
     return True
 
 
 def get_max_date_of_index_history(index_name):
-    db = dataset.connect('sqlite:///stockbase.db')
+    db = dataset.connect('sqlite:///data/stockbase.db')
     try:
         dates = db.get_table('index_histories').find(index=index_name)
     except:
@@ -40,7 +40,7 @@ def get_max_date_of_index_history(index_name):
 
 
 def get_max_date_of_stock_history(stock_name):
-    db = dataset.connect('sqlite:///stockbase.db')
+    db = dataset.connect('sqlite:///data/stockbase.db')
     try:
         dates = db.get_table('stock_histories').find(stock=stock_name)
     except:
@@ -58,7 +58,7 @@ def get_max_date_of_stock_history(stock_name):
 
 
 def get_closing_price_from_date(request_date, index_name):
-    db = dataset.connect('sqlite:///stockbase.db')
+    db = dataset.connect('sqlite:///data/stockbase.db')
     q_date = date.date_to_string(request_date)
     result = db.get_table('index_histories').find(datum=q_date, index=index_name)
     for value in result:
@@ -66,7 +66,7 @@ def get_closing_price_from_date(request_date, index_name):
 
 
 def get_all_stock_infos(index_name):
-    db = dataset.connect('sqlite:///stockbase.db')
+    db = dataset.connect('sqlite:///data/stockbase.db')
     try:
         urls = db.get_table('index_stocks').find(index=index_name)
     except:

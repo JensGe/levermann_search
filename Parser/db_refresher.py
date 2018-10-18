@@ -1,7 +1,6 @@
 from utils import db_op as db
+from utils import parse_op as parse
 from utils import date_op as date
-from Scrapper import index_history_scrapper as ihs
-
 
 index_history_url = "https://www.boerse-online.de/index/historisch/"
 index_stocks_url = "https://www.boerse-online.de/index/liste/"
@@ -39,11 +38,11 @@ def refresh_index_history(index_name, start_date_str, end_date_str):
         print("---- Enddate less or equal than start date --- Don't Scrap")
         return False
     # start scrapping with calculated intervall
-    driver = ihs.init_driver()
-    content = ihs.get_index_history_content(driver, index_history_url, index_name, start_date_str, end_date_str)
+    driver = parse.init_driver()
+    content = parse.get_index_history_content(driver, index_history_url, index_name, start_date_str, end_date_str)
 
-    index_history = ihs.extract_history_table_to_list(content)
-    ihs.save_index_history_to_db(index_history, index_name)
+    index_history = parse.extract_history_table_to_list(content)
+    parse.save_index_history_to_db(index_history, index_name)
 
     driver.quit()
     return True
@@ -53,14 +52,14 @@ def refresh_index_stocks(index_name):
     """
     Scraps the current Stocks inside selected Index
     """
-    driver = ihs.init_driver()
-    content = ihs.get_index_stocks_content(driver, index_stocks_url, index_name)
+    driver = parse.init_driver()
+    content = parse.get_index_stocks_content(driver, index_stocks_url, index_name)
     index_stocks = []
     for index_stock_page in content:
-        index_stocks.extend(ihs.extract_index_stocks_to_list(index_stock_page))
+        index_stocks.extend(parse.extract_index_stocks_to_list(index_stock_page))
     # index_stocks = ihs.extract_index_stocks_to_list(content)
 
-    ihs.update_index_stocks_db(index_stocks, index_name)
+    parse.update_index_stocks_db(index_stocks, index_name)
     driver.quit()
 
 
@@ -103,11 +102,11 @@ def refresh_single_stock_history(stock, index_name, start_date_str, end_date_str
         return False
 
     # start scrapping with calculated intervall
-    driver = ihs.init_driver()
-    content = ihs.get_stock_history_content(driver, page_url, start_date_str, end_date_str)
+    driver = parse.init_driver()
+    content = parse.get_stock_history_content(driver, page_url, start_date_str, end_date_str)
 
-    stock_history = ihs.extract_history_table_to_list(content)
-    ihs.save_stock_history_to_db(stock_history, index_name, stock_name, stock_isin)
+    stock_history = parse.extract_history_table_to_list(content)
+    parse.save_stock_history_to_db(stock_history, index_name, stock_name, stock_isin)
 
     driver.quit()
 
