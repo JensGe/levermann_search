@@ -2,6 +2,8 @@ from utils import db_op as db
 from utils import parse_op as parse
 from utils import date_op as date
 
+from utils import scrap_op as scrap
+
 index_history_url = "https://www.boerse-online.de/index/historisch/"
 index_stocks_url = "https://www.boerse-online.de/index/liste/"
 stock_history_url = "https://www.boerse-online.de/kurse/historisch/"
@@ -111,3 +113,20 @@ def refresh_single_stock_history(stock, index_name, start_date_str, end_date_str
     driver.quit()
 
     return True
+
+
+def download_soups_for_stock(stock_short_link):
+    driver = scrap.init_driver()
+    download_list = scrap.create_download_list(stock_short_link)
+
+    for url in download_list:
+        soup = scrap.get_soup_code_of_url(driver, url)
+        file_name = 'data/' + stock_short_link + '/' + url.split('/')[3] + '_' + date.date_to_string(date.get_todays_date()) + '.html'
+        scrap.save_soup_to_file(soup, file_name)
+
+    scrap.close_driver(driver)
+
+
+def get_levermann_score(stock_short_link):
+
+    return levermann_score

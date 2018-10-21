@@ -1,3 +1,4 @@
+import re
 import time
 
 from utils import db_op as db
@@ -147,3 +148,79 @@ def save_stock_history_to_db(input_table, index_name, stock_name, isin):
                                               tageshoch=input_table[i][3],
                                               tagestief=input_table[i][3]))
     return True
+
+# V2
+# Stock / Company Infos
+
+
+def get_market_cap(soup):
+    market_cap = soup.find(text=re.compile('Marktkapitalisierung'))
+    return market_cap.find_next('td').contents[0].strip()
+
+
+def get_listed_indizes(soup):
+    indizes = soup.find_all('h2', text=re.compile('Zur Aktie'))
+    parent = []
+    for par in indizes:
+        parent.append(par.parent)
+    link_items = []
+    for items in parent:
+        links = items.find_all('a')
+        for link in links:
+            link_items.append(link.text)
+    return link_items
+
+
+def get_sectors(soup):
+    sectors = soup.find_all('h2', text=re.compile('Zum Unternehmen'))
+    parent = []
+    for item in sectors:
+        parent.append(item.parent)
+    link_items = []
+    for items in parent:
+        links = items.find_all('a')
+        for link in links:
+            link_items.append(link.text)
+    return link_items
+
+
+def get_historic_prices(soup):
+    history_table = soup.find_all("div", {"id": "historic-price-list"})
+    index_history = []
+    table_rows = []
+    for rows in history_table:
+        table_rows = rows.find_all('tr')
+        row_items = []
+        for items in table_rows[1:]:
+            row_items = items.find_all('td')
+            tds = [td.text for td in row_items]
+            index_history.append(tds)
+    return index_history
+
+
+def get_result_after_tax(soup):
+    result_td = soup.find('td', text=re.compile('Ergebnis nach Steuer'))
+    result_tr = result_td.parent
+    result_after_tax = result_tr.find_all('td')[-1].text.strip()
+    return result_after_tax
+
+
+def get_operative_result(soup):
+    result_td = soup.find('td', text=re.compile('Operatives Ergebnis'))
+    result_tr = result_td.parent
+    operative_result = result_tr.find_all('td')[-1].text.strip()
+    return operative_result
+
+
+def get_sales_revenue(soup):
+    result_td = soup.find('td', text=re.compile('Umsatzerlöse'))
+    result_tr = result_td.parent
+    sales_revenue = result_tr.find_all('td')[-1].text.strip()
+    return sales_revenue
+
+
+def get_total_assets(soup):
+    result_td = soup.find('td', text=re.compile('Bilanzsumme'))
+    result_tr = result_td.parent
+    total_assets = result_tr.find_all('td')[-1].text.strip()
+    return total_assets

@@ -43,20 +43,12 @@ class TestScrapping(unittest.TestCase):
         asserted_market_cap = '37,53 Mrd'
         self.assertEqual(asserted_market_cap, market_cap_value)
 
-    def test_stock_in_which_index_single(self):
-        soup = scrap.get_soup_code_of_file('data/bo_tesla-aktie.html')
-        index = soup.find('h2', text=re.compile('Zur Aktie'))
-        index_value = index.find_next('a').contents[0].strip()
-        asserted_index = 'NASDAQ 100'
-        self.assertEqual(asserted_index, index_value)
-
     def test_stock_in_which_index_multiple(self):
         soup = scrap.get_soup_code_of_file('data/bo_sap-aktie.html')
         indizes = soup.find_all('h2', text=re.compile('Zur Aktie'))
         parent = []
         for par in indizes:
             parent.append(par.parent)
-
         link_items = []
         for items in parent:
             links = items.find_all('a')
@@ -72,6 +64,56 @@ class TestScrapping(unittest.TestCase):
                                    'Schatten-Index-TecDAX']
 
         self.assertEqual(asserted_indizes_values, link_items)
+
+    def test_stock_sectors(self):
+        soup = scrap.get_soup_code_of_file('data/bo_sap-aktie.html')
+        indizes = soup.find_all('h2', text=re.compile('Zum Unternehmen'))
+        parent = []
+        for par in indizes:
+            parent.append(par.parent)
+        link_items = []
+        for items in parent:
+            links = items.find_all('a')
+            for link in links:
+                link_items.append(link.text)
+
+        asserted_indizes_values = ['Informationstechnologie', 'IT-Dienstleister',
+                                   'Server-/ Großrechner (Software)', 'Software']
+        self.assertEqual(asserted_indizes_values, link_items)
+
+    def test_get_historic_prices(self):
+        soup = scrap.get_soup_code_of_file('data/bo_index_history.html')
+        table_list = parse.get_historic_prices(soup)
+        asserted_list = [['06.09.2018', '11.955,25', '11.995,81', '12.091,98', '11.944,50'],
+                         ['07.09.2018', '11.959,63', '11.960,10', '11.990,81', '11.888,57'],
+                         ['10.09.2018', '11.986,34', '11.950,55', '12.039,22', '11.930,30'],
+                         ['11.09.2018', '11.970,27', '12.013,01', '12.017,73', '11.865,47'],
+                         ['12.09.2018', '12.032,30', '11.989,27', '12.046,66', '11.952,49']]
+        self.assertEqual(table_list[:5], asserted_list)
+
+    def test_get_result_after_tax(self):
+        soup = scrap.get_soup_code_of_file('data/bo_bilanz_guv.html')
+        result = parse.get_result_after_tax(soup)
+        asserted_result = '1353'
+        self.assertEqual(result, asserted_result)
+
+    def test_get_operative_result(self):
+        soup = scrap.get_soup_code_of_file('data/bo_bilanz_guv.html')
+        result = parse.get_operative_result(soup)
+        asserted_result = '1907,4'
+        self.assertEqual(result, asserted_result)
+
+    def test_get_sales_revenue(self):
+        soup = scrap.get_soup_code_of_file('data/bo_bilanz_guv.html')
+        result = parse.get_sales_revenue(soup)
+        asserted_result = '21218'
+        self.assertEqual(result, asserted_result)
+
+    def test_get_total_assets(self):
+        soup = scrap.get_soup_code_of_file('data/bo_bilanz_guv.html')
+        result = parse.get_total_assets(soup)
+        asserted_result = '14522'
+        self.assertEqual(result, asserted_result)
 
     def tearDown(self):
         pass
