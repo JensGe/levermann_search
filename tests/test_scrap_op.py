@@ -16,10 +16,11 @@ class TestScrapping(unittest.TestCase):
         date_before_one_year_str = date.date_to_string(date_before_one_year)
         download_list = scrap.create_download_list(stock_short_link)
         asserted_list = ['https://www.boerse-online.de/aktie/allianz-Aktie',
-                         'https://www.boerse-online.de/kurse/historisch/allianz/fse/' + date_before_one_year_str + '_' + date_today_str,
+                         'https://www.boerse-online.de/kurse/historisch/allianz/xetra/' + date_before_one_year_str + '_' + date_today_str,
                          'https://www.boerse-online.de/bilanz_guv/allianz',
                          'https://www.boerse-online.de/schaetzungen/allianz',
-                         'https://www.boerse-online.de/unternehmensprofil/allianz']
+                         'https://www.boerse-online.de/unternehmensprofil/allianz',
+                         'https://www.boerse-online.de/termine/uebersicht/allianz']
         self.assertEqual(download_list, asserted_list)
 
     def tearDown(self):

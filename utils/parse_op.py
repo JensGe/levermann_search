@@ -30,7 +30,8 @@ def init_driver():
     options.add_argument("--host-resolver-rules=MAP http://nuggad.net 127.0.0.1")
     options.add_argument("--host-resolver-rules=MAP https://adselect.nuggad.net 127.0.0.1")
     options.add_argument("--host-resolver-rules=MAP http://plista.com 127.0.0.1")
-    options.add_argument("--host-resolver-rules=MAP https://static-de.plista.com 127.0.0.1")
+    options.add_argument("--host-resolver-rules=MAP https://static-de.plista.com 127.0.0.1"
+                         "--host-resolver-rules=MAP http://audiencemanager.com 127.0.0.1")
 
     driver = webdriver.Firefox()
     driver.wait = WebDriverWait(driver, 5)
@@ -224,3 +225,43 @@ def get_total_assets(soup):
     result_tr = result_td.parent
     total_assets = result_tr.find_all('td')[-1].text.strip()
     return total_assets
+
+
+def get_current_value_of_attribute(soup, attribute):
+    result_td = soup.find('td', text=re.compile(attribute))
+    result_tr = result_td.parent
+    result = result_tr.find_all('td')[-1].text.strip()
+    return result
+
+
+def get_latest_date_of_list(date_list):
+    current_date = date.get_todays_date()
+    date_list_past = [date_ for date_ in date_list if date_ < current_date]
+    max_date = max(date_list_past)
+    return max_date
+
+
+def get_last_quarterly_figures_date(soup):
+    """
+    Calculates the newest, but in the past lying date, where a company event has
+    been held. Returns a date-object
+    :param soup:
+    :return: date
+    """
+    result_td = soup.find('h2', text=re.compile('vergangene Termine'))
+    parent_div = result_td.parent
+    dates = parent_div.find_all('td', {'class': 'text-right'})
+    date_list = [date.string_to_date(date_.text.strip()) for date_ in dates]
+    latest_date = get_latest_date_of_list(date_list)
+    return latest_date
+
+#ToDo aus Bilanz
+def get_result_per_share_last_two_years(soup):
+    pass
+
+#ToDo aus Schätzungen
+def get_result_per_share_current_and_next_two_years(soup):
+    pass
+
+
+

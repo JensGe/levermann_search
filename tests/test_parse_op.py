@@ -1,6 +1,7 @@
 import unittest
 from utils import scrap_op as scrap
 from utils import parse_op as parse
+from utils import date_op as date
 import re
 
 
@@ -113,6 +114,18 @@ class TestScrapping(unittest.TestCase):
         soup = scrap.get_soup_code_of_file('data/bo_bilanz_guv.html')
         result = parse.get_total_assets(soup)
         asserted_result = '14522'
+        self.assertEqual(result, asserted_result)
+
+    def test_get_equity_capital(self):
+        soup = scrap.get_soup_code_of_file('data/bo_unternehmensprofil.html')
+        result = parse.get_current_value_of_attribute(soup, 'Eigenkapital')
+        asserted_result = '6.435'
+        self.assertEqual(result, asserted_result)
+
+    def test_get_last_quarterly_figures_date(self):
+        soup = scrap.get_soup_code_of_file('data/bo_termine.html')
+        result = parse.get_last_quarterly_figures_date(soup)
+        asserted_result = date.string_to_date('09.08.18')
         self.assertEqual(result, asserted_result)
 
     def tearDown(self):

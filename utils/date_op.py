@@ -3,11 +3,17 @@ import dateutil.relativedelta
 
 
 def date_to_string(date):
-    return datetime.strftime(date, '%d.%m.%Y')
+    try:
+        return datetime.strftime(date, '%d.%m.%Y')
+    except ValueError:
+        return datetime.strftime(date, '%d.%m.%y')
 
 
 def string_to_date(string):
-    return datetime.strptime(string, '%d.%m.%Y')
+    try:
+        return datetime.strptime(string, '%d.%m.%Y')
+    except ValueError:
+        return datetime.strptime(string, '%d.%m.%y')
 
 
 def get_todays_date():

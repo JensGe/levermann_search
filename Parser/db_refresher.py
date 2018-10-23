@@ -127,6 +127,6 @@ def download_soups_for_stock(stock_short_link):
     scrap.close_driver(driver)
 
 
-def get_levermann_score(stock_short_link):
-
-    return levermann_score
+# def get_levermann_score(stock_short_link):
+#
+#     return levermann_score
