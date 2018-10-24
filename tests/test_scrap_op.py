@@ -20,7 +20,8 @@ class TestScrapping(unittest.TestCase):
                          'https://www.boerse-online.de/bilanz_guv/allianz',
                          'https://www.boerse-online.de/schaetzungen/allianz',
                          'https://www.boerse-online.de/unternehmensprofil/allianz',
-                         'https://www.boerse-online.de/termine/uebersicht/allianz']
+                         'https://www.boerse-online.de/termine/uebersicht/allianz',
+                         'https://www.boerse-online.de/kursziele/allianz']
         self.assertEqual(download_list, asserted_list)
 
     def tearDown(self):

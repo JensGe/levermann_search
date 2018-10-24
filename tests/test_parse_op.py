@@ -128,6 +128,34 @@ class TestScrapping(unittest.TestCase):
         asserted_result = date.string_to_date('09.08.18')
         self.assertEqual(result, asserted_result)
 
+    def test_get_result_per_share_last_two_years(self):
+        soup = scrap.get_soup_code_of_file('data/bo_bilanz_guv.html')
+        result_2016, result_2017 = parse.get_result_per_share_last_two_years(soup)
+        asserted_result_2016 = '5,08'
+        asserted_result_2017 = '6,69'
+        self.assertEqual(result_2016, asserted_result_2016)
+        self.assertEqual(result_2017, asserted_result_2017)
+
+    def test_get_result_per_share_current_and_next_two_years(self):
+        soup = scrap.get_soup_code_of_file('data/bo_schaetzungen.html')
+        result_2018, result_2019, result_2020 = parse.get_result_per_share_current_and_next_two_years(soup)
+        asserted_result_2018 = '8,22'
+        asserted_result_2019 = '9,54'
+        asserted_result_2020 = '10,92'
+        self.assertEqual(result_2018, asserted_result_2018)
+        self.assertEqual(result_2019, asserted_result_2019)
+        self.assertEqual(result_2020, asserted_result_2020)
+
+    def test_get_analyst_ratings(self):
+        soup = scrap.get_soup_code_of_file('data/bo_kursziele.html')
+        no_buy, no_hold, no_sell = parse.get_analyst_ratings(soup)
+        asserted_no_buy = '15'
+        asserted_no_hold = '8'
+        asserted_no_sell = '0'
+        self.assertEqual(no_buy, asserted_no_buy)
+        self.assertEqual(no_hold, asserted_no_hold)
+        self.assertEqual(no_sell, asserted_no_sell)
+
     def tearDown(self):
         pass
 

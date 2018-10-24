@@ -255,13 +255,27 @@ def get_last_quarterly_figures_date(soup):
     latest_date = get_latest_date_of_list(date_list)
     return latest_date
 
-#ToDo aus Bilanz
+
 def get_result_per_share_last_two_years(soup):
-    pass
+    result_td = soup.find('td', text=re.compile('Ergebnis je Aktie unverwässert'))
+    result_tr = result_td.parent
+    result_minus2 = result_tr.find_all('td')[-2].text.strip()
+    result_minus1 = result_tr.find_all('td')[-1].text.strip()
+    return result_minus2, result_minus1
 
-#ToDo aus Schätzungen
+
 def get_result_per_share_current_and_next_two_years(soup):
-    pass
+    result_td = soup.find('td', text=re.compile('Ergebnis/Aktie'))
+    result_tr = result_td.parent
+    result_current = result_tr.find_all('td')[3].text.strip()
+    result_plus1 = result_tr.find_all('td')[4].text.strip()
+    result_plus2 = result_tr.find_all('td')[5].text.strip()
+    return result_current, result_plus1, result_plus2
 
 
-
+def get_analyst_ratings(soup):
+    result_td = soup.find('td', {'class': 'historicRatingTdContent'})
+    values = result_td.find_all('span')
+    list = [value.text.strip() for value in values if value.has_attr('id')]
+    no_buy, no_hold, no_sell = list[0], list[1], list[2]
+    return no_buy, no_hold, no_sell

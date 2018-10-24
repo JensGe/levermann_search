@@ -14,7 +14,8 @@ urls = {'overview': ['https://www.boerse-online.de/aktie/', '-aktie'],
         'guv': ['https://www.boerse-online.de/bilanz_guv/', None],
         'estimate': ['https://www.boerse-online.de/schaetzungen/', None],
         'company': ['https://www.boerse-online.de/unternehmensprofil/', None],
-        'events': ['https://www.boerse-online.de/termine/uebersicht/', None]}
+        'events': ['https://www.boerse-online.de/termine/uebersicht/', None],
+        'goals': ['https://www.boerse-online.de/kursziele/', None]}
 
 
 def init_driver():
@@ -73,6 +74,7 @@ def create_download_list(stock_short_link):
     url_list.append(urls['estimate'][0] + stock_shorter_link)
     url_list.append(urls['company'][0] + stock_shorter_link)
     url_list.append(urls['events'][0] + stock_shorter_link)
+    url_list.append(urls['goals'][0] + stock_shorter_link)
     return url_list
 
 
