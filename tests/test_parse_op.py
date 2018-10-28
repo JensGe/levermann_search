@@ -180,6 +180,7 @@ class TestScrapping(unittest.TestCase):
         self.assertEqual(asserted_stock_list_first, stock_list[:3])
         self.assertEqual(asserted_stock_list_last, stock_list[-2:])
 
+
     def tearDown(self):
         pass
 

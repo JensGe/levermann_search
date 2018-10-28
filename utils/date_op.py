@@ -17,7 +17,7 @@ def string_to_date(string):
 
 
 def get_todays_date():
-    return datetime.now()
+    return datetime.now().date()
 
 
 def subtract_six_months(date):

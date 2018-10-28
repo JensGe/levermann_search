@@ -48,11 +48,23 @@ class TestDatabase(unittest.TestCase):
                              'https://www.boerse-online.de/index/liste/SMI']
         self.assertEqual(asserted_url_list, url_list)
 
-    def test_check_if_exists(self):
-        search = '010101'
-        table = 'Aktien'
-        column = 'ISIN'
-        self.assertEqual(True, db.check_if_exists(search, table, column))
+    # Not testable Tests
+    ####################
+    # def test_check_if_exists(self):
+    #     search = '010101'
+    #     table = 'Aktien'
+    #     column = 'ISIN'
+    #     self.assertEqual(True, db.check_if_exists(search, table, column))
+    #
+    # def test_write_stock_to_stock_table(self):
+    #     stock = ['Test1', 'XX00X0XX000', 'Test-Aktie']
+    #     db.write_stock_to_stock_table(stock)
+    #
+    # def test_write_stock_to_stock_content_table(self):
+    #     stock = 'XX00X0XX000'
+    #     index_name = 'dax'
+    #     current_date = date.get_todays_date()
+    #     db.write_stock_to_stock_contents_table(stock, index_name, current_date)
 
     def tearDown(self):
         pass

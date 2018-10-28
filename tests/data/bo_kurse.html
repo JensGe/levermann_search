@@ -10915,7 +10915,6 @@ function UABPear(){
     xhr.send(JSON.stringify(data));
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
-            // TODO is xhr.responseType necessary ?
             if (xhr.status === 200 && xhr.responseType === "json") {
                 
                 //w.uabpnl = (xhr.response.privateModeProbablity > minAntiTrackingProbablity);

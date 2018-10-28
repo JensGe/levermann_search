@@ -1,5 +1,6 @@
 from utils import date_op as date
 from utils import constants as CST
+import sqlalchemy
 
 import dataset
 
@@ -28,17 +29,32 @@ def create_index_content_url_list():
 def check_if_exists(search, table, column):
     with dataset.connect(CST.DATABASE) as database:
         results = database.query("SELECT %s FROM %s WHERE %s = '%s'" % (column, table, column, search))
-        result = [item for item in results][0]
+        try:
+            result = [item for item in results][0]
+        except IndexError:
+            return False
         return result[column] == search
 
 
-# def write_stock_list_to_db(stock_list, index_name):
-#     for stock in stock_list:
-#         if check_if_exists(stock[1], 'Aktien', 'ISIN'):
-#
-#     return True
+def write_stock_list_to_db(stock_list, index_name):
+    for stock in stock_list:
+        if not check_if_exists(stock[1], 'Aktien', 'ISIN'):
+            write_stock_to_stock_table(stock)
+        write_stock_to_stock_contents_table(stock[1], index_name, date.get_todays_date())
+    return True
 
 
+def write_stock_to_stock_table(stock):
+    with dataset.connect(CST.DATABASE) as database:
+        database['Aktien'].insert(dict(ISIN=stock[1], Name=stock[0], URI=stock[2]))
+
+
+def write_stock_to_stock_contents_table(isin, index_name, current_date):
+    with dataset.connect(CST.DATABASE) as database:
+        try:
+            database['Indexinhalte'].insert(dict(IndexURI=index_name, AktienISIN=isin, Abrufdatum=current_date))
+        except sqlalchemy.exc.IntegrityError:
+            pass
 
 
 ######## OLD
