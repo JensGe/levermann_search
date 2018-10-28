@@ -2,18 +2,42 @@ from Scraper import scraper
 from Parser import parser
 
 
-print('##################################')
-print('# (1) Scrap Index Content Sites  #')
-print('# (2) Write Index Contents to DB #')
-print('#                                #')
-print('##################################')
+root_menu = True
 
-selection = input('# > ')
+while root_menu:
+    print('Main Menu')
+    print('(1) Scraping')
+    print('(2) Parsing')
+    print('---------------')
+    print('(x) Exit')
 
-if selection == '1':
-    scraper.scrap_index_content_sites()
-elif selection == '2':
-    parser.write_index_contents_from_html_to_db()
-else:
-    quit(0)
+    menu_selection = str(input('> '))
 
+    if menu_selection == '1':
+        menu_1 = True
+        while menu_1:
+            print('Sub Menu 1: Scraping')
+            print('(1) Scrap Index Contents')
+            print('------------------------')
+            print('(x) Back')
+            menu_1_selection = str(input('> '))
+            if menu_1_selection == '1':
+                scraper.scrap_index_content_sites()
+            elif menu_1_selection == 'x':
+                menu_1 = False
+
+    elif menu_selection == '2':
+        menu_2 = True
+        while menu_2:
+            print('Sub Menu 2: Parsing')
+            print('(1) Write Index Contents to DB')
+            print('------------------------------')
+            print('(x) Back')
+            menu_2_selection = str(input('> '))
+            if menu_2_selection == '1':
+                parser.write_index_contents_from_html_to_db()
+            elif menu_2_selection == 'x':
+                menu_2 = False
+
+    elif menu_selection == 'x':
+        root_menu = False
