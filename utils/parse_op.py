@@ -150,6 +150,9 @@ def save_stock_history_to_db(input_table, index_name, stock_name, isin):
                                               tagestief=input_table[i][3]))
     return True
 
+
+
+
 # V2
 # Stock / Company Infos
 
@@ -279,3 +282,19 @@ def get_analyst_ratings(soup):
     list = [value.text.strip() for value in values if value.has_attr('id')]
     no_buy, no_hold, no_sell = list[0], list[1], list[2]
     return no_buy, no_hold, no_sell
+
+
+def get_closing_price_from_date(soup, date_str):
+    result_td = soup.find('td', text=re.compile(date_str))
+    result_tr = result_td.parent
+    closing_price = result_tr.find_all('td')[2].text.strip()
+    return closing_price
+
+
+def get_closing_price_from_date_before(soup, date_str):
+    result_td = soup.find('td', text=re.compile(date_str))
+    parent_tr = result_td.parent
+    results = parent_tr.next_sibling.next_sibling.find_all('td')
+    return results[2].text.strip()
+
+

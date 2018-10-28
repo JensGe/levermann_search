@@ -8,13 +8,13 @@ class TestScrapping(unittest.TestCase):
     def setUp(self):
         pass
 
-    def test_create_download_list(self):
+    def test_create_stock_download_list(self):
         stock_short_link = 'allianz-Aktie'
         date_today = date.get_todays_date()
         date_before_one_year = date.subtract_one_year(date_today)
         date_today_str = date.date_to_string(date_today)
         date_before_one_year_str = date.date_to_string(date_before_one_year)
-        download_list = scrap.create_download_list(stock_short_link)
+        download_list = scrap.create_stock_download_list(stock_short_link)
         asserted_list = ['https://www.boerse-online.de/aktie/allianz-Aktie',
                          'https://www.boerse-online.de/kurse/historisch/allianz/xetra/' + date_before_one_year_str + '_' + date_today_str,
                          'https://www.boerse-online.de/bilanz_guv/allianz',
@@ -22,7 +22,9 @@ class TestScrapping(unittest.TestCase):
                          'https://www.boerse-online.de/unternehmensprofil/allianz',
                          'https://www.boerse-online.de/termine/uebersicht/allianz',
                          'https://www.boerse-online.de/kursziele/allianz']
-        self.assertEqual(download_list, asserted_list)
+        self.assertEqual(asserted_list, download_list)
+
+
 
     def tearDown(self):
         pass

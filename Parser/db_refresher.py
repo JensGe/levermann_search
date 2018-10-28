@@ -66,7 +66,7 @@ def refresh_index_stocks(index_name):
 
 
 def select_stock_intervall(stock_name):
-    """ calculate Intervall to be used in scrapping
+    """ calculate Intervall to be used in parsing
         therefore uses latest date in DB + 1
         if DB is empty, the intervall will be one year ago to today
     :param stock_name: the stocks name
@@ -117,7 +117,7 @@ def refresh_single_stock_history(stock, index_name, start_date_str, end_date_str
 
 def download_soups_for_stock(stock_short_link):
     driver = scrap.init_driver()
-    download_list = scrap.create_download_list(stock_short_link)
+    download_list = scrap.create_stock_download_list(stock_short_link)
 
     for url in download_list:
         soup = scrap.get_soup_code_of_url(driver, url)

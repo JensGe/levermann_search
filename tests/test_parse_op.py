@@ -152,9 +152,21 @@ class TestScrapping(unittest.TestCase):
         asserted_no_buy = '15'
         asserted_no_hold = '8'
         asserted_no_sell = '0'
-        self.assertEqual(no_buy, asserted_no_buy)
-        self.assertEqual(no_hold, asserted_no_hold)
-        self.assertEqual(no_sell, asserted_no_sell)
+        self.assertEqual(asserted_no_buy, no_buy)
+        self.assertEqual(asserted_no_hold, no_hold)
+        self.assertEqual(asserted_no_sell, no_sell)
+
+    def test_get_closing_price_from_date(self):
+        soup = scrap.get_soup_code_of_file('data/bo_kurse.html')
+        closing_price = parse.get_closing_price_from_date(soup, '09.08.2018')
+        asserted_price = '208,50'
+        self.assertEqual(asserted_price, closing_price)
+
+    def test_get_closing_price_from_date_before(self):
+        soup = scrap.get_soup_code_of_file('data/bo_kurse.html')
+        closing_price = parse.get_closing_price_from_date_before(soup, '09.08.2018')
+        asserted_price = '190,55'
+        self.assertEqual(asserted_price, closing_price)
 
     def tearDown(self):
         pass

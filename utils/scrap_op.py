@@ -2,6 +2,7 @@ import time, os
 
 from utils import db_op as db
 from utils import date_op as date
+from utils import constants as CST
 
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
@@ -61,7 +62,7 @@ def save_soup_to_file(soup, file):
     return True
 
 
-def create_download_list(stock_short_link):
+def create_stock_download_list(stock_short_link):
     url_list = []
     stock_shorter_link = stock_short_link[:-6]
     date_today = date.get_todays_date()
