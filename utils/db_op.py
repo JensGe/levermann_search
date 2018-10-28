@@ -21,9 +21,22 @@ def create_index_content_url_list():
     url_list = []
     index_list = get_index_names()
     for index in index_list:
-        for i in range(get_pages_count(index)):
-            url_list.append(CST.URL_INDEX_CONTENT + index + '?p=' + str(i+1))
+        url_list.append(CST.URL_INDEX_CONTENT + index)
     return url_list
+
+
+def check_if_exists(search, table, column):
+    with dataset.connect(CST.DATABASE) as database:
+        results = database.query("SELECT %s FROM %s WHERE %s = '%s'" % (column, table, column, search))
+        result = [item for item in results][0]
+        return result[column] == search
+
+
+# def write_stock_list_to_db(stock_list, index_name):
+#     for stock in stock_list:
+#         if check_if_exists(stock[1], 'Aktien', 'ISIN'):
+#
+#     return True
 
 
 

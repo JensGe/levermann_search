@@ -4,7 +4,7 @@ from utils import db_op as db
 from Parser import db_refresher
 
 
-class TestDate(unittest.TestCase):
+class TestDatabase(unittest.TestCase):
 
     def setUp(self):
         pass
@@ -40,15 +40,19 @@ class TestDate(unittest.TestCase):
 
     def test_create_index_content_url_list(self):
         url_list = db.create_index_content_url_list()
-        asserted_url_list = ['https://www.boerse-online.de/index/liste/CAC_40?p=1',
-                             'https://www.boerse-online.de/index/liste/dax?p=1',
-                             'https://www.boerse-online.de/index/liste/dow_jones?p=1',
-                             'https://www.boerse-online.de/index/liste/Euro_Stoxx_50?p=1',
-                             'https://www.boerse-online.de/index/liste/FTSE_100?p=1',
-                             'https://www.boerse-online.de/index/liste/FTSE_100?p=2',
-                             'https://www.boerse-online.de/index/liste/FTSE_100?p=3',
-                             'https://www.boerse-online.de/index/liste/SMI?p=1']
+        asserted_url_list = ['https://www.boerse-online.de/index/liste/CAC_40',
+                             'https://www.boerse-online.de/index/liste/dax',
+                             'https://www.boerse-online.de/index/liste/dow_jones',
+                             'https://www.boerse-online.de/index/liste/Euro_Stoxx_50',
+                             'https://www.boerse-online.de/index/liste/FTSE_100',
+                             'https://www.boerse-online.de/index/liste/SMI']
         self.assertEqual(asserted_url_list, url_list)
+
+    def test_check_if_exists(self):
+        search = '010101'
+        table = 'Aktien'
+        column = 'ISIN'
+        self.assertEqual(True, db.check_if_exists(search, table, column))
 
     def tearDown(self):
         pass

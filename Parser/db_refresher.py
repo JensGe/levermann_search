@@ -40,7 +40,7 @@ def refresh_index_history(index_name, start_date_str, end_date_str):
         print("---- Enddate less or equal than start date --- Don't Scrap")
         return False
     # start scrapping with calculated intervall
-    driver = parse.init_driver()
+    driver = scrap.init_driver()
     content = parse.get_index_history_content(driver, index_history_url, index_name, start_date_str, end_date_str)
 
     index_history = parse.extract_history_table_to_list(content)
@@ -54,7 +54,7 @@ def refresh_index_stocks(index_name):
     """
     Scraps the current Stocks inside selected Index
     """
-    driver = parse.init_driver()
+    driver = scrap.init_driver()
     content = parse.get_index_stocks_content(driver, index_stocks_url, index_name)
     index_stocks = []
     for index_stock_page in content:
@@ -104,7 +104,7 @@ def refresh_single_stock_history(stock, index_name, start_date_str, end_date_str
         return False
 
     # start scrapping with calculated intervall
-    driver = parse.init_driver()
+    driver = scrap.init_driver()
     content = parse.get_stock_history_content(driver, page_url, start_date_str, end_date_str)
 
     stock_history = parse.extract_history_table_to_list(content)

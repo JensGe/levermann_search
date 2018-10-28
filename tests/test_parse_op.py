@@ -21,20 +21,20 @@ class TestScrapping(unittest.TestCase):
                          ['12.09.2018', '12.032,30', '11.989,27', '12.046,66', '11.952,49']]
         self.assertEqual(table_list[:5], asserted_list)
 
-    def test_index_stocks_list_extract(self):
-        soup = scrap.get_soup_code_of_file('data/bo_index_stocks.html')
-        stocks_table = soup.find_all('div', {'id': 'index-list-container'})
-        table_list = parse.extract_index_stocks_to_list(stocks_table)
-        asserted_list = [['adidas', 'DE000A1EWWW0', 'adidas-Aktie'],
-                         ['Allianz', 'DE0008404005', 'allianz-Aktie'],
-                         ['BASF', 'DE000BASF111', 'basf-Aktie'],
-                         ['Bayer', 'DE000BAY0017', 'bayer-Aktie'],
-                         ['Beiersdorf', 'DE0005200000', 'beiersdorf-Aktie']]
-        self.assertEqual(table_list[:5], asserted_list)
+    # def test_index_stocks_list_extract(self):
+    #     soup = scrap.get_soup_code_of_file('data/bo_index_stocks.html')
+    #     stocks_table = soup.find_all('div', {'id': 'index-list-container'})
+    #     table_list = parse.extract_index_stocks_to_list(stocks_table)
+    #     asserted_list = [['adidas', 'DE000A1EWWW0', 'adidas-Aktie'],
+    #                      ['Allianz', 'DE0008404005', 'allianz-Aktie'],
+    #                      ['BASF', 'DE000BASF111', 'basf-Aktie'],
+    #                      ['Bayer', 'DE000BAY0017', 'bayer-Aktie'],
+    #                      ['Beiersdorf', 'DE0005200000', 'beiersdorf-Aktie']]
+    #     self.assertEqual(table_list[:5], asserted_list)
 
     def test_pagination_getting(self):
         soup = scrap.get_soup_code_of_file('data/bo_index_stocks_pagination.html')
-        highest_pagination = parse.get_max_page(soup)
+        highest_pagination = scrap.get_max_page(soup)
         self.assertEqual(highest_pagination, 3)
 
     def test_get_market_cap(self):
@@ -167,6 +167,18 @@ class TestScrapping(unittest.TestCase):
         closing_price = parse.get_closing_price_from_date_before(soup, '09.08.2018')
         asserted_price = '190,55'
         self.assertEqual(asserted_price, closing_price)
+
+    def test_get_stock_table_of_index(self):
+        soup = scrap.get_soup_code_of_file('data/bo_FTSE_100.html')
+        asserted_stock_list_first = [['3i', 'GB00B1YW4409', '3i-Aktie'],
+                                     ['Admiral Group', 'GB00B02J6398', 'admiral_group-Aktie'],
+                                     ['Anglo American', 'GB00B1XZS820', 'anglo_american-Aktie']]
+        asserted_stock_list_last = [['WPP 2012', 'JE00B8KF9B49', 'wpp_2012-Aktie'],
+                                    ['WPP 2012', 'JE00B8KF9B49', 'wpp_2012-Aktie']]
+
+        stock_list = parse.get_stock_list_of_single_index(soup)
+        self.assertEqual(asserted_stock_list_first, stock_list[:3])
+        self.assertEqual(asserted_stock_list_last, stock_list[-2:])
 
     def tearDown(self):
         pass
