@@ -18,11 +18,11 @@ def get_pages_count(index_name):
         return int(result[0])
 
 
-def create_index_content_url_list():
+def create_index_content_url_list(url_type):
     url_list = []
     index_list = get_index_names()
     for index in index_list:
-        url_list.append(CST.URL_INDEX_CONTENT + index)
+        url_list.append(url_type + index)
     return url_list
 
 

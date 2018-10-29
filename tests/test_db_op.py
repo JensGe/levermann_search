@@ -2,6 +2,7 @@ import unittest
 from utils import date_op as date
 from utils import db_op as db
 from Parser import db_refresher
+from utils import constants as CST
 
 
 class TestDatabase(unittest.TestCase):
@@ -39,14 +40,14 @@ class TestDatabase(unittest.TestCase):
         self.assertEqual(asserted_pages_2, pages_2)
 
     def test_create_index_content_url_list(self):
-        url_list = db.create_index_content_url_list()
+        url_list = db.create_index_content_url_list(CST.URL_INDEX_CONTENT)
         asserted_url_list = ['https://www.boerse-online.de/index/liste/CAC_40',
                              'https://www.boerse-online.de/index/liste/dax',
                              'https://www.boerse-online.de/index/liste/dow_jones',
                              'https://www.boerse-online.de/index/liste/Euro_Stoxx_50',
                              'https://www.boerse-online.de/index/liste/FTSE_100',
                              'https://www.boerse-online.de/index/liste/SMI']
-        self.assertEqual(asserted_url_list, url_list)
+        self.assertEqual(asserted_url_list, url_list[:6])
 
     # Not testable Tests
     ####################
