@@ -8,14 +8,24 @@ from utils import scrap_op as scrap
 from bs4 import BeautifulSoup
 
 
-
-
 # Index Histories
-def get_index_history_content(driver, url, index, start_date, end_date):
-    driver.get(url + index + "/" + start_date + "_" + end_date)
-    soup = BeautifulSoup(driver.page_source, "html.parser")
+def get_historic_prices(soup):
     history_table = soup.find_all("div", {"id": "historic-price-list"})
-    return history_table
+    index_history = []
+    table_rows = []
+    for rows in history_table:
+        table_rows = rows.find_all('tr')
+        row_items = []
+        for items in table_rows[1:]:
+            row_items = items.find_all('td')
+            tds = [td.text.strip() for td in row_items]
+            index_history.append(tds)
+    return index_history
+
+
+def convert_index_history_list(index_history):
+    return [[list_[0], float(list_[1].replace('.','').replace(',','.')), float(list_[2].replace('.','').replace(',','.'))] for list_ in index_history]
+
 
 
 def extract_history_table_to_list(input_table):
@@ -134,19 +144,6 @@ def get_sectors(soup):
             link_items.append(link.text)
     return link_items
 
-
-def get_historic_prices(soup):
-    history_table = soup.find_all("div", {"id": "historic-price-list"})
-    index_history = []
-    table_rows = []
-    for rows in history_table:
-        table_rows = rows.find_all('tr')
-        row_items = []
-        for items in table_rows[1:]:
-            row_items = items.find_all('td')
-            tds = [td.text for td in row_items]
-            index_history.append(tds)
-    return index_history
 
 
 def get_result_after_tax(soup):

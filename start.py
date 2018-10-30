@@ -34,11 +34,14 @@ while root_menu:
         while menu_2:
             print('Sub Menu 2: Parsing')
             print('(1) Write Index Contents to DB')
+            print('(2) Write Index Histories to DB')
             print('------------------------------')
             print('(x) Back')
             menu_2_selection = str(input('> '))
             if menu_2_selection == '1':
                 parser.write_index_contents_from_html_to_db()
+            elif menu_2_selection == '2':
+                parser.write_index_histories_from_html_to_db()
             elif menu_2_selection == 'x':
                 menu_2 = False
 

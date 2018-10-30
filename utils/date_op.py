@@ -11,6 +11,13 @@ def date_to_string(date):
 
 def string_to_date(string):
     try:
+        return datetime.strptime(string, '%d.%m.%Y').date()
+    except ValueError:
+        return datetime.strptime(string, '%d.%m.%y').date()
+
+
+def string_to_datetime(string):
+    try:
         return datetime.strptime(string, '%d.%m.%Y')
     except ValueError:
         return datetime.strptime(string, '%d.%m.%y')

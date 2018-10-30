@@ -67,6 +67,13 @@ class TestDatabase(unittest.TestCase):
     #     current_date = date.get_todays_date()
     #     db.write_stock_to_stock_contents_table(stock, index_name, current_date)
 
+    def test_write_stock_history_to_db(self):
+        index_URI = 'CAC_40'
+        index_history = [['01.10.2018', 9127.05, 9094.28],
+                         ['02.10.2018', 9087.32, 9076.57],
+                         ['03.10.2018', 9175.21, 9126.31]]
+        db.write_stock_history_to_db(index_history, index_URI)
+
     def tearDown(self):
         pass
 

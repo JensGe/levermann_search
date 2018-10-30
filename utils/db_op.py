@@ -57,6 +57,20 @@ def write_stock_to_stock_contents_table(isin, index_name, current_date):
             pass
 
 
+def write_stock_history_to_db(index_history, index_URI):
+    with dataset.connect(CST.DATABASE) as database:
+        for item in index_history:
+            date_ = date.string_to_date(item[0])
+            start = float(item[1].replace('.', '').replace(',', '.'))
+            end = float(item[2].replace('.', '').replace(',', '.'))
+            try:
+                database['Indexhistorien'].insert(dict(IndexURI=index_URI, Datum=date_,
+                                                       Eroeffnungswert=start, Schlusswert=end))
+            except sqlalchemy.exc.IntegrityError:
+                pass
+
+
+
 ######## OLD
 ################################################
 def select_data(table):

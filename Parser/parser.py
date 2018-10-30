@@ -11,7 +11,18 @@ def write_index_contents_from_html_to_db():
     for file in file_list:
         index_content_soup = scrap.get_soup_code_of_file(file)
         stock_list = parse.get_stock_list_of_single_index(index_content_soup)
-        index_name = file.split('/')[-1][:-5]
-        db.write_stock_list_to_db(stock_list, index_name)
+        index_URI = file.split('/')[-1][:-5]
+        db.write_stock_list_to_db(stock_list, index_URI)
 
     return True
+
+
+def write_index_histories_from_html_to_db():
+    index_list = db.get_index_names()
+    file_list = [CST.INDEX_HISTORY_PATH + index + CST.EXT_HTML for index in index_list]
+    for file in file_list:
+        index_history_soup = scrap.get_soup_code_of_file(file)
+        index_history_list = parse.get_historic_prices(index_history_soup)
+
+        index_URI = file.split('/')[-1][:-5]
+        db.write_stock_history_to_db(index_history_list, index_URI)

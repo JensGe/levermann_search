@@ -82,16 +82,6 @@ class TestScrapping(unittest.TestCase):
                                    'Server-/ Großrechner (Software)', 'Software']
         self.assertEqual(asserted_indizes_values, link_items)
 
-    def test_get_historic_prices(self):
-        soup = scrap.get_soup_code_of_file('data/bo_index_history.html')
-        table_list = parse.get_historic_prices(soup)
-        asserted_list = [['06.09.2018', '11.955,25', '11.995,81', '12.091,98', '11.944,50'],
-                         ['07.09.2018', '11.959,63', '11.960,10', '11.990,81', '11.888,57'],
-                         ['10.09.2018', '11.986,34', '11.950,55', '12.039,22', '11.930,30'],
-                         ['11.09.2018', '11.970,27', '12.013,01', '12.017,73', '11.865,47'],
-                         ['12.09.2018', '12.032,30', '11.989,27', '12.046,66', '11.952,49']]
-        self.assertEqual(table_list[:5], asserted_list)
-
     def test_get_result_after_tax(self):
         soup = scrap.get_soup_code_of_file('data/bo_bilanz_guv.html')
         result = parse.get_result_after_tax(soup)
@@ -180,6 +170,30 @@ class TestScrapping(unittest.TestCase):
         self.assertEqual(asserted_stock_list_first, stock_list[:3])
         self.assertEqual(asserted_stock_list_last, stock_list[-2:])
 
+    def test_get_historic_prices(self):
+        soup = scrap.get_soup_code_of_file('data/bo_index_history_big.html')
+        table_list = parse.get_historic_prices(soup)
+        asserted_list = [['01.10.2018', 9127.05, 9094.28],
+                         ['02.10.2018', 9087.32, 9076.57],
+                         ['03.10.2018', 9175.21, 9126.31]]
+        self.assertEqual(table_list[:3], asserted_list)
+
+    def test_convert_index_history_list(self):
+        insert_list = [['01.10.2018', '9.127,05', '9.094,28', '9.155,65', '9.084,22'],
+                       ['02.10.2018', '9.087,32', '9.076,57', '9.090,46', '9.050,50'],
+                       ['03.10.2018', '9.175,21', '9.126,31', '9.194,99', '9.123,48']]
+        asserted_list = [['01.10.2018', 9127.05, 9094.28],
+                         ['02.10.2018', 9087.32, 9076.57],
+                         ['03.10.2018', 9175.21, 9126.31]]
+        self.assertEqual(asserted_list, parse.convert_index_history_list(insert_list))
+
+    # def test_get_historic_prices_big_html(self):
+    #     soup = scrap.get_soup_code_of_file('data/bo_index_history_big.html')
+    #     table_list = parse.get_historic_prices(soup)
+    #     asserted_list = [['01.10.2018', '9.127,05', '9.094,28', '9.155,65', '9.084,22'],
+    #                      ['02.10.2018', '9.087,32', '9.076,57', '9.090,46', '9.050,50'],
+    #                      ['03.10.2018', '9.175,21', '9.126,31', '9.194,99', '9.123,48']]
+    #     self.assertEqual(table_list[:3], asserted_list)
 
     def tearDown(self):
         pass
