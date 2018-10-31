@@ -10,7 +10,7 @@ stock_history_url = "https://www.boerse-online.de/kurse/historisch/"
 
 
 def select_index_intervall(index_name):
-    """ calculate Intervall to be used in scrapping
+    """ calculate Intervall to be used in scraping
         therefore uses latest date in DB + 1
         if DB is empty, the intervall will be one year ago to today
     :param index_name: the stockindex's name
