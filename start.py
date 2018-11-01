@@ -20,14 +20,18 @@ while root_menu:
             print('(1) Scrap Index Contents')
             print('(2) Scrap Index Histories')
             print('------------------------')
-            print('(x) Back')
+            print('(u) Up')
+            print('(x) Exit')
             menu_1_selection = str(input('> '))
             if menu_1_selection == '1':
                 scraper.scrap_index_content_sites()
             if menu_1_selection == '2':
                 scraper.scrap_index_content_histories()
+            elif menu_1_selection == 'u':
+                menu_1 = False
             elif menu_1_selection == 'x':
                 menu_1 = False
+                root_menu = False
 
     elif menu_selection == '2':
         menu_2 = True
@@ -36,14 +40,18 @@ while root_menu:
             print('(1) Write Index Contents to DB')
             print('(2) Write Index Histories to DB')
             print('------------------------------')
-            print('(x) Back')
+            print('(u) Up')
+            print('(x) Exit')
             menu_2_selection = str(input('> '))
             if menu_2_selection == '1':
                 parser.write_index_contents_from_html_to_db()
             elif menu_2_selection == '2':
                 parser.write_index_histories_from_html_to_db()
+            elif menu_2_selection == 'u':
+                menu_2 = False
             elif menu_2_selection == 'x':
                 menu_2 = False
+                root_menu = False
 
     elif menu_selection == 'x':
         root_menu = False

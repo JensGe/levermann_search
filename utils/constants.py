@@ -17,3 +17,8 @@ INDEX_HISTORY_PATH = 'data/indizes/history/'
 
 
 EXT_HTML = '.html'
+
+
+# Database Tables
+
+TABLE_INDEX_HISTORIES = 'Indexhistorien'

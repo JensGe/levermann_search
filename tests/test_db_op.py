@@ -49,7 +49,7 @@ class TestDatabase(unittest.TestCase):
                              'https://www.boerse-online.de/index/liste/SMI']
         self.assertEqual(asserted_url_list, url_list[:6])
 
-    # Not testable Tests
+    # DB Tests
     ####################
     # def test_check_if_exists(self):
     #     search = '010101'
@@ -66,13 +66,21 @@ class TestDatabase(unittest.TestCase):
     #     index_name = 'dax'
     #     current_date = date.get_todays_date()
     #     db.write_stock_to_stock_contents_table(stock, index_name, current_date)
+    #
+    # def test_write_stock_history_to_db(self):
+    #     index_URI = 'CAC_40'
+    #     index_history = [['01.10.2018', 9127.05, 9094.28],
+    #                      ['02.10.2018', 9087.32, 9076.57],
+    #                      ['03.10.2018', 9175.21, 9126.31]]
+    #     db.write_stock_history_to_db(index_history, index_URI)
 
-    def test_write_stock_history_to_db(self):
-        index_URI = 'CAC_40'
-        index_history = [['01.10.2018', 9127.05, 9094.28],
-                         ['02.10.2018', 9087.32, 9076.57],
-                         ['03.10.2018', 9175.21, 9126.31]]
-        db.write_stock_history_to_db(index_history, index_URI)
+    def test_get_latest_date_from_history(self):
+        index_uri = 'dax'
+        latest_date = db.get_latest_date_from_history(index_uri)
+        asserted_date = date.string_to_date('29.10.2018')
+        self.assertEqual(asserted_date, latest_date)
+
+
 
     def tearDown(self):
         pass

@@ -62,13 +62,25 @@ def write_stock_history_to_db(index_history, index_URI):
         for item in index_history:
             date_ = date.string_to_date(item[0])
             start = float(item[1].replace('.', '').replace(',', '.'))
-            end = float(item[2].replace('.', '').replace(',', '.'))
+            try:
+                end = float(item[2].replace('.', '').replace(',', '.'))
+            except ValueError:
+                print(item[2])
             try:
                 database['Indexhistorien'].insert(dict(IndexURI=index_URI, Datum=date_,
                                                        Eroeffnungswert=start, Schlusswert=end))
             except sqlalchemy.exc.IntegrityError:
                 pass
 
+
+def get_latest_date_from_history(index_uri):
+    with dataset.connect(CST.DATABASE) as database:
+        results = database.query("SELECT max(Datum) as maxdate FROM %s WHERE IndexURI = '%s'" %(CST.TABLE_INDEX_HISTORIES, index_uri))
+        try:
+            result = [item for item in results][0]
+        except IndexError:
+            return False
+        return result['maxdate']
 
 
 ######## OLD

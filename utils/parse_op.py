@@ -27,7 +27,6 @@ def convert_index_history_list(index_history):
     return [[list_[0], float(list_[1].replace('.','').replace(',','.')), float(list_[2].replace('.','').replace(',','.'))] for list_ in index_history]
 
 
-
 def extract_history_table_to_list(input_table):
     index_history = []
     table_rows = []
