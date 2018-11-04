@@ -40,7 +40,7 @@ class TestDatabase(unittest.TestCase):
         self.assertEqual(asserted_pages_2, pages_2)
 
     def test_create_index_content_url_list(self):
-        url_list = db.create_index_content_url_list(CST.URL_INDEX_CONTENT)
+        url_list = db.create_index_url_list(CST.URL_INDEX_CONTENT)
         asserted_url_list = ['https://www.boerse-online.de/index/liste/CAC_40',
                              'https://www.boerse-online.de/index/liste/dax',
                              'https://www.boerse-online.de/index/liste/dow_jones',
@@ -48,6 +48,7 @@ class TestDatabase(unittest.TestCase):
                              'https://www.boerse-online.de/index/liste/FTSE_100',
                              'https://www.boerse-online.de/index/liste/SMI']
         self.assertEqual(asserted_url_list, url_list[:6])
+
 
     # DB Tests
     ####################
@@ -76,7 +77,7 @@ class TestDatabase(unittest.TestCase):
 
     def test_get_latest_date_from_history(self):
         index_uri = 'dax'
-        latest_date = db.get_latest_date_from_history(index_uri)
+        latest_date = db.get_latest_date_from_index_history(index_uri)
         asserted_date = date.string_to_date('29.10.2018')
         self.assertEqual(asserted_date, latest_date)
 

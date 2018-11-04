@@ -7,22 +7,32 @@ import dataset
 
 def get_index_names():
     with dataset.connect(CST.DATABASE) as database:
-        index_list = [item['URI'] for item in database['Aktienindizes']]
+        index_list = [item[CST.COLUMN_URI] for item in database[CST.TABLE_INDIZES]]
     return index_list
+
+
+def get_stock_names():
+    with dataset.connect(CST.DATABASE) as database:
+        stock_list = [item[CST.COLUMN_URI] for item in database[CST.TABLE_STOCKS]]
+    return stock_list
 
 
 def get_pages_count(index_name):
     with dataset.connect(CST.DATABASE) as database:
-        table = database['Aktienindizes'].find(URI=index_name)
-        result = [item['Seiten'] for item in table]
+        table = database[CST.TABLE_INDIZES].find(URI=index_name)
+        result = [item[CST.COLUMN_PAGES] for item in table]
         return int(result[0])
 
 
-def create_index_content_url_list(url_type):
-    url_list = []
+def create_index_url_list(base_url):
     index_list = get_index_names()
-    for index in index_list:
-        url_list.append(url_type + index)
+    url_list = [base_url + index for index in index_list]
+    return url_list
+
+
+def create_stock_url_list(base_url):
+    stock_list = get_stock_names()
+    url_list = [base_url + stock + CST.EXCHANGE_APPENDIX for stock in stock_list]
     return url_list
 
 
@@ -46,13 +56,13 @@ def write_stock_list_to_db(stock_list, index_name):
 
 def write_stock_to_stock_table(stock):
     with dataset.connect(CST.DATABASE) as database:
-        database['Aktien'].insert(dict(ISIN=stock[1], Name=stock[0], URI=stock[2]))
+        database[CST.TABLE_STOCKS].insert(dict(ISIN=stock[1], Name=stock[0], URI=stock[2]))
 
 
 def write_stock_to_stock_contents_table(isin, index_name, current_date):
     with dataset.connect(CST.DATABASE) as database:
         try:
-            database['Indexinhalte'].insert(dict(IndexURI=index_name, AktienISIN=isin, Abrufdatum=current_date))
+            database[CST.TABLE_INDEX_CONTENTS].insert(dict(IndexURI=index_name, AktienISIN=isin, Abrufdatum=current_date))
         except sqlalchemy.exc.IntegrityError:
             pass
 
@@ -67,15 +77,25 @@ def write_stock_history_to_db(index_history, index_URI):
             except ValueError:
                 print(item[2])
             try:
-                database['Indexhistorien'].insert(dict(IndexURI=index_URI, Datum=date_,
-                                                       Eroeffnungswert=start, Schlusswert=end))
+                database[CST.TABLE_INDEX_HISTORIES].insert(dict(IndexURI=index_URI, Datum=date_,
+                                                                Eroeffnungswert=start, Schlusswert=end))
             except sqlalchemy.exc.IntegrityError:
                 pass
 
 
-def get_latest_date_from_history(index_uri):
+def get_latest_date_from_index_history(index_uri):
     with dataset.connect(CST.DATABASE) as database:
         results = database.query("SELECT max(Datum) as maxdate FROM %s WHERE IndexURI = '%s'" %(CST.TABLE_INDEX_HISTORIES, index_uri))
+        try:
+            result = [item for item in results][0]
+        except IndexError:
+            return False
+        return result['maxdate']
+
+
+def get_latest_date_from_stock_history(stock_uri):
+    with dataset.connect(CST.DATABASE) as database:
+        results = database.query("SELECT max(Datum) as maxdate FROM %s WHERE URI = '%s'" %(CST.TABLE_STOCKS_HISTORIES, stock_uri))
         try:
             result = [item for item in results][0]
         except IndexError:
