@@ -1,6 +1,6 @@
 # Scraping Settings
-SHORT_WAIT = 2 # Seconds
-LONG_WAIT = 5 # Seconds
+SHORT_WAIT = 5 # Seconds
+LONG_WAIT = 10 # Seconds
 
 
 # Base Scraping URLs
@@ -8,8 +8,11 @@ URL_INDEX_CONTENT = 'https://www.boerse-online.de/index/liste/'
 URL_INDEX_HISTORY = 'https://www.boerse-online.de/index/historisch/'
 URL_STOCK_HISTORY = 'https://www.boerse-online.de/kurse/historisch/'
 
-EXCHANGE_APPENDIX = '/XETRA'
+EXCHANGE_APPENDIX = '/FSE'
+ALT_EXCHANGE_APPENDIX = '/XETRA'
 
+# Scraping Parts
+NO_DATA_AVAILABLE = 'Keine Daten verfügbar'
 
 # Local Paths
 INDEX_CONTENT_PATH = 'data/indizes/content/'

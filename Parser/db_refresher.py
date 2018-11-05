@@ -120,7 +120,7 @@ def download_soups_for_stock(stock_short_link):
     download_list = scrap.create_stock_download_list(stock_short_link)
 
     for url in download_list:
-        soup = scrap.get_soup_code_of_url(driver, url)
+        soup = scrap.get_soup_code_from_url(driver, url)
         file_name = 'data/' + stock_short_link + '/' + url.split('/')[3] + '_' + date.date_to_string(date.get_todays_date()) + '.html'
         scrap.save_soup_to_file(soup, file_name)
 

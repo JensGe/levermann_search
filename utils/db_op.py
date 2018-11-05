@@ -67,7 +67,7 @@ def write_stock_to_stock_contents_table(isin, index_name, current_date):
             pass
 
 
-def write_stock_history_to_db(index_history, index_URI):
+def write_index_history_to_db(index_history, index_uri):
     with dataset.connect(CST.DATABASE) as database:
         for item in index_history:
             date_ = date.string_to_date(item[0])
@@ -77,9 +77,28 @@ def write_stock_history_to_db(index_history, index_URI):
             except ValueError:
                 print(item[2])
             try:
-                database[CST.TABLE_INDEX_HISTORIES].insert(dict(IndexURI=index_URI, Datum=date_,
+                database[CST.TABLE_INDEX_HISTORIES].insert(dict(IndexURI=index_uri, Datum=date_,
                                                                 Eroeffnungswert=start, Schlusswert=end))
             except sqlalchemy.exc.IntegrityError:
+                pass
+
+
+def write_stock_history_to_db(stock_history, stock_uri):
+    with dataset.connect(CST.DATABASE) as database:
+        for item in stock_history:
+            date_ = date.string_to_date(item[0])
+            try:
+                start = float(item[1].replace('.', '').replace(',', '.'))
+                end = float(item[2].replace('.', '').replace(',', '.'))
+            except ValueError:
+                print('Missing Value for %s at %s' % (stock_uri, date))
+                print('startdate: %s' % str(item[1]))
+                print('enddate: %s' % str(item[2]))
+            try:
+                database[CST.TABLE_STOCKS_HISTORIES].insert(dict(AktienURI=stock_uri, Datum=date_,
+                                                                Eroeffnungswert=start, Schlusswert=end))
+            except sqlalchemy.exc.IntegrityError:
+                print('IntegrityError')
                 pass
 
 

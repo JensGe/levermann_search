@@ -10,7 +10,7 @@ def scrap_index_content_sites():
     for url in scrap_list:
         index_uri = url.split('/')[-1]
         file_name = CST.INDEX_CONTENT_PATH + index_uri + CST.EXT_HTML
-        soup = scrap.get_soup_code_of_url(driver, url)
+        soup = scrap.get_soup_code_from_url(driver, url)
         scrap.save_soup_to_file(soup, file_name)
     scrap.close_driver(driver)
 
@@ -36,7 +36,7 @@ def scrap_index_histories():
                         '_' + date.date_to_string(end_date)
         dated_url = url + date_interval
 
-        soup = scrap.get_soup_code_of_url(driver, dated_url)
+        soup = scrap.get_soup_code_from_url(driver, dated_url)
         scrap.save_soup_to_file(soup, file_name)
     scrap.close_driver(driver)
 
@@ -62,7 +62,7 @@ def scrap_stock_histories():
         date_interval = '/' + date.date_to_string(start_date) +\
                         '_' + date.date_to_string(end_date)
         dated_url = url.replace(stock_uri, short_stock_uri) + date_interval
-        soup = scrap.get_soup_code_of_url(driver, dated_url)
+        soup = scrap.get_soup_code_from_url(driver, dated_url)
         scrap.save_soup_to_file(soup, file_name)
     scrap.close_driver(driver)
 

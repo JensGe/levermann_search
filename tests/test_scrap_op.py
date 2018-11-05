@@ -24,6 +24,9 @@ class TestScrapping(unittest.TestCase):
                          'https://www.boerse-online.de/kursziele/allianz']
         self.assertEqual(asserted_list, download_list)
 
+    def test_get_data_available_info(self):
+        soup = scrap.get_soup_code_from_file('data/no_history_data.html')
+        self.assertEqual(False, scrap.get_data_available_info(soup))
 
 
     def tearDown(self):

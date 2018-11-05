@@ -11,7 +11,7 @@ class TestScrapping(unittest.TestCase):
         pass
 
     def test_index_history_list_extract(self):
-        soup = scrap.get_soup_code_of_file('data/bo_index_history.html')
+        soup = scrap.get_soup_code_from_file('data/bo_index_history.html')
         history_table = soup.find_all('div', {'id': 'historic-price-list'})
         table_list = parse.extract_history_table_to_list(history_table)
         asserted_list = [['06.09.2018', '11.955,25', '11.995,81', '12.091,98', '11.944,50'],
@@ -33,19 +33,19 @@ class TestScrapping(unittest.TestCase):
     #     self.assertEqual(table_list[:5], asserted_list)
 
     def test_pagination_getting(self):
-        soup = scrap.get_soup_code_of_file('data/bo_index_stocks_pagination.html')
+        soup = scrap.get_soup_code_from_file('data/bo_index_stocks_pagination.html')
         highest_pagination = scrap.get_max_page(soup)
         self.assertEqual(highest_pagination, 3)
 
     def test_get_market_cap(self):
-        soup = scrap.get_soup_code_of_file('data/bo_tesla-aktie.html')
+        soup = scrap.get_soup_code_from_file('data/bo_tesla-aktie.html')
         market_cap_title = soup.find(text=re.compile('Marktkapitalisierung'))
         market_cap_value = market_cap_title.find_next('td').contents[0].strip()
         asserted_market_cap = '37,53 Mrd'
         self.assertEqual(asserted_market_cap, market_cap_value)
 
     def test_stock_in_which_index_multiple(self):
-        soup = scrap.get_soup_code_of_file('data/bo_sap-aktie.html')
+        soup = scrap.get_soup_code_from_file('data/bo_sap-aktie.html')
         indizes = soup.find_all('h2', text=re.compile('Zur Aktie'))
         parent = []
         for par in indizes:
@@ -67,7 +67,7 @@ class TestScrapping(unittest.TestCase):
         self.assertEqual(asserted_indizes_values, link_items)
 
     def test_stock_sectors(self):
-        soup = scrap.get_soup_code_of_file('data/bo_sap-aktie.html')
+        soup = scrap.get_soup_code_from_file('data/bo_sap-aktie.html')
         indizes = soup.find_all('h2', text=re.compile('Zum Unternehmen'))
         parent = []
         for par in indizes:
@@ -83,43 +83,43 @@ class TestScrapping(unittest.TestCase):
         self.assertEqual(asserted_indizes_values, link_items)
 
     def test_get_result_after_tax(self):
-        soup = scrap.get_soup_code_of_file('data/bo_bilanz_guv.html')
+        soup = scrap.get_soup_code_from_file('data/bo_bilanz_guv.html')
         result = parse.get_result_after_tax(soup)
         asserted_result = '1353'
         self.assertEqual(result, asserted_result)
 
     def test_get_operative_result(self):
-        soup = scrap.get_soup_code_of_file('data/bo_bilanz_guv.html')
+        soup = scrap.get_soup_code_from_file('data/bo_bilanz_guv.html')
         result = parse.get_operative_result(soup)
         asserted_result = '1907,4'
         self.assertEqual(result, asserted_result)
 
     def test_get_sales_revenue(self):
-        soup = scrap.get_soup_code_of_file('data/bo_bilanz_guv.html')
+        soup = scrap.get_soup_code_from_file('data/bo_bilanz_guv.html')
         result = parse.get_sales_revenue(soup)
         asserted_result = '21218'
         self.assertEqual(result, asserted_result)
 
     def test_get_total_assets(self):
-        soup = scrap.get_soup_code_of_file('data/bo_bilanz_guv.html')
+        soup = scrap.get_soup_code_from_file('data/bo_bilanz_guv.html')
         result = parse.get_total_assets(soup)
         asserted_result = '14522'
         self.assertEqual(result, asserted_result)
 
     def test_get_equity_capital(self):
-        soup = scrap.get_soup_code_of_file('data/bo_unternehmensprofil.html')
+        soup = scrap.get_soup_code_from_file('data/bo_unternehmensprofil.html')
         result = parse.get_current_value_of_attribute(soup, 'Eigenkapital')
         asserted_result = '6.435'
         self.assertEqual(result, asserted_result)
 
     def test_get_last_quarterly_figures_date(self):
-        soup = scrap.get_soup_code_of_file('data/bo_termine.html')
+        soup = scrap.get_soup_code_from_file('data/bo_termine.html')
         result = parse.get_last_quarterly_figures_date(soup)
         asserted_result = date.string_to_date('09.08.18')
         self.assertEqual(result, asserted_result)
 
     def test_get_result_per_share_last_two_years(self):
-        soup = scrap.get_soup_code_of_file('data/bo_bilanz_guv.html')
+        soup = scrap.get_soup_code_from_file('data/bo_bilanz_guv.html')
         result_2016, result_2017 = parse.get_result_per_share_last_two_years(soup)
         asserted_result_2016 = '5,08'
         asserted_result_2017 = '6,69'
@@ -127,7 +127,7 @@ class TestScrapping(unittest.TestCase):
         self.assertEqual(result_2017, asserted_result_2017)
 
     def test_get_result_per_share_current_and_next_two_years(self):
-        soup = scrap.get_soup_code_of_file('data/bo_schaetzungen.html')
+        soup = scrap.get_soup_code_from_file('data/bo_schaetzungen.html')
         result_2018, result_2019, result_2020 = parse.get_result_per_share_current_and_next_two_years(soup)
         asserted_result_2018 = '8,22'
         asserted_result_2019 = '9,54'
@@ -137,7 +137,7 @@ class TestScrapping(unittest.TestCase):
         self.assertEqual(result_2020, asserted_result_2020)
 
     def test_get_analyst_ratings(self):
-        soup = scrap.get_soup_code_of_file('data/bo_kursziele.html')
+        soup = scrap.get_soup_code_from_file('data/bo_kursziele.html')
         no_buy, no_hold, no_sell = parse.get_analyst_ratings(soup)
         asserted_no_buy = '15'
         asserted_no_hold = '8'
@@ -147,19 +147,19 @@ class TestScrapping(unittest.TestCase):
         self.assertEqual(asserted_no_sell, no_sell)
 
     def test_get_closing_price_from_date(self):
-        soup = scrap.get_soup_code_of_file('data/bo_kurse.html')
+        soup = scrap.get_soup_code_from_file('data/bo_kurse.html')
         closing_price = parse.get_closing_price_from_date(soup, '09.08.2018')
         asserted_price = '208,50'
         self.assertEqual(asserted_price, closing_price)
 
     def test_get_closing_price_from_date_before(self):
-        soup = scrap.get_soup_code_of_file('data/bo_kurse.html')
+        soup = scrap.get_soup_code_from_file('data/bo_kurse.html')
         closing_price = parse.get_closing_price_from_date_before(soup, '09.08.2018')
         asserted_price = '190,55'
         self.assertEqual(asserted_price, closing_price)
 
     def test_get_stock_table_of_index(self):
-        soup = scrap.get_soup_code_of_file('data/bo_FTSE_100.html')
+        soup = scrap.get_soup_code_from_file('data/bo_FTSE_100.html')
         asserted_stock_list_first = [['3i', 'GB00B1YW4409', '3i-Aktie'],
                                      ['Admiral Group', 'GB00B02J6398', 'admiral_group-Aktie'],
                                      ['Anglo American', 'GB00B1XZS820', 'anglo_american-Aktie']]
@@ -171,7 +171,7 @@ class TestScrapping(unittest.TestCase):
         self.assertEqual(asserted_stock_list_last, stock_list[-2:])
 
     def test_get_historic_prices(self):
-        soup = scrap.get_soup_code_of_file('data/bo_index_history_big.html')
+        soup = scrap.get_soup_code_from_file('data/bo_index_history_big.html')
         table_list = parse.get_historic_prices(soup)
         asserted_list = [['01.10.2018', 9127.05, 9094.28],
                          ['02.10.2018', 9087.32, 9076.57],
