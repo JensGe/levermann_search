@@ -19,7 +19,9 @@ while root_menu:
             print('Sub Menu 1: Scraping')
             print('(1) Scrap Index Contents')
             print('(2) Scrap Index Histories')
+            print('------------------------')
             print('(3) Scrap Stock Histories')
+            print('(4) Scrap Stock Overview')
             print('------------------------')
             print('(u) Up')
             print('(x) Exit')
@@ -30,6 +32,8 @@ while root_menu:
                 scraper.scrap_index_histories()
             elif menu_1_selection == '3':
                 scraper.scrap_stock_histories()
+            elif menu_1_selection == '4':
+                scraper.scrap_stock_overview()
             elif menu_1_selection == 'u':
                 menu_1 = False
             elif menu_1_selection == 'x':

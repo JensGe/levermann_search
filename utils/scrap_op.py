@@ -59,8 +59,12 @@ def get_soup_code_from_url(driver, url):
 
 
 def get_data_available_info(soup):
-    info = soup.find('div', {'id': 'historic-price-list'})
-    return info.text.strip() != CST.NO_DATA_AVAILABLE
+    try:
+        info = soup.find('div', {'id': 'historic-price-list'})
+        return info.text.strip() != CST.NO_DATA_AVAILABLE
+    except AttributeError:
+        return True
+
 
 
 def get_max_page(soup):

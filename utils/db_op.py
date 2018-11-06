@@ -30,9 +30,15 @@ def create_index_url_list(base_url):
     return url_list
 
 
-def create_stock_url_list(base_url):
+def create_stock_history_url_list(base_url):
     stock_list = get_stock_names()
     url_list = [base_url + stock + CST.EXCHANGE_APPENDIX for stock in stock_list]
+    return url_list
+
+
+def create_stock_overview_url_list(base_url):
+    stock_list = get_stock_names()
+    url_list = [base_url + stock for stock in stock_list]
     return url_list
 
 

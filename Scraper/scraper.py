@@ -42,7 +42,7 @@ def scrap_index_histories():
 
 
 def scrap_stock_histories():
-    scrap_list = db.create_stock_url_list(CST.URL_STOCK_HISTORY)
+    scrap_list = db.create_stock_history_url_list(CST.URL_STOCK_HISTORY)
     driver = scrap.init_driver()
     for url in scrap_list:
         stock_uri = url.split('/')[-2]
@@ -66,4 +66,14 @@ def scrap_stock_histories():
         scrap.save_soup_to_file(soup, file_name)
     scrap.close_driver(driver)
 
-# https://www.boerse-online.de/kurse/historisch/ab_inbev-aktie/xetra/04.11.2017_04.11.2018
+
+def scrap_stock_overview():
+    scrap_list = db.create_stock_overview_url_list(CST.URL_STOCK_OVERVIEW)
+    driver = scrap.init_driver()
+    for url in scrap_list:
+        stock_uri = url.split('/')[-1]
+        short_stock_uri = stock_uri[:-6]
+        file_name = CST.STOCK_OVERVIEW_PATH + short_stock_uri + CST.EXT_HTML
+        soup = scrap.get_soup_code_from_url(driver, url)
+        scrap.save_soup_to_file(soup, file_name)
+    scrap.close_driver(driver)
