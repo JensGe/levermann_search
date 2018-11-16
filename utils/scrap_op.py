@@ -10,14 +10,6 @@ from selenium.webdriver.firefox.options import Options
 
 from bs4 import BeautifulSoup
 
-# urls = {'overview': ['https://www.boerse-online.de/aktie/', '-aktie'],
-#         'history': ['https://www.boerse-online.de/kurse/historisch/', '/xetra/'],
-#         'guv': ['https://www.boerse-online.de/bilanz_guv/', None],
-#         'estimate': ['https://www.boerse-online.de/schaetzungen/', None],
-#         'company': ['https://www.boerse-online.de/unternehmensprofil/', None],
-#         'events': ['https://www.boerse-online.de/termine/uebersicht/', None],
-#         'goals': ['https://www.boerse-online.de/kursziele/', None]}
-
 
 def init_driver():
     options = Options()
@@ -77,14 +69,14 @@ def get_max_page(soup):
 
 
 def get_soup_code_from_file(file):
-    with open(file, 'r') as file:
+    with open(file, 'r', encoding='UTF-8') as file:
         file_content = file.read()
     return BeautifulSoup(file_content, 'html.parser')
 
 
 def save_soup_to_file(soup, file):
     os.makedirs(os.path.dirname(file), exist_ok=True)
-    with open(file, 'w') as file:
+    with open(file, 'w', encoding='UTF-8') as file:
         file.write(soup)
     return True
 

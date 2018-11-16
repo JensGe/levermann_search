@@ -2,6 +2,8 @@
 SHORT_WAIT = 5 # Seconds
 LONG_WAIT = 10 # Seconds
 
+# Parser Settings
+PARSER = 'html.parser'
 
 # Base Scraping URLs
 URL_INDEX_CONTENT = 'https://www.boerse-online.de/index/liste/'
@@ -14,6 +16,37 @@ ALT_EXCHANGE_APPENDIX = '/XETRA'
 
 # Scraping Parts
 NO_DATA_AVAILABLE = 'Keine Daten verfügbar'
+
+TEXT_LAST_DATES = 'vergangene Termine'
+TEXT_EPS_UNDILUTED = 'Ergebnis je Aktie unverwässert'
+TEXT_EPS = 'Ergebnis/Aktie'
+TEXT_MARKET_CAP = 'Marktkapitalisierung'
+TEXT_LISTED_INDIZES = 'Zur Aktie'
+TEXT_COMPANY_INFO = 'Zum Unternehmen'
+TEXT_RESULT_AFTER_TAX = 'Ergebnis nach Steuer'
+TEXT_OPERATIVE_RESULT = 'Operatives Ergebnis'
+TEXT_SALES_REVENUE = 'Umsatzerlöse'
+TEXT_TOTAL_ASSETS = 'Bilanzsumme'
+
+# HTML Attributes
+TEXT_HISTORIC_RATING = 'historicRatingTdContent'
+HISTORIC_PRICE_LIST = 'historic-price-list'
+TEXT_TEXT_RIGHT = 'text-right'
+TEXT_INDEX_LIST_CONTAINER = 'index-list-container'
+
+
+# HTML Elements
+HTML_H2 = 'h2'
+HTML_TD = 'td'
+HTML_TR = 'tr'
+HTML_DIV = 'div'
+HTML_A = 'a'
+HTML_CLASS = 'class'
+HTML_ID = 'id'
+HTML_SPAN = 'span'
+HTML_HREF = 'href'
+
+
 
 # Local Paths
 INDEX_CONTENT_PATH = 'data/indizes/content/'
