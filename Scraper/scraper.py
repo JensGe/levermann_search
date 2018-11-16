@@ -9,7 +9,7 @@ def scrap_index_content_sites():
     driver = scrap.init_driver()
     for url in scrap_list:
         index_uri = url.split('/')[-1]
-        file_name = CST.INDEX_CONTENT_PATH + index_uri + CST.EXT_HTML
+        file_name = CST.INDEX_CONTENT_PATH + index_uri + CST.HTML_EXTENSION
         soup = scrap.get_soup_code_from_url(driver, url)
         scrap.save_soup_to_file(soup, file_name)
     scrap.close_driver(driver)
@@ -23,7 +23,7 @@ def scrap_index_histories():
         end_date = date.get_todays_date()
         start_date = date.subtract_one_year(date.get_todays_date())
         max_db_date = db.get_latest_date_from_index_history(index_uri)
-        file_name = CST.INDEX_HISTORY_PATH + index_uri + CST.EXT_HTML
+        file_name = CST.INDEX_HISTORY_PATH + index_uri + CST.HTML_EXTENSION
         if max_db_date is None:
             pass
         elif date.add_one_day(max_db_date) == end_date:
@@ -50,7 +50,7 @@ def scrap_stock_histories():
         end_date = date.get_todays_date()
         start_date = date.subtract_one_year(date.get_todays_date())
         max_db_date = db.get_latest_date_from_index_history(stock_uri)
-        file_name = CST.STOCK_HISTORY_PATH + short_stock_uri + CST.EXT_HTML
+        file_name = CST.STOCK_HISTORY_PATH + short_stock_uri + CST.HTML_EXTENSION
         if max_db_date is None:
             pass
         elif date.add_one_day(max_db_date) == end_date:
@@ -73,7 +73,7 @@ def scrap_stock_overview():
     for url in scrap_list:
         stock_uri = url.split('/')[-1]
         short_stock_uri = stock_uri[:-6]
-        file_name = CST.STOCK_OVERVIEW_PATH + short_stock_uri + CST.EXT_HTML
+        file_name = CST.STOCK_OVERVIEW_PATH + short_stock_uri + CST.HTML_EXTENSION
         soup = scrap.get_soup_code_from_url(driver, url)
         scrap.save_soup_to_file(soup, file_name)
     scrap.close_driver(driver)

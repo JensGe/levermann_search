@@ -128,6 +128,20 @@ def get_latest_date_from_stock_history(stock_uri):
         return result['maxdate']
 
 
+def write_single_overview_data_to_db(stock_uri, market_cap, stock_indizes, stock_sectors):
+    current_date = date.get_todays_date()
+    with dataset.connect(CST.DATABASE) as database:
+        try:
+            database[CST.TABLE_COMPANY_DATA].insert(dict(AktienURI=stock_uri,
+                                                         Datum=current_date,
+                                                         Marktkapitalisierung=market_cap,
+                                                         Indizes=str(stock_indizes),
+                                                         Sectors=str(stock_sectors)))
+        except sqlalchemy.exc.IntegrityError:
+            print('IntegrityError')
+            pass
+
+
 ######## OLD
 ################################################
 def select_data(table):

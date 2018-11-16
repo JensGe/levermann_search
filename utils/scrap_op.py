@@ -13,7 +13,7 @@ from bs4 import BeautifulSoup
 
 def init_driver():
     options = Options()
-    with open('utils/driver_starting_settings.txt') as f:
+    with open(CST.SELENIUM_SETTINGS) as f:
         start_options = f.readlines()
     for option in start_options:
         options.add_argument(option)
@@ -26,18 +26,7 @@ def init_driver():
 def get_soup_code_from_url(driver, url):
     driver.wait = WebDriverWait(driver, CST.SHORT_WAIT)
     driver.get(url)
-    soup = BeautifulSoup(driver.page_source, 'html.parser')
-
-    if not get_data_available_info(soup):
-        new_url = url.replace(CST.EXCHANGE_APPENDIX, CST.ALT_EXCHANGE_APPENDIX)
-        ####
-        print('URL Change: %s -> %s' % (url, new_url))
-        ####
-        driver.wait = WebDriverWait(driver, CST.SHORT_WAIT)
-        driver.get(new_url)
-        soup = BeautifulSoup(driver.page_source, 'html.parser')
-        if not get_data_available_info(soup):
-            print('*** CHECK STOCK: %s' % new_url)
+    soup = BeautifulSoup(driver.page_source, CST.PARSER)
 
     max_page = get_max_page(soup)
     if max_page == 1:
@@ -45,23 +34,41 @@ def get_soup_code_from_url(driver, url):
     else:
         for page in range(1, max_page):
             driver.get(url + '?p=' + str(page+1))
-            new_soup = BeautifulSoup(driver.page_source, 'html.parser')
+            new_soup = BeautifulSoup(driver.page_source, CST.PARSER)
             soup.append(new_soup)
     return soup.prettify()
 
 
-def get_data_available_info(soup):
+def get_soup_from_history_url(driver, url):
+    driver.wait = WebDriverWait(driver, CST.SHORT_WAIT)
+    driver.get(url)
+    soup = BeautifulSoup(driver.page_source, CST.PARSER)
+
+    if not is_data_available(soup):
+        new_url = url.replace(CST.EXCHANGE_APPENDIX, CST.ALT_EXCHANGE_APPENDIX)
+        ####
+        print('URL Change: %s -> %s' % (url, new_url))
+        ####
+        driver.wait = WebDriverWait(driver, CST.SHORT_WAIT)
+        driver.get(new_url)
+        soup = BeautifulSoup(driver.page_source, CST.PARSER)
+        if not is_data_available(soup):
+            print('*** CHECK STOCK: %s' % new_url)
+
+    return soup.prettify()
+
+
+def is_data_available(soup):
     try:
-        info = soup.find('div', {'id': 'historic-price-list'})
+        info = soup.find(CST.HTML_DIV, {CST.HTML_ID: CST.HISTORIC_PRICE_LIST})
         return info.text.strip() != CST.NO_DATA_AVAILABLE
     except AttributeError:
         return True
 
 
-
 def get_max_page(soup):
     try:
-        pagination = soup.find('div', {'class': 'finando_paging'})
+        pagination = soup.find(CST.HTML_DIV, {CST.HTML_CLASS: CST.TEXT_PAGINATION })
         link_list = pagination.find_all('a')
         return int(link_list[-1].text)
     except:
@@ -71,7 +78,7 @@ def get_max_page(soup):
 def get_soup_code_from_file(file):
     with open(file, 'r', encoding='UTF-8') as file:
         file_content = file.read()
-    return BeautifulSoup(file_content, 'html.parser')
+    return BeautifulSoup(file_content, CST.PARSER)
 
 
 def save_soup_to_file(soup, file):

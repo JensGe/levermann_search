@@ -39,23 +39,29 @@ class TestScrapping(unittest.TestCase):
 
     def test_get_market_cap(self):
         soup = scrap.get_soup_code_from_file('data/bo_tesla-aktie.html')
-        market_cap_title = soup.find(text=re.compile('Marktkapitalisierung'))
-        market_cap_value = market_cap_title.find_next('td').contents[0].strip()
+        market_cap_value = parse.get_market_cap(soup)
         asserted_market_cap = '37,53 Mrd'
         self.assertEqual(asserted_market_cap, market_cap_value)
 
+    def test_convert_market_cap(self):
+        market_cap_string = '37,53 Mrd'
+        asserted_marked_cap = 37530
+        calc_marked_cap = parse.convert_market_cap(market_cap_string)
+        self.assertEqual(asserted_marked_cap, calc_marked_cap)
+
+        market_cap_string_2 = '727,68 Mio'
+        asserted_marked_cap_2 = 727.68
+        calc_marked_cap_2 = parse.convert_market_cap(market_cap_string_2)
+        self.assertEqual(asserted_marked_cap_2, calc_marked_cap_2)
+
+        market_cap_string_2 = '981 Tsd'
+        asserted_marked_cap_2 = 0.981
+        calc_marked_cap_2 = parse.convert_market_cap(market_cap_string_2)
+        self.assertEqual(asserted_marked_cap_2, calc_marked_cap_2)
+
     def test_stock_in_which_index_multiple(self):
         soup = scrap.get_soup_code_from_file('data/bo_sap-aktie.html')
-        indizes = soup.find_all('h2', text=re.compile('Zur Aktie'))
-        parent = []
-        for par in indizes:
-            parent.append(par.parent)
-        link_items = []
-        for items in parent:
-            links = items.find_all('a')
-            for link in links:
-                link_items.append(link.text)
-
+        link_items = parse.get_listed_indizes(soup)
         asserted_indizes_values = ['TecDAX', 'DAX', 'STOXX 50', 'EURO STOXX 50', 'S&P 400 MidCap',
                                    'EURO STOXX Technology', 'Prime All Share', 'LDAX', 'LTecDAX',
                                    'HDAX', 'DivDAX','NYSE International 100','CDAX','EURO STOXX',
@@ -68,15 +74,7 @@ class TestScrapping(unittest.TestCase):
 
     def test_stock_sectors(self):
         soup = scrap.get_soup_code_from_file('data/bo_sap-aktie.html')
-        indizes = soup.find_all('h2', text=re.compile('Zum Unternehmen'))
-        parent = []
-        for par in indizes:
-            parent.append(par.parent)
-        link_items = []
-        for items in parent:
-            links = items.find_all('a')
-            for link in links:
-                link_items.append(link.text)
+        link_items = parse.get_sectors(soup)
 
         asserted_indizes_values = ['Informationstechnologie', 'IT-Dienstleister',
                                    'Server-/ Großrechner (Software)', 'Software']

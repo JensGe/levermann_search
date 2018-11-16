@@ -46,7 +46,9 @@ while root_menu:
             print('Sub Menu 2: Parsing')
             print('(1) Write Index Contents to DB')
             print('(2) Write Index Histories to DB')
+            print('------------------------------')
             print('(3) Write Stock Histories to DB')
+            print('(4) Write Stock Overview to DB')
             print('------------------------------')
             print('(u) Up')
             print('(x) Exit')
@@ -57,6 +59,8 @@ while root_menu:
                 parser.write_index_histories_from_html_to_db()
             elif menu_2_selection == '3':
                 parser.write_stock_histories_from_html_to_db()
+            elif menu_2_selection == '4':
+                parser.write_stock_overview_data_to_db()
             elif menu_2_selection == 'u':
                 menu_2 = False
             elif menu_2_selection == 'x':

@@ -108,15 +108,23 @@ def save_stock_history_to_db(input_table, index_name, stock_name, isin):
     return True
 
 
-
-
 # V2
 # Stock / Company Infos
 
+def convert_market_cap(market_cap_string):
+    market_cap_value, market_cap_multiplier = market_cap_string.split(' ')
+    market_cap_value = float(market_cap_value.replace('.', '').replace(',', '.'))
+    if market_cap_multiplier == 'Mrd':
+        market_cap_value *= 1000
+    elif market_cap_multiplier == 'Tsd':
+        market_cap_value /= 1000
+    return market_cap_value
+
 
 def get_market_cap(soup):
-    market_cap = soup.find(text=re.compile(CST.TEXT_MARKET_CAP))
-    return market_cap.find_next(CST.HTML_TD).contents[0].strip()
+    market_cap_loc = soup.find(text=re.compile(CST.TEXT_MARKET_CAP))
+    market_cap = market_cap_loc.find_next(CST.HTML_TD).contents[0].strip()
+    return convert_market_cap(market_cap)
 
 
 def get_listed_indizes(soup):
@@ -128,7 +136,7 @@ def get_listed_indizes(soup):
     for items in parent:
         links = items.find_all(CST.HTML_A)
         for link in links:
-            link_items.append(link.text)
+            link_items.append(link.text.strip())
     return link_items
 
 
@@ -141,7 +149,7 @@ def get_sectors(soup):
     for items in parent:
         links = items.find_all(CST.HTML_A)
         for link in links:
-            link_items.append(link.text)
+            link_items.append(link.text.strip())
     return link_items
 
 

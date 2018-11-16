@@ -5,6 +5,9 @@ LONG_WAIT = 10 # Seconds
 # Parser Settings
 PARSER = 'html.parser'
 
+# Selenium Driver Settings
+SELENIUM_SETTINGS = 'utils/driver_starting_settings.txt'
+
 # Base Scraping URLs
 URL_INDEX_CONTENT = 'https://www.boerse-online.de/index/liste/'
 URL_INDEX_HISTORY = 'https://www.boerse-online.de/index/historisch/'
@@ -33,6 +36,7 @@ TEXT_HISTORIC_RATING = 'historicRatingTdContent'
 HISTORIC_PRICE_LIST = 'historic-price-list'
 TEXT_TEXT_RIGHT = 'text-right'
 TEXT_INDEX_LIST_CONTAINER = 'index-list-container'
+TEXT_PAGINATION = 'finando_paging'
 
 
 # HTML Elements
@@ -56,7 +60,7 @@ STOCK_OVERVIEW_PATH = 'data/stocks/overview/'
 
 
 # File Extensions
-EXT_HTML = '.html'
+HTML_EXTENSION = '.html'
 
 
 # Database
@@ -69,6 +73,7 @@ TABLE_INDEX_HISTORIES = 'Indexhistorien'
 TABLE_STOCKS = 'Aktien'
 TABLE_STOCKS_HISTORIES = 'Aktienhistorien'
 TABLE_INDEX_CONTENTS = 'Indexinhalte'
+TABLE_COMPANY_DATA = 'Unternehmensdaten'
 
 
 # Database Columns
