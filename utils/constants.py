@@ -13,9 +13,15 @@ URL_INDEX_CONTENT = 'https://www.boerse-online.de/index/liste/'
 URL_INDEX_HISTORY = 'https://www.boerse-online.de/index/historisch/'
 URL_STOCK_HISTORY = 'https://www.boerse-online.de/kurse/historisch/'
 URL_STOCK_OVERVIEW = 'https://www.boerse-online.de/aktie/'
+URL_STOCK_BALANCE = 'https://www.boerse-online.de/bilanz_guv/'
+URL_STOCK_TARGETS = 'https://www.boerse-online.de/kursziele/'
+URL_STOCK_DATES = 'https://www.boerse-online.de/termine/uebersicht/'
+URL_STOCK_ESTIMATES = 'https://www.boerse-online.de/schaetzungen/'
+
 
 EXCHANGE_APPENDIX = '/FSE'
 ALT_EXCHANGE_APPENDIX = '/XETRA'
+# Laut Levermann eigentlich primär XETRA, dann FSE oder entpr. des Landes
 
 # Scraping Parts
 NO_DATA_AVAILABLE = 'Keine Daten verfügbar'
@@ -53,10 +59,14 @@ HTML_HREF = 'href'
 
 
 # Local Paths
-INDEX_CONTENT_PATH = 'data/indizes/content/'
-INDEX_HISTORY_PATH = 'data/indizes/history/'
-STOCK_HISTORY_PATH = 'data/stocks/history/'
-STOCK_OVERVIEW_PATH = 'data/stocks/overview/'
+PATH_INDEX_CONTENT = 'data/indizes/content/'
+PATH_INDEX_HISTORY = 'data/indizes/history/'
+PATH_STOCK_HISTORY = 'data/stocks/history/'
+PATH_STOCK_OVERVIEW = 'data/stocks/overview/'
+PATH_STOCK_BALANCE = 'data/stocks/balance/'
+PATH_STOCK_TARGETS = 'data/stocks/targets/'
+PATH_STOCK_DATES = 'data/stocks/dates/'
+PATH_STOCK_ESTIMATES = 'data/stocks/estimates/'
 
 
 # File Extensions

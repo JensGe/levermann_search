@@ -113,12 +113,16 @@ def save_stock_history_to_db(input_table, index_name, stock_name, isin):
 
 def convert_market_cap(market_cap_string):
     market_cap_value, market_cap_multiplier = market_cap_string.split(' ')
-    market_cap_value = float(market_cap_value.replace('.', '').replace(',', '.'))
+    market_cap_value = convert_ger_to_en_numeric(market_cap_value)
     if market_cap_multiplier == 'Mrd':
         market_cap_value *= 1000
     elif market_cap_multiplier == 'Tsd':
         market_cap_value /= 1000
     return market_cap_value
+
+
+def convert_ger_to_en_numeric(string):
+    return float(string.replace('.', '').replace(',', '.'))
 
 
 def get_market_cap(soup):
@@ -157,28 +161,28 @@ def get_result_after_tax(soup):
     result_td = soup.find(CST.HTML_TD, text=re.compile(CST.TEXT_RESULT_AFTER_TAX))
     result_tr = result_td.parent
     result_after_tax = result_tr.find_all(CST.HTML_TD)[-1].text.strip()
-    return result_after_tax
+    return convert_ger_to_en_numeric(result_after_tax)
 
 
 def get_operative_result(soup):
     result_td = soup.find(CST.HTML_TD, text=re.compile(CST.TEXT_OPERATIVE_RESULT))
     result_tr = result_td.parent
     operative_result = result_tr.find_all(CST.HTML_TD)[-1].text.strip()
-    return operative_result
+    return convert_ger_to_en_numeric(operative_result)
 
 
 def get_sales_revenue(soup):
     result_td = soup.find(CST.HTML_TD, text=re.compile(CST.TEXT_SALES_REVENUE))
     result_tr = result_td.parent
     sales_revenue = result_tr.find_all(CST.HTML_TD)[-1].text.strip()
-    return sales_revenue
+    return convert_ger_to_en_numeric(sales_revenue)
 
 
 def get_total_assets(soup):
     result_td = soup.find(CST.HTML_TD, text=re.compile(CST.TEXT_TOTAL_ASSETS))
     result_tr = result_td.parent
     total_assets = result_tr.find_all(CST.HTML_TD)[-1].text.strip()
-    return total_assets
+    return convert_ger_to_en_numeric(total_assets)
 
 
 def get_current_value_of_attribute(soup, attribute):
@@ -210,21 +214,24 @@ def get_last_quarterly_figures_date(soup):
     return latest_date
 
 
-def get_result_per_share_last_two_years(soup):
+def get_result_per_share_last_three_years(soup):
     result_td = soup.find(CST.HTML_TD, text=re.compile(CST.TEXT_EPS_UNDILUTED))
     result_tr = result_td.parent
-    result_minus2 = result_tr.find_all(CST.HTML_TD)[-2].text.strip()
-    result_minus1 = result_tr.find_all(CST.HTML_TD)[-1].text.strip()
-    return result_minus2, result_minus1
+    result_minus_3 = result_tr.find_all(CST.HTML_TD)[-3].text.strip()
+    result_minus_2 = result_tr.find_all(CST.HTML_TD)[-2].text.strip()
+    result_minus_1 = result_tr.find_all(CST.HTML_TD)[-1].text.strip()
+    return convert_ger_to_en_numeric(result_minus_3), \
+           convert_ger_to_en_numeric(result_minus_2), \
+           convert_ger_to_en_numeric(result_minus_1)
 
 
-def get_result_per_share_current_and_next_two_years(soup):
+def get_result_per_share_current_and_next_year(soup):
     result_td = soup.find(CST.HTML_TD, text=re.compile(CST.TEXT_EPS))
     result_tr = result_td.parent
     result_current = result_tr.find_all(CST.HTML_TD)[3].text.strip()
     result_plus1 = result_tr.find_all(CST.HTML_TD)[4].text.strip()
-    result_plus2 = result_tr.find_all(CST.HTML_TD)[5].text.strip()
-    return result_current, result_plus1, result_plus2
+    return convert_ger_to_en_numeric(result_current), \
+           convert_ger_to_en_numeric(result_plus1)
 
 
 def get_analyst_ratings(soup):
@@ -239,7 +246,7 @@ def get_closing_price_from_date(soup, date_str):
     result_td = soup.find(CST.HTML_TD, text=re.compile(date_str))
     result_tr = result_td.parent
     closing_price = result_tr.find_all(CST.HTML_TD)[2].text.strip()
-    return closing_price
+    return convert_ger_to_en_numeric(closing_price)
 
 
 def get_closing_price_from_date_before(soup, date_str):

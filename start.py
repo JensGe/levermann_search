@@ -21,7 +21,7 @@ while root_menu:
             print('(2) Scrap Index Histories')
             print('------------------------')
             print('(3) Scrap Stock Histories')
-            print('(4) Scrap Stock Overview')
+            print('(4) Scrap Stock Infos')
             print('------------------------')
             print('(u) Up')
             print('(x) Exit')
@@ -33,7 +33,7 @@ while root_menu:
             elif menu_1_selection == '3':
                 scraper.scrap_stock_histories()
             elif menu_1_selection == '4':
-                scraper.scrap_stock_overview()
+                scraper.scrap_stock_infos()
             elif menu_1_selection == 'u':
                 menu_1 = False
             elif menu_1_selection == 'x':
@@ -49,6 +49,7 @@ while root_menu:
             print('------------------------------')
             print('(3) Write Stock Histories to DB')
             print('(4) Write Stock Overview to DB')
+            print('(5) Write Stock Balance to DB')
             print('------------------------------')
             print('(u) Up')
             print('(x) Exit')
@@ -61,6 +62,8 @@ while root_menu:
                 parser.write_stock_histories_from_html_to_db()
             elif menu_2_selection == '4':
                 parser.write_stock_overview_data_to_db()
+            elif menu_2_selection == '5':
+                parser.write_stock_balance_data_to_db()
             elif menu_2_selection == 'u':
                 menu_2 = False
             elif menu_2_selection == 'x':

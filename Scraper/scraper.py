@@ -9,7 +9,7 @@ def scrap_index_content_sites():
     driver = scrap.init_driver()
     for url in scrap_list:
         index_uri = url.split('/')[-1]
-        file_name = CST.INDEX_CONTENT_PATH + index_uri + CST.HTML_EXTENSION
+        file_name = CST.PATH_INDEX_CONTENT + index_uri + CST.HTML_EXTENSION
         soup = scrap.get_soup_code_from_url(driver, url)
         scrap.save_soup_to_file(soup, file_name)
     scrap.close_driver(driver)
@@ -23,7 +23,7 @@ def scrap_index_histories():
         end_date = date.get_todays_date()
         start_date = date.subtract_one_year(date.get_todays_date())
         max_db_date = db.get_latest_date_from_index_history(index_uri)
-        file_name = CST.INDEX_HISTORY_PATH + index_uri + CST.HTML_EXTENSION
+        file_name = CST.PATH_INDEX_HISTORY + index_uri + CST.HTML_EXTENSION
         if max_db_date is None:
             pass
         elif date.add_one_day(max_db_date) == end_date:
@@ -50,7 +50,7 @@ def scrap_stock_histories():
         end_date = date.get_todays_date()
         start_date = date.subtract_one_year(date.get_todays_date())
         max_db_date = db.get_latest_date_from_index_history(stock_uri)
-        file_name = CST.STOCK_HISTORY_PATH + short_stock_uri + CST.HTML_EXTENSION
+        file_name = CST.PATH_STOCK_HISTORY + short_stock_uri + CST.HTML_EXTENSION
         if max_db_date is None:
             pass
         elif date.add_one_day(max_db_date) == end_date:
@@ -67,13 +67,25 @@ def scrap_stock_histories():
     scrap.close_driver(driver)
 
 
-def scrap_stock_overview():
-    scrap_list = db.create_stock_overview_url_list(CST.URL_STOCK_OVERVIEW)
+def scrap_stock_info(scrap_url, save_path):
+    scrap_list = db.create_stock_overview_url_list(scrap_url)
     driver = scrap.init_driver()
-    for url in scrap_list:
+    for url in scrap_list[:10]:
         stock_uri = url.split('/')[-1]
         short_stock_uri = stock_uri[:-6]
-        file_name = CST.STOCK_OVERVIEW_PATH + short_stock_uri + CST.HTML_EXTENSION
+        file_name = save_path + short_stock_uri + CST.HTML_EXTENSION
         soup = scrap.get_soup_code_from_url(driver, url)
         scrap.save_soup_to_file(soup, file_name)
     scrap.close_driver(driver)
+
+
+def scrap_stock_infos():
+    scrap_stock_info(CST.URL_STOCK_OVERVIEW, CST.PATH_STOCK_OVERVIEW)
+    scrap_stock_info(CST.URL_STOCK_BALANCE, CST.PATH_STOCK_BALANCE)
+    # scrap_stock_info(CST.URL_STOCK_TARGETS, CST.PATH_STOCK_TARGETS)
+    scrap_stock_info(CST.URL_STOCK_DATES, CST.PATH_STOCK_DATES)
+    scrap_stock_info(CST.URL_STOCK_ESTIMATES, CST.PATH_STOCK_ESTIMATES)
+
+
+
+

@@ -75,10 +75,15 @@ class TestScrapping(unittest.TestCase):
     def test_stock_sectors(self):
         soup = scrap.get_soup_code_from_file('data/bo_sap-aktie.html')
         link_items = parse.get_sectors(soup)
-
         asserted_indizes_values = ['Informationstechnologie', 'IT-Dienstleister',
                                    'Server-/ Großrechner (Software)', 'Software']
         self.assertEqual(asserted_indizes_values, link_items)
+
+        soup_2 = scrap.get_soup_code_from_file('data/bo_ab_inbev-aktie.html')
+        link_items_2 = parse.get_sectors(soup_2)
+        asserted_indizes_values_2 = ['Getränke / Tabak']
+        self.assertEqual(asserted_indizes_values_2, link_items_2)
+
 
     def test_get_result_after_tax(self):
         soup = scrap.get_soup_code_from_file('data/bo_bilanz_guv.html')
@@ -104,6 +109,7 @@ class TestScrapping(unittest.TestCase):
         asserted_result = '14522'
         self.assertEqual(asserted_result, result)
 
+    # ToDo Eigenkapital aus Bilanzseite ziehen
     def test_get_equity_capital(self):
         soup = scrap.get_soup_code_from_file('data/bo_unternehmensprofil.html')
         result = parse.get_current_value_of_attribute(soup, 'Eigenkapital')
@@ -116,24 +122,25 @@ class TestScrapping(unittest.TestCase):
         asserted_result = date.string_to_date('09.08.18')
         self.assertEqual(asserted_result, result)
 
-    def test_get_result_per_share_last_two_years(self):
+    def test_get_result_per_share_last_three_years(self):
         soup = scrap.get_soup_code_from_file('data/bo_bilanz_guv.html')
-        result_2016, result_2017 = parse.get_result_per_share_last_two_years(soup)
+        result_2015, result_2016, result_2017 = parse.get_result_per_share_last_three_years(soup)
+        asserted_result_2015 = '3,3'
         asserted_result_2016 = '5,08'
         asserted_result_2017 = '6,69'
+        self.assertEqual(asserted_result_2015, result_2015)
         self.assertEqual(asserted_result_2016, result_2016)
         self.assertEqual(asserted_result_2017, result_2017)
 
-    def test_get_result_per_share_current_and_next_two_years(self):
+    def test_get_result_per_share_current_and_next_year(self):
         soup = scrap.get_soup_code_from_file('data/bo_schaetzungen.html')
-        result_2018, result_2019, result_2020 = parse.get_result_per_share_current_and_next_two_years(soup)
+        result_2018, result_2019 = parse.get_result_per_share_current_and_next_year(soup)
         asserted_result_2018 = '8,22'
         asserted_result_2019 = '9,54'
-        asserted_result_2020 = '10,92'
         self.assertEqual(asserted_result_2018, result_2018)
         self.assertEqual(asserted_result_2019, result_2019)
-        self.assertEqual(asserted_result_2020, result_2020)
 
+    # ToDo Analystenmeinungen aus Overview ziehen
     def test_get_analyst_ratings(self):
         soup = scrap.get_soup_code_from_file('data/bo_kursziele.html')
         no_buy, no_hold, no_sell = parse.get_analyst_ratings(soup)

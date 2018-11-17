@@ -136,9 +136,53 @@ def write_single_overview_data_to_db(stock_uri, market_cap, stock_indizes, stock
                                                          Datum=current_date,
                                                          Marktkapitalisierung=market_cap,
                                                          Indizes=str(stock_indizes),
-                                                         Sectors=str(stock_sectors)))
+                                                         Branchen=str(stock_sectors)))
         except sqlalchemy.exc.IntegrityError:
-            print('IntegrityError')
+            print('Primary Existent - Update')
+            # database[CST.TABLE_COMPANY_DATA].update(dict(AktienURI=stock_uri,
+            #                                              Datum=current_date,
+            #                                              Marktkapitalisierung=market_cap,
+            #                                              Indizes=str(stock_indizes),
+            #                                              Branchen=str(stock_sectors)), [['AktienURI', 'Datum']])
+            database.query('UPDATE %s SET Marktkapitalisierung = "%s", Indizes = "%s", Branchen = "%s" '
+                           'WHERE AktienURI = "%s" AND Datum = "%s"'
+                           % (CST.TABLE_COMPANY_DATA, market_cap, str(stock_indizes),
+                              str(stock_sectors), stock_uri, current_date))
+            pass
+
+
+def write_single_balance_data_to_db(stock_uri, result_after_tax, operative_result, sales_revenue, total_assets,
+                                            eps_minus_3, eps_minus_2, eps_minus_1):
+    current_date = date.get_todays_date()
+    with dataset.connect(CST.DATABASE) as database:
+        try:
+            database[CST.TABLE_COMPANY_DATA].insert(dict(AktienURI=stock_uri,
+                                                         Datum=current_date,
+                                                         Ergebnis_nach_Steuern=result_after_tax,
+                                                         Operatives_Ergebnis=operative_result,
+                                                         Umsatzerloese=sales_revenue,
+                                                         Bilanzsumme=total_assets,
+                                                         EPS_minus_3=eps_minus_3,
+                                                         EPS_minus_2=eps_minus_2,
+                                                         EPS_minus_1=eps_minus_1))
+        except sqlalchemy.exc.IntegrityError:
+            print('Primary Existent - Update')
+            # database[CST.TABLE_COMPANY_DATA].update(dict(AktienURI=stock_uri,
+            #                                              Datum=current_date,
+            #                                              Marktkapitalisierung=market_cap,
+            #                                              Indizes=str(stock_indizes),
+            #                                              Branchen=str(stock_sectors)), [['AktienURI', 'Datum']])
+            database.query('UPDATE %s SET '
+                           'Ergebnis_nach_Steuern = %s, '
+                           'Operatives_Ergebnis = %s, '
+                           'Umsatzerloese = %s, '
+                           'Bilanzsumme = %s, '
+                           'EPS_minus_3 = %s, '
+                           'EPS_minus_2 = %s, '
+                           'EPS_minus_1 = %s '
+                           'WHERE AktienURI = "%s" AND Datum = "%s"'
+                           % (CST.TABLE_COMPANY_DATA, result_after_tax, operative_result, sales_revenue, total_assets,
+                              eps_minus_3, eps_minus_2, eps_minus_1, stock_uri, current_date))
             pass
 
 
