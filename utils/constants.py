@@ -36,6 +36,7 @@ TEXT_RESULT_AFTER_TAX = 'Ergebnis nach Steuer'
 TEXT_OPERATIVE_RESULT = 'Operatives Ergebnis'
 TEXT_SALES_REVENUE = 'Umsatzerlöse'
 TEXT_TOTAL_ASSETS = 'Bilanzsumme'
+TEXT_EQUITY_CAPITAL = 'Eigenkapital'
 
 # HTML Attributes
 TEXT_HISTORIC_RATING = 'historicRatingTdContent'

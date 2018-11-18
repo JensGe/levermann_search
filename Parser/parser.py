@@ -54,16 +54,17 @@ def write_stock_overview_data_to_db():
 def write_stock_balance_data_to_db():
     stock_list = db.get_stock_names()
     file_list = [CST.PATH_STOCK_BALANCE + stock[:-6] + CST.HTML_EXTENSION for stock in stock_list]
-    for file in file_list[:5]:
+    for file in file_list[:10]:
         stock_uri = file.split('/')[-1][:-5] + '-Aktie'
         stock_balance_soup = scrap.get_soup_code_from_file(file)
 
-        result_after_tax = parse.get_result_after_tax(stock_balance_soup)
-        operative_result = parse.get_operative_result(stock_balance_soup)
-        sales_revenue = parse.get_sales_revenue(stock_balance_soup)
-        total_assets = parse.get_total_assets(stock_balance_soup)
+        result_after_tax = parse.get_current_value_of_attribute(stock_balance_soup, CST.TEXT_RESULT_AFTER_TAX)
+        operative_result = parse.get_current_value_of_attribute(stock_balance_soup, CST.TEXT_OPERATIVE_RESULT)
+        sales_revenue = parse.get_current_value_of_attribute(stock_balance_soup, CST.TEXT_SALES_REVENUE)
+        total_assets = parse.get_current_value_of_attribute(stock_balance_soup, CST.TEXT_TOTAL_ASSETS)
+        equity_capital = parse.get_current_value_of_attribute(stock_balance_soup, CST.TEXT_EQUITY_CAPITAL)
         eps_minus_3, eps_minus_2, eps_minus_1 = parse.get_result_per_share_last_three_years(stock_balance_soup)
 
         db.write_single_balance_data_to_db(stock_uri, result_after_tax, operative_result, sales_revenue, total_assets,
-                                            eps_minus_3, eps_minus_2, eps_minus_1)
+                                           equity_capital, eps_minus_3, eps_minus_2, eps_minus_1)
 

@@ -70,7 +70,7 @@ def scrap_stock_histories():
 def scrap_stock_info(scrap_url, save_path):
     scrap_list = db.create_stock_overview_url_list(scrap_url)
     driver = scrap.init_driver()
-    for url in scrap_list[:10]:
+    for url in scrap_list[:10]:                     # ToDo Testcase: Only 10 Items, delete [:10]
         stock_uri = url.split('/')[-1]
         short_stock_uri = stock_uri[:-6]
         file_name = save_path + short_stock_uri + CST.HTML_EXTENSION
@@ -82,7 +82,6 @@ def scrap_stock_info(scrap_url, save_path):
 def scrap_stock_infos():
     scrap_stock_info(CST.URL_STOCK_OVERVIEW, CST.PATH_STOCK_OVERVIEW)
     scrap_stock_info(CST.URL_STOCK_BALANCE, CST.PATH_STOCK_BALANCE)
-    # scrap_stock_info(CST.URL_STOCK_TARGETS, CST.PATH_STOCK_TARGETS)
     scrap_stock_info(CST.URL_STOCK_DATES, CST.PATH_STOCK_DATES)
     scrap_stock_info(CST.URL_STOCK_ESTIMATES, CST.PATH_STOCK_ESTIMATES)
 

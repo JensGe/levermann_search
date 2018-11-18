@@ -152,7 +152,7 @@ def write_single_overview_data_to_db(stock_uri, market_cap, stock_indizes, stock
 
 
 def write_single_balance_data_to_db(stock_uri, result_after_tax, operative_result, sales_revenue, total_assets,
-                                            eps_minus_3, eps_minus_2, eps_minus_1):
+                                    equity_capital, eps_minus_3, eps_minus_2, eps_minus_1):
     current_date = date.get_todays_date()
     with dataset.connect(CST.DATABASE) as database:
         try:
@@ -162,6 +162,7 @@ def write_single_balance_data_to_db(stock_uri, result_after_tax, operative_resul
                                                          Operatives_Ergebnis=operative_result,
                                                          Umsatzerloese=sales_revenue,
                                                          Bilanzsumme=total_assets,
+                                                         Eigenkapital=equity_capital,
                                                          EPS_minus_3=eps_minus_3,
                                                          EPS_minus_2=eps_minus_2,
                                                          EPS_minus_1=eps_minus_1))
@@ -177,12 +178,13 @@ def write_single_balance_data_to_db(stock_uri, result_after_tax, operative_resul
                            'Operatives_Ergebnis = %s, '
                            'Umsatzerloese = %s, '
                            'Bilanzsumme = %s, '
+                           'Eigenkapital = %s, '
                            'EPS_minus_3 = %s, '
                            'EPS_minus_2 = %s, '
                            'EPS_minus_1 = %s '
                            'WHERE AktienURI = "%s" AND Datum = "%s"'
                            % (CST.TABLE_COMPANY_DATA, result_after_tax, operative_result, sales_revenue, total_assets,
-                              eps_minus_3, eps_minus_2, eps_minus_1, stock_uri, current_date))
+                              equity_capital, eps_minus_3, eps_minus_2, eps_minus_1, stock_uri, current_date))
             pass
 
 

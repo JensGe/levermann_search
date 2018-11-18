@@ -157,35 +157,13 @@ def get_sectors(soup):
     return link_items
 
 
-def get_result_after_tax(soup):
-    result_td = soup.find(CST.HTML_TD, text=re.compile(CST.TEXT_RESULT_AFTER_TAX))
-    result_tr = result_td.parent
-    result_after_tax = result_tr.find_all(CST.HTML_TD)[-1].text.strip()
-    return convert_ger_to_en_numeric(result_after_tax)
-
-
-def get_operative_result(soup):
-    result_td = soup.find(CST.HTML_TD, text=re.compile(CST.TEXT_OPERATIVE_RESULT))
-    result_tr = result_td.parent
-    operative_result = result_tr.find_all(CST.HTML_TD)[-1].text.strip()
-    return convert_ger_to_en_numeric(operative_result)
-
-
-def get_sales_revenue(soup):
-    result_td = soup.find(CST.HTML_TD, text=re.compile(CST.TEXT_SALES_REVENUE))
-    result_tr = result_td.parent
-    sales_revenue = result_tr.find_all(CST.HTML_TD)[-1].text.strip()
-    return convert_ger_to_en_numeric(sales_revenue)
-
-
-def get_total_assets(soup):
-    result_td = soup.find(CST.HTML_TD, text=re.compile(CST.TEXT_TOTAL_ASSETS))
-    result_tr = result_td.parent
-    total_assets = result_tr.find_all(CST.HTML_TD)[-1].text.strip()
-    return convert_ger_to_en_numeric(total_assets)
-
-
 def get_current_value_of_attribute(soup, attribute):
+    for elem in soup.find_all(CST.HTML_TD, text=re.compile(attribute)):
+        if elem.text.strip() == attribute:
+            return convert_ger_to_en_numeric(elem.parent.find_all(CST.HTML_TD)[-1].text.strip())
+
+
+def get_current_value_of_attribute_old(soup, attribute):
     result_td = soup.find(CST.HTML_TD, text=re.compile(attribute))
     result_tr = result_td.parent
     result = result_tr.find_all(CST.HTML_TD)[-1].text.strip()
@@ -253,7 +231,7 @@ def get_closing_price_from_date_before(soup, date_str):
     result_td = soup.find(CST.HTML_TD, text=re.compile(date_str))
     parent_tr = result_td.parent
     results = parent_tr.next_sibling.next_sibling.find_all(CST.HTML_TD)
-    return results[2].text.strip()
+    return convert_ger_to_en_numeric(results[2].text.strip())
 
 
 def get_stock_list_of_single_index(soup):
