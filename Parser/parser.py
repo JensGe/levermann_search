@@ -68,3 +68,33 @@ def write_stock_balance_data_to_db():
         db.write_single_balance_data_to_db(stock_uri, result_after_tax, operative_result, sales_revenue, total_assets,
                                            equity_capital, eps_minus_3, eps_minus_2, eps_minus_1)
 
+
+def write_stock_estimates_data_to_db():
+    stock_list = db.get_stock_names()
+    file_list = [CST.PATH_STOCK_ESTIMATES + stock[:-6] + CST.HTML_EXTENSION for stock in stock_list]
+    for file in file_list[:10]:
+        stock_uri = file.split('/')[-1][:-5] + '-Aktie'
+        stock_estimate_soup = scrap.get_soup_code_from_file(file)
+        eps_0, eps_plus_1 = parse.get_result_per_share_current_and_next_year(stock_estimate_soup)
+
+        db.write_single_estimate_data_to_db(stock_uri, eps_0, eps_plus_1)
+
+
+def write_stock_targets_data_to_db():
+    stock_list = db.get_stock_names()
+    file_list = [CST.PATH_STOCK_TARGETS + stock[:-6] + CST.HTML_EXTENSION for stock in stock_list]
+    for file in file_list[:10]:
+        stock_uri = file.split('/')[-1][:-5] + '-Aktie'
+        stock_targets_soup = scrap.get_soup_code_from_file(file)
+        buy, hold, sell = parse.get_analyst_ratings(stock_targets_soup)
+        db.write_single_targets_data_to_db(stock_uri, buy, hold, sell)
+
+
+def write_stock_dates_data_to_db():
+    stock_list = db.get_stock_names()
+    file_list = [CST.PATH_STOCK_DATES + stock[:-6] + CST.HTML_EXTENSION for stock in stock_list]
+    for file in file_list[:10]:
+        stock_uri = file.split('/')[-1][:-5] + '-Aktie'
+        stock_targets_soup = scrap.get_soup_code_from_file(file)
+        analysts_rating_avg = parse.get_analyst_ratings_avg(stock_targets_soup)
+        db.write_single_targets_data_to_db(stock_uri, analysts_rating_avg)

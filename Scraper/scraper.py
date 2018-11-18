@@ -84,6 +84,7 @@ def scrap_stock_infos():
     scrap_stock_info(CST.URL_STOCK_BALANCE, CST.PATH_STOCK_BALANCE)
     scrap_stock_info(CST.URL_STOCK_DATES, CST.PATH_STOCK_DATES)
     scrap_stock_info(CST.URL_STOCK_ESTIMATES, CST.PATH_STOCK_ESTIMATES)
+    scrap_stock_info(CST.URL_STOCK_TARGETS, CST.PATH_STOCK_TARGETS)
 
 
 

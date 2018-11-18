@@ -50,6 +50,9 @@ while root_menu:
             print('(3) Write Stock Histories to DB')
             print('(4) Write Stock Overview to DB')
             print('(5) Write Stock Balance to DB')
+            print('(6) Write Stock Estimates to DB')
+            print('(7) Write Stock Targets to DB')
+            print('(8) Write Stock Dates to DB')
             print('------------------------------')
             print('(u) Up')
             print('(x) Exit')
@@ -64,6 +67,12 @@ while root_menu:
                 parser.write_stock_overview_data_to_db()
             elif menu_2_selection == '5':
                 parser.write_stock_balance_data_to_db()
+            elif menu_2_selection == '6':
+                parser.write_stock_estimates_data_to_db()
+            elif menu_2_selection == '7':
+                parser.write_stock_targets_data_to_db()
+            elif menu_2_selection == '8':
+                parser.write_stock_dates_data_to_db()
             elif menu_2_selection == 'u':
                 menu_2 = False
             elif menu_2_selection == 'x':

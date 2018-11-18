@@ -217,7 +217,7 @@ def get_analyst_ratings(soup):
     values = result_td.find_all(CST.HTML_SPAN)
     list = [value.text.strip() for value in values if value.has_attr(CST.HTML_ID)]
     no_buy, no_hold, no_sell = list[0], list[1], list[2]
-    return no_buy, no_hold, no_sell
+    return int(no_buy), int(no_hold), int(no_sell)
 
 
 def get_closing_price_from_date(soup, date_str):

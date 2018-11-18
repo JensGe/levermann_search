@@ -145,13 +145,12 @@ class TestScrapping(unittest.TestCase):
         self.assertEqual(asserted_result_2018, result_2018)
         self.assertEqual(asserted_result_2019, result_2019)
 
-    # ToDo Analystenmeinungen aus Overview ziehen
     def test_get_analyst_ratings(self):
         soup = scrap.get_soup_code_from_file('data/bo_kursziele.html')
         no_buy, no_hold, no_sell = parse.get_analyst_ratings(soup)
-        asserted_no_buy = '15'
-        asserted_no_hold = '8'
-        asserted_no_sell = '0'
+        asserted_no_buy = 15
+        asserted_no_hold = 8
+        asserted_no_sell = 0
         self.assertEqual(asserted_no_buy, no_buy)
         self.assertEqual(asserted_no_hold, no_hold)
         self.assertEqual(asserted_no_sell, no_sell)

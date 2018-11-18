@@ -188,6 +188,52 @@ def write_single_balance_data_to_db(stock_uri, result_after_tax, operative_resul
             pass
 
 
+def write_single_estimate_data_to_db(stock_uri, eps_0, eps_plus_1):
+    current_date = date.get_todays_date()
+    with dataset.connect(CST.DATABASE) as database:
+        try:
+            database[CST.TABLE_COMPANY_DATA].insert(dict(AktienURI=stock_uri,
+                                                         Datum=current_date,
+                                                         EPS_0=eps_0,
+                                                         EPS_plus_1=eps_plus_1))
+        except sqlalchemy.exc.IntegrityError:
+            print('Primary Existent - Update')
+            # database[CST.TABLE_COMPANY_DATA].update(dict(AktienURI=stock_uri,
+            #                                              Datum=current_date,
+            #                                              Marktkapitalisierung=market_cap,
+            #                                              Indizes=str(stock_indizes),
+            #                                              Branchen=str(stock_sectors)), [['AktienURI', 'Datum']])
+            database.query('UPDATE %s SET '
+                           'EPS_0 = %s, '
+                           'EPS_plus_1 = %s '
+                           'WHERE AktienURI = "%s" AND Datum = "%s"'
+                           % (CST.TABLE_COMPANY_DATA, eps_0, eps_plus_1, stock_uri, current_date))
+            pass
+
+
+def write_single_targets_data_to_db(stock_uri, analyst_buy, analyst_hold, analyst_sell):
+    current_date = date.get_todays_date()
+    with dataset.connect(CST.DATABASE) as database:
+        try:
+            database[CST.TABLE_COMPANY_DATA].insert(dict(AktienURI=stock_uri,
+                                                         Datum=current_date,
+                                                         Analysten_Buy=analyst_buy,
+                                                         Analysten_Hold=analyst_hold,
+                                                         Analysten_Sell=analyst_sell))
+        except sqlalchemy.exc.IntegrityError:
+            print('Primary Existent - Update')
+            # database[CST.TABLE_COMPANY_DATA].update(dict(AktienURI=stock_uri,
+            #                                              Datum=current_date,
+            #                                              Marktkapitalisierung=market_cap,
+            #                                              Indizes=str(stock_indizes),
+            #                                              Branchen=str(stock_sectors)), [['AktienURI', 'Datum']])
+            database.query('UPDATE %s SET '
+                           'Analysten_Buy = %s, '
+                           'Analysten_Hold = %s, '
+                           'Analysten_Sell = %s '
+                           'WHERE AktienURI = "%s" AND Datum = "%s"'
+                           % (CST.TABLE_COMPANY_DATA, analyst_buy, analyst_hold, analyst_sell, stock_uri, current_date))
+            pass
 ######## OLD
 ################################################
 def select_data(table):
