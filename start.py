@@ -72,7 +72,7 @@ while root_menu:
             elif menu_2_selection == '7':
                 parser.write_stock_targets_data_to_db()
             elif menu_2_selection == '8':
-                parser.write_stock_dates_data_to_db()
+                parser.write_stock_last_quarterly_figures_date_to_db()
             elif menu_2_selection == 'u':
                 menu_2 = False
             elif menu_2_selection == 'x':

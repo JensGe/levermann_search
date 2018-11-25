@@ -68,12 +68,14 @@ def scrap_stock_histories():
 
 
 def scrap_stock_info(scrap_url, save_path):
-    scrap_list = db.create_stock_overview_url_list(scrap_url)
+    if scrap_url == CST.URL_STOCK_OVERVIEW:
+        scrap_list = db.create_stock_overview_url_list(scrap_url)
+    else:
+        scrap_list = db.create_stock_info_url_list(scrap_url)
     driver = scrap.init_driver()
     for url in scrap_list[:10]:                     # ToDo Testcase: Only 10 Items, delete [:10]
         stock_uri = url.split('/')[-1]
-        short_stock_uri = stock_uri[:-6]
-        file_name = save_path + short_stock_uri + CST.HTML_EXTENSION
+        file_name = save_path + stock_uri + CST.HTML_EXTENSION
         soup = scrap.get_soup_code_from_url(driver, url)
         scrap.save_soup_to_file(soup, file_name)
     scrap.close_driver(driver)
@@ -81,10 +83,10 @@ def scrap_stock_info(scrap_url, save_path):
 
 def scrap_stock_infos():
     scrap_stock_info(CST.URL_STOCK_OVERVIEW, CST.PATH_STOCK_OVERVIEW)
-    scrap_stock_info(CST.URL_STOCK_BALANCE, CST.PATH_STOCK_BALANCE)
-    scrap_stock_info(CST.URL_STOCK_DATES, CST.PATH_STOCK_DATES)
-    scrap_stock_info(CST.URL_STOCK_ESTIMATES, CST.PATH_STOCK_ESTIMATES)
-    scrap_stock_info(CST.URL_STOCK_TARGETS, CST.PATH_STOCK_TARGETS)
+    # scrap_stock_info(CST.URL_STOCK_BALANCE, CST.PATH_STOCK_BALANCE)
+    # scrap_stock_info(CST.URL_STOCK_DATES, CST.PATH_STOCK_DATES)
+    # scrap_stock_info(CST.URL_STOCK_ESTIMATES, CST.PATH_STOCK_ESTIMATES)
+    # scrap_stock_info(CST.URL_STOCK_TARGETS, CST.PATH_STOCK_TARGETS)
 
 
 

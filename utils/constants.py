@@ -18,6 +18,13 @@ URL_STOCK_TARGETS = 'https://www.boerse-online.de/kursziele/'
 URL_STOCK_DATES = 'https://www.boerse-online.de/termine/uebersicht/'
 URL_STOCK_ESTIMATES = 'https://www.boerse-online.de/schaetzungen/'
 
+URL_STOCK_HISTORY_EXT = ''
+URL_STOCK_OVERVIEW_EXT = '-aktie'
+URL_STOCK_BALANCE_EXT = ''
+URL_STOCK_TARGETS_EXT = ''
+URL_STOCK_DATES_EXT = ''
+URL_STOCK_ESTIMATES_EXT = ''
+
 
 EXCHANGE_APPENDIX = '/FSE'
 ALT_EXCHANGE_APPENDIX = '/XETRA'
@@ -83,11 +90,15 @@ TABLE_INDIZES = 'Aktienindizes'
 TABLE_INDEX_HISTORIES = 'Indexhistorien'
 TABLE_STOCKS = 'Aktien'
 TABLE_STOCKS_HISTORIES = 'Aktienhistorien'
+TABLE_STOCK_DATES = 'Aktientermine'
 TABLE_INDEX_CONTENTS = 'Indexinhalte'
 TABLE_COMPANY_DATA = 'Unternehmensdaten'
+
 
 
 # Database Columns
 COLUMN_URI = 'URI'
 COLUMN_PAGES = 'Seiten'
+COLUMN_URI_LONG = 'AktienURI'
+
 

@@ -42,6 +42,12 @@ def create_stock_overview_url_list(base_url):
     return url_list
 
 
+def create_stock_info_url_list(base_url):
+    stock_list = get_stock_names()
+    url_list = [base_url + stock[:-6] for stock in stock_list]
+    return url_list
+
+
 def check_if_exists(search, table, column):
     with dataset.connect(CST.DATABASE) as database:
         results = database.query("SELECT %s FROM %s WHERE %s = '%s'" % (column, table, column, search))
@@ -138,12 +144,6 @@ def write_single_overview_data_to_db(stock_uri, market_cap, stock_indizes, stock
                                                          Indizes=str(stock_indizes),
                                                          Branchen=str(stock_sectors)))
         except sqlalchemy.exc.IntegrityError:
-            print('Primary Existent - Update')
-            # database[CST.TABLE_COMPANY_DATA].update(dict(AktienURI=stock_uri,
-            #                                              Datum=current_date,
-            #                                              Marktkapitalisierung=market_cap,
-            #                                              Indizes=str(stock_indizes),
-            #                                              Branchen=str(stock_sectors)), [['AktienURI', 'Datum']])
             database.query('UPDATE %s SET Marktkapitalisierung = "%s", Indizes = "%s", Branchen = "%s" '
                            'WHERE AktienURI = "%s" AND Datum = "%s"'
                            % (CST.TABLE_COMPANY_DATA, market_cap, str(stock_indizes),
@@ -167,12 +167,7 @@ def write_single_balance_data_to_db(stock_uri, result_after_tax, operative_resul
                                                          EPS_minus_2=eps_minus_2,
                                                          EPS_minus_1=eps_minus_1))
         except sqlalchemy.exc.IntegrityError:
-            print('Primary Existent - Update')
-            # database[CST.TABLE_COMPANY_DATA].update(dict(AktienURI=stock_uri,
-            #                                              Datum=current_date,
-            #                                              Marktkapitalisierung=market_cap,
-            #                                              Indizes=str(stock_indizes),
-            #                                              Branchen=str(stock_sectors)), [['AktienURI', 'Datum']])
+            print('Primary Key Existent - Update')
             database.query('UPDATE %s SET '
                            'Ergebnis_nach_Steuern = %s, '
                            'Operatives_Ergebnis = %s, '
@@ -197,12 +192,7 @@ def write_single_estimate_data_to_db(stock_uri, eps_0, eps_plus_1):
                                                          EPS_0=eps_0,
                                                          EPS_plus_1=eps_plus_1))
         except sqlalchemy.exc.IntegrityError:
-            print('Primary Existent - Update')
-            # database[CST.TABLE_COMPANY_DATA].update(dict(AktienURI=stock_uri,
-            #                                              Datum=current_date,
-            #                                              Marktkapitalisierung=market_cap,
-            #                                              Indizes=str(stock_indizes),
-            #                                              Branchen=str(stock_sectors)), [['AktienURI', 'Datum']])
+            print('Primary Key Existent - Update')
             database.query('UPDATE %s SET '
                            'EPS_0 = %s, '
                            'EPS_plus_1 = %s '
@@ -221,12 +211,7 @@ def write_single_targets_data_to_db(stock_uri, analyst_buy, analyst_hold, analys
                                                          Analysten_Hold=analyst_hold,
                                                          Analysten_Sell=analyst_sell))
         except sqlalchemy.exc.IntegrityError:
-            print('Primary Existent - Update')
-            # database[CST.TABLE_COMPANY_DATA].update(dict(AktienURI=stock_uri,
-            #                                              Datum=current_date,
-            #                                              Marktkapitalisierung=market_cap,
-            #                                              Indizes=str(stock_indizes),
-            #                                              Branchen=str(stock_sectors)), [['AktienURI', 'Datum']])
+            print('Primary Key Existent - Update')
             database.query('UPDATE %s SET '
                            'Analysten_Buy = %s, '
                            'Analysten_Hold = %s, '
@@ -234,8 +219,33 @@ def write_single_targets_data_to_db(stock_uri, analyst_buy, analyst_hold, analys
                            'WHERE AktienURI = "%s" AND Datum = "%s"'
                            % (CST.TABLE_COMPANY_DATA, analyst_buy, analyst_hold, analyst_sell, stock_uri, current_date))
             pass
-######## OLD
-################################################
+
+
+def write_single_stock_dates_data_to_db(stock_uri, figures_date):
+    current_date = date.get_todays_date()
+    with dataset.connect(CST.DATABASE) as database:
+        try:
+            database[CST.TABLE_STOCK_DATES].insert(dict(AktienURI=stock_uri,
+                                                        Datum=figures_date,
+                                                        Terminart='Quarterly/Yearly'))
+        except sqlalchemy.exc.IntegrityError:
+            print('Primary Key Existent - Update')
+            database.query('UPDATE %s SET '
+                           'Analysten_Buy = %s, '
+                           'Analysten_Hold = %s, '
+                           'Analysten_Sell = %s '
+                           'WHERE AktienURI = "%s" AND Datum = "%s"'
+                           % (CST.TABLE_COMPANY_DATA, analyst_buy, analyst_hold, analyst_sell, stock_uri, current_date))
+            pass
+
+#################
+#
+# OLD TODO DELETE
+# >>>>>>>>>>>>>>
+#
+#################
+
+
 def select_data(table):
     with dataset.connect(CST.DATABASE) as tx:
         print(tx[table])

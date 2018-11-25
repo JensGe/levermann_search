@@ -90,11 +90,11 @@ def write_stock_targets_data_to_db():
         db.write_single_targets_data_to_db(stock_uri, buy, hold, sell)
 
 
-def write_stock_dates_data_to_db():
+def write_stock_last_quarterly_figures_date_to_db():
     stock_list = db.get_stock_names()
     file_list = [CST.PATH_STOCK_DATES + stock[:-6] + CST.HTML_EXTENSION for stock in stock_list]
     for file in file_list[:10]:
         stock_uri = file.split('/')[-1][:-5] + '-Aktie'
         stock_targets_soup = scrap.get_soup_code_from_file(file)
-        analysts_rating_avg = parse.get_analyst_ratings_avg(stock_targets_soup)
-        db.write_single_targets_data_to_db(stock_uri, analysts_rating_avg)
+        last_figures_date = parse.get_last_quarterly_figures_date(stock_targets_soup)
+        db.write_single_stock_dates_data_to_db(stock_uri, last_figures_date)

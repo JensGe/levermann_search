@@ -127,6 +127,7 @@ class TestScrapping(unittest.TestCase):
         asserted_result = date.string_to_date('09.08.18')
         self.assertEqual(asserted_result, result)
 
+
     def test_get_result_per_share_last_three_years(self):
         soup = scrap.get_soup_code_from_file('data/bo_bilanz_guv.html')
         result_2015, result_2016, result_2017 = parse.get_result_per_share_last_three_years(soup)
