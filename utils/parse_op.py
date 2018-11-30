@@ -82,7 +82,7 @@ def update_index_stocks_db(input_table, name):
                                            stock_name=input_table[i][0],
                                            ISIN=input_table[i][1],
                                            stock_link=input_table[i][2],
-                                           last_update=date.date_to_string(date.get_todays_date())))
+                                           last_update=date.date_to_string(date.get_current_date())))
     return True
 
 
@@ -171,10 +171,13 @@ def get_current_value_of_attribute_old(soup, attribute):
 
 
 def get_latest_date_of_list(date_list):
-    current_date = date.get_todays_date()
-    date_list_past = [date_ for date_ in date_list if date_ < current_date]
-    max_date = max(date_list_past)
-    return max_date
+    current_date = date.get_current_date()
+    quarter_year_ago = date.edit_date(current_date, CST.DT_MINUS, 3, CST.DT_MONTH)
+    date_list_past = [date_ for date_ in date_list if quarter_year_ago < date_ < current_date]
+    try:
+        return max(date_list_past)
+    except ValueError:
+        return None
 
 
 def get_last_quarterly_figures_date(soup):
@@ -252,7 +255,7 @@ def extract_index_stocks_to_list(input_table):
             tds = []
             for td in row_items[:1]:
                 tds.append(td.text.strip().split('\n')[0])
-                tds.append(td.text.strip().split('\n')[3].strip())
+                # tds.append(td.text.strip().split('\n')[3].strip())
             for a in links[:1]:
                 tds.append(a[CST.HTML_HREF].split('/')[-1])
             index_stock_list.append(tds)

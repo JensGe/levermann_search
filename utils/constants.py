@@ -65,7 +65,6 @@ HTML_SPAN = 'span'
 HTML_HREF = 'href'
 
 
-
 # Local Paths
 PATH_INDEX_CONTENT = 'data/indizes/content/'
 PATH_INDEX_HISTORY = 'data/indizes/history/'
@@ -93,12 +92,36 @@ TABLE_STOCKS_HISTORIES = 'Aktienhistorien'
 TABLE_STOCK_DATES = 'Aktientermine'
 TABLE_INDEX_CONTENTS = 'Indexinhalte'
 TABLE_COMPANY_DATA = 'Unternehmensdaten'
-
+TABLE_LEVERMANN = 'Levermannscores'
 
 
 # Database Columns
 COLUMN_URI = 'URI'
 COLUMN_PAGES = 'Seiten'
 COLUMN_URI_LONG = 'AktienURI'
+COLUMN_EARNINGS_AT = 'Ergebnis_nach_Steuern'
+COLUMN_EQUITY_CAPITAL = 'Eigenkapital'
+COLUMN_OPERATIVE_RESULT = 'Operatives_Ergebnis'
+COLUMN_SALES_REVENUE = 'Umsatzerloese'
+COLUMN_BALANCE = 'Bilanzsumme'
+COLUMN_CLOSING_VALUE = 'Schlusswert'
+COLUMN_EPS_M3 = 'EPS_minus_3'
+COLUMN_EPS_M2 = 'EPS_minus_2'
+COLUMN_EPS_M1 = 'EPS_minus_1'
+COLUMN_EPS_0 = 'EPS_0'
+COLUMN_EPS_P1 = 'EPS_plus_1'
+COLUMN_ANALYST_BUY = 'Analysten_Buy'
+COLUMN_ANALYST_HOLD = 'Analysten_Hold'
+COLUMN_ANALYST_SELL = 'Analysten_Sell'
+COLUMN_MARKET_CAP = 'Marktkapitalisierung'
+COLUMN_DATE = 'Datum'
+
+# Date Enums
+DT_MINUS = 'minus'
+DT_PLUS = 'plus'
+DT_DAY = 'day'
+DT_MONTH = 'month'
 
 
+# Data
+MARKET_CAP_THRESHOLD = 5000

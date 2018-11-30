@@ -21,16 +21,16 @@ class TestScrapping(unittest.TestCase):
                          ['12.09.2018', '12.032,30', '11.989,27', '12.046,66', '11.952,49']]
         self.assertEqual(asserted_list, table_list[:5])
 
-    # def test_index_stocks_list_extract(self):
-    #     soup = scrap.get_soup_code_of_file('data/bo_index_stocks.html')
-    #     stocks_table = soup.find_all('div', {'id': 'index-list-container'})
-    #     table_list = parse.extract_index_stocks_to_list(stocks_table)
-    #     asserted_list = [['adidas', 'DE000A1EWWW0', 'adidas-Aktie'],
-    #                      ['Allianz', 'DE0008404005', 'allianz-Aktie'],
-    #                      ['BASF', 'DE000BASF111', 'basf-Aktie'],
-    #                      ['Bayer', 'DE000BAY0017', 'bayer-Aktie'],
-    #                      ['Beiersdorf', 'DE0005200000', 'beiersdorf-Aktie']]
-    #     self.assertEqual(table_list[:5], asserted_list)
+    def test_index_stocks_list_extract(self):
+        soup = scrap.get_soup_code_from_file('data/bo_index_stocks.html')
+        stocks_table = soup.find_all('div', {'id': 'index-list-container'})
+        table_list = parse.extract_index_stocks_to_list(stocks_table)
+        asserted_list = [['adidas', 'adidas-Aktie'],
+                         ['Allianz', 'allianz-Aktie'],
+                         ['BASF', 'basf-Aktie'],
+                         ['Bayer', 'bayer-Aktie'],
+                         ['Beiersdorf', 'beiersdorf-Aktie']]
+        self.assertEqual(table_list[:5], asserted_list)
 
     def test_pagination_getting(self):
         soup = scrap.get_soup_code_from_file('data/bo_index_stocks_pagination.html')

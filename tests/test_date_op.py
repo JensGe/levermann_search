@@ -9,7 +9,7 @@ class TestDate(unittest.TestCase):
         pass
 
     def test_get_todays_date(self):
-        calc_date = date.get_todays_date().strftime("%d.%m.%Y")
+        calc_date = date.get_current_date().strftime("%d.%m.%Y")
         self.assertEqual(len(calc_date), 10)
 
     def test_get_date_six_months_ago(self):

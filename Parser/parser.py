@@ -42,7 +42,7 @@ def write_stock_histories_from_html_to_db():
 def write_stock_overview_data_to_db():
     stock_list = db.get_stock_names()
     file_list = [CST.PATH_STOCK_OVERVIEW + stock[:-6] + CST.HTML_EXTENSION for stock in stock_list]
-    for file in file_list[:10]:
+    for file in file_list[:10]:                                                 #TODO delete :10 Limit
         stock_uri = file.split('/')[-1][:-5] + '-Aktie'
         stock_overview_soup = scrap.get_soup_code_from_file(file)
         market_cap = parse.get_market_cap(stock_overview_soup)
@@ -54,7 +54,7 @@ def write_stock_overview_data_to_db():
 def write_stock_balance_data_to_db():
     stock_list = db.get_stock_names()
     file_list = [CST.PATH_STOCK_BALANCE + stock[:-6] + CST.HTML_EXTENSION for stock in stock_list]
-    for file in file_list[:10]:
+    for file in file_list[:10]:                                                #TODO delete :10 Limit
         stock_uri = file.split('/')[-1][:-5] + '-Aktie'
         stock_balance_soup = scrap.get_soup_code_from_file(file)
 
@@ -72,7 +72,7 @@ def write_stock_balance_data_to_db():
 def write_stock_estimates_data_to_db():
     stock_list = db.get_stock_names()
     file_list = [CST.PATH_STOCK_ESTIMATES + stock[:-6] + CST.HTML_EXTENSION for stock in stock_list]
-    for file in file_list[:10]:
+    for file in file_list[:10]:                                                #TODO delete :10 Limit
         stock_uri = file.split('/')[-1][:-5] + '-Aktie'
         stock_estimate_soup = scrap.get_soup_code_from_file(file)
         eps_0, eps_plus_1 = parse.get_result_per_share_current_and_next_year(stock_estimate_soup)
@@ -83,7 +83,7 @@ def write_stock_estimates_data_to_db():
 def write_stock_targets_data_to_db():
     stock_list = db.get_stock_names()
     file_list = [CST.PATH_STOCK_TARGETS + stock[:-6] + CST.HTML_EXTENSION for stock in stock_list]
-    for file in file_list[:10]:
+    for file in file_list[:10]:                                                #TODO delete :10 Limit
         stock_uri = file.split('/')[-1][:-5] + '-Aktie'
         stock_targets_soup = scrap.get_soup_code_from_file(file)
         buy, hold, sell = parse.get_analyst_ratings(stock_targets_soup)
@@ -93,8 +93,11 @@ def write_stock_targets_data_to_db():
 def write_stock_last_quarterly_figures_date_to_db():
     stock_list = db.get_stock_names()
     file_list = [CST.PATH_STOCK_DATES + stock[:-6] + CST.HTML_EXTENSION for stock in stock_list]
-    for file in file_list[:10]:
+    for file in file_list[:10]:                                                #TODO delete :10 Limit
         stock_uri = file.split('/')[-1][:-5] + '-Aktie'
         stock_targets_soup = scrap.get_soup_code_from_file(file)
         last_figures_date = parse.get_last_quarterly_figures_date(stock_targets_soup)
-        db.write_single_stock_dates_data_to_db(stock_uri, last_figures_date)
+        if last_figures_date is None:
+            continue
+        else:
+            db.write_single_stock_dates_data_to_db(stock_uri, last_figures_date)

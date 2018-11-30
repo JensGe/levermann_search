@@ -75,6 +75,36 @@ class TestDatabase(unittest.TestCase):
     #                      ['03.10.2018', 9175.21, 9126.31]]
     #     db.write_stock_history_to_db(index_history, index_URI)
 
+    def test_get_earnings_after_tax(self):
+        result = db.get_earnings_after_tax('ab_inbev-Aktie')
+        self.assertEqual(7089.06, result)
+
+    def test_get_equity_capital(self):
+        result = db.get_equity_capital('ab_inbev-Aktie')
+        self.assertEqual(66805.46, result)
+
+    def test_eps_s(self):
+        eps_s = db.get_eps('ab_inbev-Aktie')
+        self.assertEqual([4.55, 0.65, 3.60, 3.47, 4.22], eps_s)
+
+    def test_ratings(self):
+        ratings = db.get_analyst_ratings('ab_inbev-Aktie')
+        self.assertEqual([1, 0, 0], ratings)
+
+    def test_caps(self):
+        is_cap = db.is_small_cap('ab_inbev-Aktie')
+        self.assertFalse(is_cap)
+
+    def test_get_closing_stock_price(self):
+        stock_uri = 'credit_suisse-Aktie'
+        quarterly = '2018-11-01'
+        closing_price = db.get_closing_stock_price(quarterly, stock_uri)
+        self.assertEqual(11.36, float(closing_price))
+
+        quarterly_we = '2018-10-28'
+        closing_price = db.get_closing_stock_price(quarterly_we, stock_uri)
+        self.assertEqual(10.92, float(closing_price))
+
     def test_get_latest_date_from_history(self):
         index_uri = 'dax'
         latest_date = db.get_latest_date_from_index_history(index_uri)

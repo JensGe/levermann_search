@@ -20,8 +20,8 @@ def scrap_index_histories():
     driver = scrap.init_driver()
     for url in scrap_list:
         index_uri = url.split('/')[-1]
-        end_date = date.get_todays_date()
-        start_date = date.subtract_one_year(date.get_todays_date())
+        end_date = date.get_current_date()
+        start_date = date.subtract_one_year(date.get_current_date())
         max_db_date = db.get_latest_date_from_index_history(index_uri)
         file_name = CST.PATH_INDEX_HISTORY + index_uri + CST.HTML_EXTENSION
         if max_db_date is None:
@@ -47,8 +47,8 @@ def scrap_stock_histories():
     for url in scrap_list:
         stock_uri = url.split('/')[-2]
         short_stock_uri = stock_uri[:-6]
-        end_date = date.get_todays_date()
-        start_date = date.subtract_one_year(date.get_todays_date())
+        end_date = date.get_current_date()
+        start_date = date.subtract_one_year(date.get_current_date())
         max_db_date = db.get_latest_date_from_index_history(stock_uri)
         file_name = CST.PATH_STOCK_HISTORY + short_stock_uri + CST.HTML_EXTENSION
         if max_db_date is None:
@@ -83,10 +83,10 @@ def scrap_stock_info(scrap_url, save_path):
 
 def scrap_stock_infos():
     scrap_stock_info(CST.URL_STOCK_OVERVIEW, CST.PATH_STOCK_OVERVIEW)
-    # scrap_stock_info(CST.URL_STOCK_BALANCE, CST.PATH_STOCK_BALANCE)
-    # scrap_stock_info(CST.URL_STOCK_DATES, CST.PATH_STOCK_DATES)
-    # scrap_stock_info(CST.URL_STOCK_ESTIMATES, CST.PATH_STOCK_ESTIMATES)
-    # scrap_stock_info(CST.URL_STOCK_TARGETS, CST.PATH_STOCK_TARGETS)
+    scrap_stock_info(CST.URL_STOCK_BALANCE, CST.PATH_STOCK_BALANCE)
+    scrap_stock_info(CST.URL_STOCK_DATES, CST.PATH_STOCK_DATES)
+    scrap_stock_info(CST.URL_STOCK_ESTIMATES, CST.PATH_STOCK_ESTIMATES)
+    scrap_stock_info(CST.URL_STOCK_TARGETS, CST.PATH_STOCK_TARGETS)
 
 
 

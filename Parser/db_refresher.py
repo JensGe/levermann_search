@@ -16,7 +16,7 @@ def select_index_intervall(index_name):
     :param index_name: the stockindex's name
     :return: start_date_str, end_date_str: as strings
     """
-    today_date = date.get_todays_date()
+    today_date = date.get_current_date()
     start_date = date.subtract_one_year(today_date)
 
     max_db_date = db.get_max_date_of_index_history(index_name)
@@ -72,7 +72,7 @@ def select_stock_intervall(stock_name):
     :param stock_name: the stocks name
     :return: start_date_str, end_date_str: as strings
     """
-    today_date = date.get_todays_date()
+    today_date = date.get_current_date()
     start_date = date.subtract_one_year(today_date)
 
     max_db_date = db.get_max_date_of_stock_history(stock_name)
@@ -121,7 +121,7 @@ def download_soups_for_stock(stock_short_link):
 
     for url in download_list:
         soup = scrap.get_soup_code_from_url(driver, url)
-        file_name = 'data/' + stock_short_link + '/' + url.split('/')[3] + '_' + date.date_to_string(date.get_todays_date()) + '.html'
+        file_name = 'data/' + stock_short_link + '/' + url.split('/')[3] + '_' + date.date_to_string(date.get_current_date()) + '.html'
         scrap.save_soup_to_file(soup, file_name)
 
     scrap.close_driver(driver)
