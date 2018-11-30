@@ -111,6 +111,11 @@ class TestDatabase(unittest.TestCase):
         asserted_date = date.string_to_date('29.10.2018')
         self.assertEqual(asserted_date, latest_date)
 
+    def test_get_index_of_stock(self):
+        stock_uri = 'credit_suisse-Aktie'
+        index_uri = db.get_index_of_stock(stock_uri)
+        self.assertEqual('SMI', index_uri)
+
 
 
     def tearDown(self):

@@ -68,13 +68,18 @@ def write_stock_list_to_db(stock_list, index_name):
 
 def write_stock_to_stock_table(stock):
     with dataset.connect(CST.DATABASE) as database:
-        database[CST.TABLE_STOCKS].insert(dict(ISIN=stock[1], Name=stock[0], URI=stock[2]))
+        try:
+            database[CST.TABLE_STOCKS].insert(dict(Name=stock[0], URI=stock[1]))
+        except sqlalchemy.exc.IntegrityError:
+            pass
 
 
-def write_stock_to_stock_contents_table(isin, index_name, current_date):
+def write_stock_to_stock_contents_table(aktien_uri, index_name, current_date):
     with dataset.connect(CST.DATABASE) as database:
         try:
-            database[CST.TABLE_INDEX_CONTENTS].insert(dict(IndexURI=index_name, AktienISIN=isin, Abrufdatum=current_date))
+            database[CST.TABLE_INDEX_CONTENTS].insert(dict(IndexURI=index_name,
+                                                           AktienURI=aktien_uri,
+                                                           Abrufdatum=current_date))
         except sqlalchemy.exc.IntegrityError:
             pass
 
@@ -499,9 +504,6 @@ def get_closing_stock_price(request_date, aktien_uri):
         except IndexError:
             pass
 
-# def get_index_of_stock(stock):
-
-
 
 def get_closing_index_price(request_date, index_uri):
     with dataset.connect(CST.DATABASE) as database:
@@ -516,7 +518,20 @@ def get_closing_index_price(request_date, index_uri):
             pass
 
 
-def save______to_db(stock_uri, rating, rating_score):
+def get_index_of_stock(aktien_uri):
+    with dataset.connect(CST.DATABASE) as database:
+        try:
+            results = database.query("SELECT * FROM %s WHERE AktienURI = '%s'"
+                                     % (CST.TABLE_INDEX_CONTENTS, aktien_uri))
+            index_uri = [item for item in results][0][CST.COLUMN_INDEX_URI]
+            return index_uri
+        except ValueError:
+            pass
+        except IndexError:
+            pass
+
+
+def save_quaterly_reaction_to_db(stock_uri, rating, rating_score):
     current_date = date.get_current_date()
     with dataset.connect(CST.DATABASE) as database:
         try:

@@ -97,8 +97,9 @@ TABLE_LEVERMANN = 'Levermannscores'
 
 # Database Columns
 COLUMN_URI = 'URI'
+COLUMN_INDEX_URI = 'IndexURI'
 COLUMN_PAGES = 'Seiten'
-COLUMN_URI_LONG = 'AktienURI'
+COLUMN_STOCK_URI = 'AktienURI'
 COLUMN_EARNINGS_AT = 'Ergebnis_nach_Steuern'
 COLUMN_EQUITY_CAPITAL = 'Eigenkapital'
 COLUMN_OPERATIVE_RESULT = 'Operatives_Ergebnis'
