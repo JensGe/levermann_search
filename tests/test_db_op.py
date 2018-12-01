@@ -98,12 +98,13 @@ class TestDatabase(unittest.TestCase):
     def test_get_closing_stock_price(self):
         stock_uri = 'credit_suisse-Aktie'
         quarterly = '2018-11-01'
-        closing_price = db.get_closing_stock_price(quarterly, stock_uri)
+        closing_price, actual_date = db.get_closing_stock_price(quarterly, stock_uri)
         self.assertEqual(11.36, float(closing_price))
 
         quarterly_we = '2018-10-28'
-        closing_price = db.get_closing_stock_price(quarterly_we, stock_uri)
+        closing_price, actual_date = db.get_closing_stock_price(quarterly_we, stock_uri)
         self.assertEqual(10.92, float(closing_price))
+        self.assertEqual('26.10.2018', date.date_to_string(actual_date))
 
     def test_get_latest_date_from_history(self):
         index_uri = 'dax'
@@ -116,6 +117,15 @@ class TestDatabase(unittest.TestCase):
         index_uri = db.get_index_of_stock(stock_uri)
         self.assertEqual('SMI', index_uri)
 
+    def test_get_stock_names(self):
+        asserted_stock_list = ['aktie1', 'aktie2', 'aktie3']
+        stock_names = db.get_stock_names()
+        self.assertEqual(asserted_stock_list, stock_names[:3])
+
+    def test_calculate_list_change(self):
+        input_list = [100, 90, 99, 49.5]
+        asserted_list = [-0.1, 0.1, -0.5]
+        self.assertEqual(asserted_list, db.calculate_list_changes(input_list))
 
 
     def tearDown(self):

@@ -43,6 +43,16 @@ class TestScrapping(unittest.TestCase):
         asserted_market_cap = 37530
         self.assertEqual(asserted_market_cap, market_cap_value)
 
+        soup2 = scrap.get_soup_code_from_file('data/bo_3i-Aktie_overview.html')
+        market_cap_value2 = parse.get_market_cap(soup2)
+        asserted_market_cap2 = 9600
+        self.assertEqual(asserted_market_cap2, market_cap_value2)
+
+        soup3 = scrap.get_soup_code_from_file('data/bo_london_stock_exchange-Aktie_overview.html')
+        market_cap_value3 = parse.get_market_cap(soup3)
+        asserted_market_cap3 = 15890
+        self.assertEqual(asserted_market_cap3, market_cap_value3)
+
     def test_convert_market_cap(self):
         market_cap_string = '37,53 Mrd'
         asserted_marked_cap = 37530
@@ -72,6 +82,11 @@ class TestScrapping(unittest.TestCase):
 
         self.assertEqual(asserted_indizes_values, link_items)
 
+        soup2 = scrap.get_soup_code_from_file('data/bo_3i-Aktie_overview.html')
+        link_items2 = parse.get_listed_indizes(soup2)
+        asserted_indizes_values2 = ['FTSE 100', 'FTSE Allshare']
+        self.assertEqual(asserted_indizes_values2, link_items2)
+
     def test_stock_sectors(self):
         soup = scrap.get_soup_code_from_file('data/bo_sap-aktie.html')
         link_items = parse.get_sectors(soup)
@@ -83,6 +98,15 @@ class TestScrapping(unittest.TestCase):
         link_items_2 = parse.get_sectors(soup_2)
         asserted_indizes_values_2 = ['Getränke / Tabak']
         self.assertEqual(asserted_indizes_values_2, link_items_2)
+
+        soup3 = scrap.get_soup_code_from_file('data/bo_3i-Aktie_overview.html')
+        link_items3 = parse.get_sectors(soup3)
+        asserted_indizes_values3 = ['Finanzdienstleister']
+        self.assertEqual(asserted_indizes_values3, link_items3)
+
+    def test_if_is_data_available(self):
+        soup = scrap.get_soup_code_from_file('data/bo_bhp_billiton_balance.html')
+        self.assertFalse(parse.is_data_available(soup))
 
     def test_get_result_after_tax(self):
         soup = scrap.get_soup_code_from_file('data/bo_bilanz_guv.html')

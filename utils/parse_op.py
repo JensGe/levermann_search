@@ -111,24 +111,43 @@ def save_stock_history_to_db(input_table, index_name, stock_name, isin):
 # V2
 # Stock / Company Infos
 
+def is_data_available(soup):
+    try:
+        info = soup.find(CST.HTML_DIV, {CST.HTML_CLASS: 'state_content'})
+        return info.text.strip() != CST.NO_DATA_AVAILABLE_LONG
+    except AttributeError:
+        return True
+
+
 def convert_market_cap(market_cap_string):
-    market_cap_value, market_cap_multiplier = market_cap_string.split(' ')
-    market_cap_value = convert_ger_to_en_numeric(market_cap_value)
-    if market_cap_multiplier == 'Mrd':
-        market_cap_value *= 1000
-    elif market_cap_multiplier == 'Tsd':
-        market_cap_value /= 1000
-    return market_cap_value
+    try:
+        market_cap_value, market_cap_multiplier = market_cap_string.split(' ')
+        market_cap_value = convert_ger_to_en_numeric(market_cap_value)
+        if market_cap_multiplier == 'Mrd':
+            market_cap_value *= 1000
+        elif market_cap_multiplier == 'Tsd':
+            market_cap_value /= 1000
+        return market_cap_value
+    except ValueError:
+        print('Market Cap Error: %s' % market_cap_string)
+        pass
 
 
 def convert_ger_to_en_numeric(string):
-    return float(string.replace('.', '').replace(',', '.'))
+    try:
+        en_numeric = float(string.replace('.', '').replace(',', '.'))
+        return en_numeric
+    except ValueError:
+        return 0
 
 
 def get_market_cap(soup):
-    market_cap_loc = soup.find(text=re.compile(CST.TEXT_MARKET_CAP))
-    market_cap = market_cap_loc.find_next(CST.HTML_TD).contents[0].strip()
-    return convert_market_cap(market_cap)
+    try:
+        market_cap_loc = soup.find(text=re.compile(CST.TEXT_MARKET_CAP))
+        market_cap = market_cap_loc.find_next(CST.HTML_TD).contents[0].strip()
+        return convert_market_cap(market_cap)
+    except AttributeError:
+        pass
 
 
 def get_listed_indizes(soup):
@@ -198,6 +217,7 @@ def get_last_quarterly_figures_date(soup):
 def get_result_per_share_last_three_years(soup):
     result_td = soup.find(CST.HTML_TD, text=re.compile(CST.TEXT_EPS_UNDILUTED))
     result_tr = result_td.parent
+
     result_minus_3 = result_tr.find_all(CST.HTML_TD)[-3].text.strip()
     result_minus_2 = result_tr.find_all(CST.HTML_TD)[-2].text.strip()
     result_minus_1 = result_tr.find_all(CST.HTML_TD)[-1].text.strip()

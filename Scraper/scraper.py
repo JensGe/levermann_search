@@ -1,3 +1,5 @@
+import os
+
 from utils import scrap_op as scrap
 from utils import db_op as db
 from utils import date_op as date
@@ -49,8 +51,12 @@ def scrap_stock_histories():
         short_stock_uri = stock_uri[:-6]
         end_date = date.get_current_date()
         start_date = date.subtract_one_year(date.get_current_date())
-        max_db_date = db.get_latest_date_from_index_history(stock_uri)
+        max_db_date = db.get_latest_date_from_stock_history(stock_uri)
         file_name = CST.PATH_STOCK_HISTORY + short_stock_uri + CST.HTML_EXTENSION
+        if os.path.isfile(file_name):
+            print('File already existing - skipping')
+            continue
+
         if max_db_date is None:
             pass
         elif date.add_one_day(max_db_date) == end_date:
@@ -73,9 +79,12 @@ def scrap_stock_info(scrap_url, save_path):
     else:
         scrap_list = db.create_stock_info_url_list(scrap_url)
     driver = scrap.init_driver()
-    for url in scrap_list[:10]:                     # ToDo Testcase: Only 10 Items, delete [:10]
+    for url in scrap_list:
         stock_uri = url.split('/')[-1]
         file_name = save_path + stock_uri + CST.HTML_EXTENSION
+        if os.path.isfile(file_name):
+            print('File already existing - skipping')
+            continue
         soup = scrap.get_soup_code_from_url(driver, url)
         scrap.save_soup_to_file(soup, file_name)
     scrap.close_driver(driver)

@@ -32,11 +32,12 @@ ALT_EXCHANGE_APPENDIX = '/XETRA'
 
 # Scraping Parts
 NO_DATA_AVAILABLE = 'Keine Daten verfügbar'
+NO_DATA_AVAILABLE_LONG = 'Zu diesem Datensatz liegen uns leider keine Daten vor.'
 
 TEXT_LAST_DATES = 'vergangene Termine'
 TEXT_EPS_UNDILUTED = 'Ergebnis je Aktie unverwässert'
 TEXT_EPS = 'Ergebnis/Aktie'
-TEXT_MARKET_CAP = 'Marktkapitalisierung'
+TEXT_MARKET_CAP = 'Marktkapitalisierung in Euro'
 TEXT_LISTED_INDIZES = 'Zur Aktie'
 TEXT_COMPANY_INFO = 'Zum Unternehmen'
 TEXT_RESULT_AFTER_TAX = 'Ergebnis nach Steuer'

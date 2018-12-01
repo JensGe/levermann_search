@@ -115,13 +115,14 @@ def write_stock_history_to_db(stock_history, stock_uri):
                 database[CST.TABLE_STOCKS_HISTORIES].insert(dict(AktienURI=stock_uri, Datum=date_,
                                                                 Eroeffnungswert=start, Schlusswert=end))
             except sqlalchemy.exc.IntegrityError:
-                print('IntegrityError')
                 pass
 
 
 def get_latest_date_from_index_history(index_uri):
     with dataset.connect(CST.DATABASE) as database:
-        results = database.query("SELECT max(Datum) as maxdate FROM %s WHERE IndexURI = '%s'" %(CST.TABLE_INDEX_HISTORIES, index_uri))
+        results = database.query("SELECT max(Datum) as maxdate "
+                                 "FROM %s WHERE IndexURI = '%s'"
+                                 % (CST.TABLE_INDEX_HISTORIES, index_uri))
         try:
             result = [item for item in results][0]
         except IndexError:
@@ -131,7 +132,9 @@ def get_latest_date_from_index_history(index_uri):
 
 def get_latest_date_from_stock_history(stock_uri):
     with dataset.connect(CST.DATABASE) as database:
-        results = database.query("SELECT max(Datum) as maxdate FROM %s WHERE URI = '%s'" %(CST.TABLE_STOCKS_HISTORIES, stock_uri))
+        results = database.query("SELECT max(Datum) as maxdate "
+                                 "FROM %s WHERE AktienURI = '%s'"
+                                 % (CST.TABLE_STOCKS_HISTORIES, stock_uri))
         try:
             result = [item for item in results][0]
         except IndexError:
@@ -149,7 +152,10 @@ def write_single_overview_data_to_db(stock_uri, market_cap, stock_indizes, stock
                                                          Indizes=str(stock_indizes),
                                                          Branchen=str(stock_sectors)))
         except sqlalchemy.exc.IntegrityError:
-            database.query('UPDATE %s SET Marktkapitalisierung = "%s", Indizes = "%s", Branchen = "%s" '
+            database.query('UPDATE %s SET '
+                           'Marktkapitalisierung = "%s", '
+                           'Indizes = "%s", '
+                           'Branchen = "%s" '
                            'WHERE AktienURI = "%s" AND Datum = "%s"'
                            % (CST.TABLE_COMPANY_DATA, market_cap, str(stock_indizes),
                               str(stock_sectors), stock_uri, current_date))
@@ -253,6 +259,8 @@ def get_earnings_after_tax(stock_uri):
             pass
         except IndexError:
             pass
+        except TypeError:
+            pass
 
 
 def get_equity_capital(stock_uri):
@@ -264,6 +272,8 @@ def get_equity_capital(stock_uri):
         except ValueError:
             pass
         except IndexError:
+            pass
+        except TypeError:
             pass
 
 
@@ -297,6 +307,8 @@ def get_operative_result(stock_uri):
             pass
         except IndexError:
             pass
+        except TypeError:
+            pass
 
 
 def get_sales_revenue(stock_uri):
@@ -308,6 +320,8 @@ def get_sales_revenue(stock_uri):
         except ValueError:
             pass
         except IndexError:
+            pass
+        except TypeError:
             pass
 
 
@@ -341,6 +355,8 @@ def get_balance(stock_uri):
             pass
         except IndexError:
             pass
+        except TypeError:
+            pass
 
 
 def save_equity_ratio_to_db(stock_uri, equity_ratio, lev_score):
@@ -363,7 +379,7 @@ def save_equity_ratio_to_db(stock_uri, equity_ratio, lev_score):
 
 # Levermann 04 & 05
 
-def get_current_stock_price(stock_uri):
+def get_latest_stock_price(stock_uri):
     with dataset.connect(CST.DATABASE) as database:
         try:
             results = database.query("SELECT %s FROM %s WHERE AktienURI = '%s' ORDER BY Datum DESC"
@@ -372,6 +388,8 @@ def get_current_stock_price(stock_uri):
         except ValueError:
             pass
         except IndexError:
+            pass
+        except TypeError:
             pass
 
 
@@ -388,6 +406,26 @@ def get_eps(stock_uri):
         except ValueError:
             pass
         except IndexError:
+            pass
+        except TypeError:
+            pass
+
+
+def get_older_eps(stock_uri):
+    with dataset.connect(CST.DATABASE) as database:
+        try:
+            results = database.query("SELECT * FROM %s WHERE AktienURI = '%s' ORDER BY Datum DESC"
+                                     % (CST.TABLE_COMPANY_DATA, stock_uri))
+            eps_s = [item for item in results][1]
+            eps_list = [float(eps_s[CST.COLUMN_EPS_M3]), float(eps_s[CST.COLUMN_EPS_M2]),
+                        float(eps_s[CST.COLUMN_EPS_M1]), float(eps_s[CST.COLUMN_EPS_0]),
+                        float(eps_s[CST.COLUMN_EPS_P1])]
+            return eps_list
+        except ValueError:
+            pass
+        except IndexError:
+            pass
+        except TypeError:
             pass
 
 
@@ -443,6 +481,8 @@ def get_analyst_ratings(stock_uri):
             pass
         except IndexError:
             pass
+        except TypeError:
+            pass
 
 
 def save_rating_to_db(stock_uri, rating, rating_score):
@@ -475,6 +515,8 @@ def is_small_cap(stock_uri):
             pass
         except IndexError:
             pass
+        except TypeError:
+            pass
 
 
 # Levermann 07
@@ -490,6 +532,8 @@ def get_quarterly_date(stock_uri):
             pass
         except IndexError:
             pass
+        except TypeError:
+            pass
 
 
 def get_closing_stock_price(request_date, aktien_uri):
@@ -497,24 +541,32 @@ def get_closing_stock_price(request_date, aktien_uri):
         try:
             results = database.query("SELECT * FROM %s WHERE AktienURI = '%s' and Datum <= '%s' ORDER BY Datum DESC"
                                      % (CST.TABLE_STOCKS_HISTORIES, aktien_uri, request_date))
-            closing_price = [item for item in results][0][CST.COLUMN_CLOSING_VALUE]
-            return closing_price
+            result = [item for item in results][0]
+            closing_price = result[CST.COLUMN_CLOSING_VALUE]
+            actual_date = result[CST.COLUMN_DATE]
+            return closing_price, actual_date
         except ValueError:
             pass
         except IndexError:
+            pass
+        except TypeError:
             pass
 
 
 def get_closing_index_price(request_date, index_uri):
     with dataset.connect(CST.DATABASE) as database:
         try:
-            results = database.query("SELECT * FROM %s WHERE IndexURI = '%s' and Datum = '%s'"
+            results = database.query("SELECT * FROM %s WHERE IndexURI = '%s' and Datum <= '%s' ORDER BY Datum DESC"
                                      % (CST.TABLE_INDEX_HISTORIES, index_uri, request_date))
-            closing_price = [item for item in results][0][CST.COLUMN_CLOSING_VALUE]
-            return closing_price
+            result = [item for item in results][0]
+            closing_price = result[CST.COLUMN_CLOSING_VALUE]
+            actual_date = result[CST.COLUMN_DATE]
+            return closing_price, actual_date
         except ValueError:
             pass
         except IndexError:
+            pass
+        except TypeError:
             pass
 
 
@@ -526,28 +578,168 @@ def get_index_of_stock(aktien_uri):
             index_uri = [item for item in results][0][CST.COLUMN_INDEX_URI]
             return index_uri
         except ValueError:
-            pass
+            print(aktien_uri)
         except IndexError:
+            print(aktien_uri)
+        except TypeError:
             pass
 
 
-def save_quaterly_reaction_to_db(stock_uri, rating, rating_score):
+def save_quarterly_reaction_to_db(stock_uri, quarterly_diff, lev_score):
     current_date = date.get_current_date()
     with dataset.connect(CST.DATABASE) as database:
         try:
             database[CST.TABLE_LEVERMANN].insert(dict(AktienURI=stock_uri,
                                                       Datum=current_date,
-                                                      Lev06_Wert=rating,
-                                                      Lev06_Score=rating_score))
+                                                      Lev07_Wert=quarterly_diff,
+                                                      Lev07_Score=lev_score))
         except sqlalchemy.exc.IntegrityError:
             print('Primary Key Existent - Update')
             database.query('UPDATE %s SET '
-                           'Lev06_Wert = %s, '
-                           'Lev06_Score = %s '
+                           'Lev07_Wert = %s, '
+                           'Lev07_Score = %s '
                            'WHERE AktienURI = "%s" AND Datum = "%s"'
-                           % (CST.TABLE_LEVERMANN, rating, rating_score, stock_uri, current_date))
+                           % (CST.TABLE_LEVERMANN, quarterly_diff, lev_score, stock_uri, current_date))
             pass
 
+
+# Levermann 08
+
+def save_eps_revision_to_db(stock_uri, eps_diff, lev_score):
+    current_date = date.get_current_date()
+    with dataset.connect(CST.DATABASE) as database:
+        try:
+            database[CST.TABLE_LEVERMANN].insert(dict(AktienURI=stock_uri,
+                                                      Datum=current_date,
+                                                      Lev08_Wert=eps_diff,
+                                                      Lev08_Score=lev_score))
+        except sqlalchemy.exc.IntegrityError:
+            print('Primary Key Existent - Update')
+            database.query('UPDATE %s SET '
+                           'Lev08_Wert = %s, '
+                           'Lev08_Score = %s '
+                           'WHERE AktienURI = "%s" AND Datum = "%s"'
+                           % (CST.TABLE_LEVERMANN, eps_diff, lev_score, stock_uri, current_date))
+            pass
+
+
+# Levermann 09-11
+
+def save_6_months_ratio_to_db(stock_uri, ratio, lev_score):
+    current_date = date.get_current_date()
+    with dataset.connect(CST.DATABASE) as database:
+        try:
+            database[CST.TABLE_LEVERMANN].insert(dict(AktienURI=stock_uri,
+                                                      Datum=current_date,
+                                                      Lev09_Wert=ratio,
+                                                      Lev09_Score=lev_score))
+        except sqlalchemy.exc.IntegrityError:
+            print('Primary Key Existent - Update')
+            database.query('UPDATE %s SET '
+                           'Lev09_Wert = %s, '
+                           'Lev09_Score = %s '
+                           'WHERE AktienURI = "%s" AND Datum = "%s"'
+                           % (CST.TABLE_LEVERMANN, ratio, lev_score, stock_uri, current_date))
+            pass
+
+
+def save_12_months_ratio_to_db(stock_uri, ratio, lev_score):
+    current_date = date.get_current_date()
+    with dataset.connect(CST.DATABASE) as database:
+        try:
+            database[CST.TABLE_LEVERMANN].insert(dict(AktienURI=stock_uri,
+                                                      Datum=current_date,
+                                                      Lev10_Wert=ratio,
+                                                      Lev10_Score=lev_score))
+        except sqlalchemy.exc.IntegrityError:
+            print('Primary Key Existent - Update')
+            database.query('UPDATE %s SET '
+                           'Lev10_Wert = %s, '
+                           'Lev10_Score = %s '
+                           'WHERE AktienURI = "%s" AND Datum = "%s"'
+                           % (CST.TABLE_LEVERMANN, ratio, lev_score, stock_uri, current_date))
+            pass
+
+
+def save_momentum_to_db(stock_uri, lev_score):
+    current_date = date.get_current_date()
+    with dataset.connect(CST.DATABASE) as database:
+        try:
+            database[CST.TABLE_LEVERMANN].insert(dict(AktienURI=stock_uri,
+                                                      Datum=current_date,
+                                                      Lev11_Score=lev_score))
+        except sqlalchemy.exc.IntegrityError:
+            print('Primary Key Existent - Update')
+            database.query('UPDATE %s SET '
+                           'Lev11_Score = %s '
+                           'WHERE AktienURI = "%s" AND Datum = "%s"'
+                           % (CST.TABLE_LEVERMANN, lev_score, stock_uri, current_date))
+            pass
+
+
+# Levermann 12
+
+def calculate_list_changes(value_list):
+    stock_changes = []
+    for i in range(len(value_list)-1):
+            stock_change = (value_list[i+1] / value_list[i]) -1
+            stock_changes.append(round(stock_change, 2))
+    return stock_changes
+
+
+def save_reversal_to_db(stock_uri, diff, lev_score):
+    current_date = date.get_current_date()
+    with dataset.connect(CST.DATABASE) as database:
+        try:
+            database[CST.TABLE_LEVERMANN].insert(dict(AktienURI=stock_uri,
+                                                      Datum=current_date,
+                                                      Lev12_Wert=diff,
+                                                      Lev12_Score=lev_score))
+        except sqlalchemy.exc.IntegrityError:
+            print('Primary Key Existent - Update')
+            database.query('UPDATE %s SET '
+                           'Lev12_Wert = %s, '
+                           'Lev12_Score = %s '
+                           'WHERE AktienURI = "%s" AND Datum = "%s"'
+                           % (CST.TABLE_LEVERMANN, diff, lev_score, stock_uri, current_date))
+            pass
+
+
+# Levermann 13
+
+def save_profit_growth_to_db(stock_uri, diff, lev_score):
+    current_date = date.get_current_date()
+    with dataset.connect(CST.DATABASE) as database:
+        try:
+            database[CST.TABLE_LEVERMANN].insert(dict(AktienURI=stock_uri,
+                                                      Datum=current_date,
+                                                      Lev13_Wert=diff,
+                                                      Lev13_Score=lev_score))
+        except sqlalchemy.exc.IntegrityError:
+            print('Primary Key Existent - Update')
+            database.query('UPDATE %s SET '
+                           'Lev13_Wert = %s, '
+                           'Lev13_Score = %s '
+                           'WHERE AktienURI = "%s" AND Datum = "%s"'
+                           % (CST.TABLE_LEVERMANN, diff, lev_score, stock_uri, current_date))
+            pass
+
+
+def get_levermann_full_table():
+    with dataset.connect(CST.DATABASE) as database:
+        try:
+            results = database.query("SELECT AktienURI, (Lev01_Score + Lev02_Score + Lev03_Score "
+                                     "+ Lev04_Score + Lev05_Score + Lev06_Score + Lev07_Score "
+                                     "+ Lev08_Score + Lev09_Score + Lev10_Score + Lev11_Score "
+                                     "+ Lev12_Score + Lev12_Score) as ScoreSum "
+                                     "FROM %s ORDER BY ScoreSum DESC" % CST.TABLE_LEVERMANN)
+            return results
+        except ValueError:
+            pass
+        except IndexError:
+            pass
+        except TypeError:
+            pass
 
 #################
 #

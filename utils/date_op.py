@@ -1,5 +1,7 @@
 from utils import constants as CST
 from _datetime import datetime
+from _datetime import date
+
 import dateutil.relativedelta
 
 
@@ -41,12 +43,6 @@ def edit_date(date, operator, amount, unit):
             return date - dateutil.relativedelta.relativedelta(months=amount)
 
 
-# old
-
-def subtract_six_months(date):
-    return edit_date(date, CST.DT_MINUS, 6, CST.DT_MONTH)
-
-
 def subtract_one_year(date):
     return edit_date(date, CST.DT_MINUS, 12, CST.DT_MONTH)
 
@@ -55,5 +51,21 @@ def add_one_day(date):
     return edit_date(date, CST.DT_PLUS, 1, CST.DT_DAY)
 
 
+def get_last_days_of_last_four_months():
+    current_year = get_current_date().year
+    current_month = get_current_date().month
+    first_day = 1
 
+    first_day_of_current_month = date(current_year, current_month, first_day)
+    last_day_last_month = edit_date(first_day_of_current_month, CST.DT_MINUS, 1, CST.DT_DAY)
 
+    first_day_last_month = edit_date(first_day_of_current_month, CST.DT_MINUS, 1, CST.DT_MONTH)
+    last_day_second_last_month = edit_date(first_day_last_month, CST.DT_MINUS, 1, CST.DT_DAY)
+
+    first_day_second_last_month = edit_date(first_day_of_current_month, CST.DT_MINUS, 2, CST.DT_MONTH)
+    last_day_third_last_month = edit_date(first_day_second_last_month, CST.DT_MINUS, 1, CST.DT_DAY)
+
+    first_day_third_last_month = edit_date(first_day_of_current_month, CST.DT_MINUS, 3, CST.DT_MONTH)
+    last_day_forth_last_month = edit_date(first_day_third_last_month, CST.DT_MINUS, 1, CST.DT_DAY)
+
+    return [last_day_forth_last_month, last_day_third_last_month, last_day_second_last_month, last_day_last_month]

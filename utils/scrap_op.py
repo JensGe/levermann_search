@@ -76,9 +76,12 @@ def get_max_page(soup):
 
 
 def get_soup_code_from_file(file):
-    with open(file, 'r', encoding='UTF-8') as file:
-        file_content = file.read()
-    return BeautifulSoup(file_content, CST.PARSER)
+    try:
+        with open(file, 'r', encoding='UTF-8') as file:
+            file_content = file.read()
+        return BeautifulSoup(file_content, CST.PARSER)
+    except FileNotFoundError:
+        pass
 
 
 def save_soup_to_file(soup, file):
