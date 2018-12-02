@@ -106,14 +106,17 @@ def write_stock_history_to_db(stock_history, stock_uri):
             date_ = date.string_to_date(item[0])
             try:
                 start = float(item[1].replace('.', '').replace(',', '.'))
+            except ValueError:
+                print('Missing start value for %s at %s' % (stock_uri, str(date_)))
+                start = None
+            try:
                 end = float(item[2].replace('.', '').replace(',', '.'))
             except ValueError:
-                print('Missing Value for %s at %s' % (stock_uri, date))
-                print('startdate: %s' % str(item[1]))
-                print('enddate: %s' % str(item[2]))
+                print('Missing end value for %s at %s' % (stock_uri, str(date_)))
+                end = None
             try:
                 database[CST.TABLE_STOCKS_HISTORIES].insert(dict(AktienURI=stock_uri, Datum=date_,
-                                                                Eroeffnungswert=start, Schlusswert=end))
+                                                                 Eroeffnungswert=start, Schlusswert=end))
             except sqlalchemy.exc.IntegrityError:
                 pass
 
@@ -726,6 +729,23 @@ def save_profit_growth_to_db(stock_uri, diff, lev_score):
 
 
 def get_levermann_full_table():
+    with dataset.connect(CST.DATABASE) as database:
+        try:
+            results = database.query("SELECT AktienURI, (Lev01_Score + Lev02_Score + Lev03_Score "
+                                     "+ Lev04_Score + Lev05_Score + Lev06_Score + Lev07_Score "
+                                     "+ Lev08_Score + Lev09_Score + Lev10_Score + Lev11_Score "
+                                     "+ Lev12_Score + Lev12_Score) as ScoreSum "
+                                     "FROM %s ORDER BY ScoreSum DESC" % CST.TABLE_LEVERMANN)
+            return results
+        except ValueError:
+            pass
+        except IndexError:
+            pass
+        except TypeError:
+            pass
+
+
+def get_best_levermann_with_info():
     with dataset.connect(CST.DATABASE) as database:
         try:
             results = database.query("SELECT AktienURI, (Lev01_Score + Lev02_Score + Lev03_Score "

@@ -8,7 +8,7 @@ def levermann_01():
     for stock in stock_list:
         earnings_before_tax = db.get_earnings_after_tax(stock)
         equity_capital = db.get_equity_capital(stock)
-        if earnings_before_tax is None or equity_capital is None:
+        if earnings_before_tax is None or equity_capital is None or equity_capital == 0:
             continue
 
         return_on_equity = round(earnings_before_tax / equity_capital, 2)
@@ -50,7 +50,7 @@ def levermann_03():
         equity_capital = db.get_equity_capital(stock)
         balance = db.get_balance(stock)
 
-        if equity_capital is None or balance is None:
+        if equity_capital is None or balance is None or balance == 0:
             continue
 
         equity_ratio = round(equity_capital / balance, 2)
@@ -71,7 +71,7 @@ def levermann_04_05():
         current_stock_price = db.get_latest_stock_price(stock)
         eps = db.get_eps(stock)
 
-        if current_stock_price is None or eps is None :
+        if current_stock_price is None or eps is None:
             continue
 
         eps_0 = eps[3]
@@ -174,16 +174,21 @@ def levermann_07():
         compare_price_stock = db.get_closing_stock_price(day_before_actual_date_stock, stock)[0]
         compare_price_index = db.get_closing_index_price(day_before_actual_date_index, index)[0]
 
-        stock_diff = quaterly_stock_closing_price / compare_price_stock - 1
-        index_diff = quaterly_index_closing_price / compare_price_index - 1
+        if compare_price_stock is None or compare_price_index == 0 \
+                or compare_price_index is None or compare_price_index == 0:
+            continue
+        stock_diff = (quaterly_stock_closing_price / compare_price_stock) - 1
+        index_diff = (quaterly_index_closing_price / compare_price_index) - 1
 
+        if index_diff == 0:
+            continue
         combined_diff = round(stock_diff - index_diff, 2)
 
-        if combined_diff > 0.01:
+        if combined_diff >= 0.01:
             lev_score = 1
         elif -0.01 < combined_diff < 0.01:
             lev_score = 0
-        elif combined_diff < -0.01:
+        elif combined_diff <= -0.01:
             lev_score = -1
 
         db.save_quarterly_reaction_to_db(stock, combined_diff, lev_score)
