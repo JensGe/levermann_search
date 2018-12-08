@@ -86,6 +86,8 @@ while root_menu:
                 scraper.scrap_stock_info(CST.URL_STOCK_DATES, CST.PATH_STOCK_DATES)
                 parser.write_stock_last_quarterly_figures_date_to_db()
             elif menu_2_selection == 'a':
+                scraper.scrap_stock_histories()
+                parser.write_stock_histories_from_html_to_db()
                 scraper.scrap_stock_info(CST.URL_STOCK_OVERVIEW, CST.PATH_STOCK_OVERVIEW)
                 parser.write_stock_overview_data_to_db()
                 scraper.scrap_stock_info(CST.URL_STOCK_BALANCE, CST.PATH_STOCK_BALANCE)
@@ -169,17 +171,17 @@ while root_menu:
         menu_4 = True
         while menu_4:
             print('Sub Menu 3: Show Results')
-            print('#(1) Show Stocks sorted by Levermann Score (Top10)')
-            print('#(2) ')
+            print('#(1) Show Levermann Buy Recommendation')
+            print('#(1) Show Levermann Hold Recommendation (w/o Buy)')
             print('------------------------')
             print('(a) Run All')
             print('(u) Up')
             print('(x) Exit')
             menu_4_selection = str(input('> '))
             if menu_4_selection == '1':
-                displayer.display_top_10()
+                displayer.display_levermann_buy()
             elif menu_4_selection == '2':
-                pass
+                displayer.display_levermann_hold()
             elif menu_4_selection == 'u':
                 menu_4 = False
             elif menu_4_selection == 'x':

@@ -18,13 +18,14 @@ def init_driver():
     for option in start_options:
         options.add_argument(option)
 
-    driver = webdriver.Firefox()
+    driver_profile = webdriver.FirefoxProfile('/home/jens/.mozilla/firefox/ietjlzx1.DriverProfile')
+    driver = webdriver.Firefox(driver_profile)
     driver.wait = WebDriverWait(driver, CST.LONG_WAIT)
     return driver
 
 
 def get_soup_code_from_url(driver, url):
-    driver.wait = WebDriverWait(driver, CST.SHORT_WAIT)
+    driver.wait = WebDriverWait(driver, CST.LONG_WAIT)
     driver.get(url)
     soup = BeautifulSoup(driver.page_source, CST.PARSER)
 
@@ -40,7 +41,7 @@ def get_soup_code_from_url(driver, url):
 
 
 def get_soup_from_history_url(driver, url):
-    driver.wait = WebDriverWait(driver, CST.SHORT_WAIT)
+    driver.wait = WebDriverWait(driver, CST.LONG_WAIT)
     driver.get(url)
     soup = BeautifulSoup(driver.page_source, CST.PARSER)
 

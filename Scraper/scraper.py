@@ -1,4 +1,6 @@
 import os
+import time
+import random
 
 from utils import scrap_op as scrap
 from utils import db_op as db
@@ -85,6 +87,8 @@ def scrap_stock_info(scrap_url, save_path):
         if os.path.isfile(file_name):
             print('File already existing - skipping')
             continue
+        else:
+            time.sleep(CST.SHORT_WAIT + random.uniform(0, CST.RANDOM_WAIT_RANGE))
         soup = scrap.get_soup_code_from_url(driver, url)
         scrap.save_soup_to_file(soup, file_name)
     scrap.close_driver(driver)

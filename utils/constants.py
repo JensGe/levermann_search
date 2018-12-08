@@ -1,6 +1,7 @@
 # Scraping Settings
-SHORT_WAIT = 5 # Seconds
-LONG_WAIT = 10 # Seconds
+SHORT_WAIT = 0.4             # Seconds
+LONG_WAIT = 2               # Seconds
+RANDOM_WAIT_RANGE = 0.2     # Seconds
 
 # Parser Settings
 PARSER = 'html.parser'
@@ -28,7 +29,7 @@ URL_STOCK_ESTIMATES_EXT = ''
 
 EXCHANGE_APPENDIX = '/FSE'
 ALT_EXCHANGE_APPENDIX = '/XETRA'
-# Laut Levermann eigentlich primär XETRA, dann FSE oder entpr. des Landes
+# TODO Get History URL from overview scrap
 
 # Scraping Parts
 NO_DATA_AVAILABLE = 'Keine Daten verfügbar'
@@ -94,6 +95,9 @@ TABLE_STOCK_DATES = 'Aktientermine'
 TABLE_INDEX_CONTENTS = 'Indexinhalte'
 TABLE_COMPANY_DATA = 'Unternehmensdaten'
 TABLE_LEVERMANN = 'Levermannscores'
+
+VIEW_LEVERMANN_BUY = 'Levermann_Buy'
+VIEW_LEVERMANN_HOLD = 'Levermann_Hold'
 
 
 # Database Columns
