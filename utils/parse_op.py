@@ -129,7 +129,7 @@ def convert_market_cap(market_cap_string):
             market_cap_value /= 1000
         return market_cap_value
     except ValueError:
-        print('Market Cap Error: %s' % market_cap_string)
+        print('Market Cap Error: %s' % market_cap_string)   # TODO Return Value to COnsole / Log, market_cap_string usually empty
         pass
 
 
@@ -146,6 +146,14 @@ def get_market_cap(soup):
         market_cap_loc = soup.find(text=re.compile(CST.TEXT_MARKET_CAP))
         market_cap = market_cap_loc.find_next(CST.HTML_TD).contents[0].strip()
         return convert_market_cap(market_cap)
+    except AttributeError:
+        pass
+
+
+def get_market_place(soup):
+    try:
+        market_place_container = soup.find(CST.HTML_A, {CST.HTML_ID: 'exchanges-drop-down'})
+        return market_place_container.contents[0].strip()
     except AttributeError:
         pass
 

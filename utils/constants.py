@@ -120,6 +120,7 @@ COLUMN_ANALYST_BUY = 'Analysten_Buy'
 COLUMN_ANALYST_HOLD = 'Analysten_Hold'
 COLUMN_ANALYST_SELL = 'Analysten_Sell'
 COLUMN_MARKET_CAP = 'Marktkapitalisierung'
+COLUMN_MARKET_PLACE = 'Handelsplatz'
 COLUMN_DATE = 'Datum'
 
 # Date Enums

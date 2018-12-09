@@ -53,6 +53,17 @@ class TestScrapping(unittest.TestCase):
         asserted_market_cap3 = 15890
         self.assertEqual(asserted_market_cap3, market_cap_value3)
 
+    def test_get_market_place(self):
+        soup = scrap.get_soup_code_from_file('data/bo_3i-Aktie_overview.html')
+        market_place = parse.get_market_place(soup)
+        asserted_market_place = 'FSE'
+        self.assertEqual(asserted_market_place, market_place)
+
+        soup2 = scrap.get_soup_code_from_file('data/bo_tesla-aktie.html')
+        market_place2 = parse.get_market_place(soup2)
+        asserted_market_place2 = 'FSE'
+        self.assertEqual(asserted_market_place2, market_place2)
+
     def test_convert_market_cap(self):
         market_cap_string = '37,53 Mrd'
         asserted_marked_cap = 37530

@@ -122,6 +122,18 @@ class TestDatabase(unittest.TestCase):
         stock_names = db.get_stock_names()
         self.assertEqual(asserted_stock_list, stock_names[:3])
 
+    def test_get_stock_history_url_list(self):
+        stock_history_list = [['aktie1', 'FSE'],
+                              ['aktie2', 'XETRA'],
+                              ['aktie3', 'FSE']]
+        base_url = 'https://www.boerse-online.de/kurse/historisch/'
+        url_list = [base_url + stock[0] + '/' + stock[1] for stock in stock_history_list]
+        asserted_url_list = ['https://www.boerse-online.de/kurse/historisch/aktie1/FSE',
+                             'https://www.boerse-online.de/kurse/historisch/aktie2/XETRA',
+                             'https://www.boerse-online.de/kurse/historisch/aktie3/FSE']
+        self.assertEqual(asserted_url_list, url_list)
+
+
     def test_calculate_list_change(self):
         input_list = [100, 90, 99, 49.5]
         asserted_list = [-0.1, 0.1, -0.5]

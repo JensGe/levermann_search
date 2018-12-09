@@ -28,20 +28,6 @@ def write_index_histories_from_html_to_db():
         db.write_index_history_to_db(index_history_list, index_uri)
 
 
-def write_stock_histories_from_html_to_db():
-    stock_list = db.get_stock_names()
-    file_list = [CST.PATH_STOCK_HISTORY + stock[:-6] + CST.HTML_EXTENSION for stock in stock_list]
-    for file in file_list:
-        stock_history_soup = scrap.get_soup_code_from_file(file)
-        if stock_history_soup is None:
-            print('File not found or empty for stock: %s' % str(file))
-            continue
-        stock_history_list = parse.get_historic_prices(stock_history_soup)
-
-        stock_uri = file.split('/')[-1][:-5] + '-Aktie'
-        db.write_stock_history_to_db(stock_history_list, stock_uri)
-
-
 def write_stock_overview_data_to_db():
     stock_list = db.get_stock_names()
     file_list = [CST.PATH_STOCK_OVERVIEW + stock + CST.HTML_EXTENSION for stock in stock_list]
@@ -56,9 +42,25 @@ def write_stock_overview_data_to_db():
             market_cap = parse.get_market_cap(stock_overview_soup)
             stock_indizes = parse.get_listed_indizes(stock_overview_soup)
             stock_sectors = parse.get_sectors(stock_overview_soup)
-            db.write_single_overview_data_to_db(stock_uri, market_cap, stock_indizes, stock_sectors)
+            market_place = parse.get_market_place(stock_overview_soup)
+            db.write_single_overview_data_to_db(stock_uri, market_cap, stock_indizes, stock_sectors, market_place)
         except:
             print('# Overview Processing Error')
+
+
+def write_stock_histories_from_html_to_db():
+    stock_list = db.get_stock_names()
+    file_list = [CST.PATH_STOCK_HISTORY + stock[:-6] + CST.HTML_EXTENSION for stock in stock_list]
+    for file in file_list:
+        stock_history_soup = scrap.get_soup_code_from_file(file)
+        if stock_history_soup is None:
+            print('File not found or empty for stock: %s' % str(file))
+            continue
+        stock_history_list = parse.get_historic_prices(stock_history_soup)
+
+        stock_uri = file.split('/')[-1][:-5] + '-Aktie'
+        db.write_stock_history_to_db(stock_history_list, stock_uri)
+
 
 def write_stock_balance_data_to_db():
     stock_list = db.get_stock_names()

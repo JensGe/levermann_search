@@ -50,7 +50,7 @@ def scrap_stock_histories():
     driver = scrap.init_driver()
     for url in scrap_list:
         stock_uri = url.split('/')[-2]
-        short_stock_uri = stock_uri[:-6]
+        # short_stock_uri = stock_uri[:-6]
         end_date = date.get_current_date()
         start_date = date.subtract_one_year(date.get_current_date())
         max_db_date = db.get_latest_date_from_stock_history(stock_uri)
@@ -69,7 +69,8 @@ def scrap_stock_histories():
 
         date_interval = '/' + date.date_to_string(start_date) +\
                         '_' + date.date_to_string(end_date)
-        dated_url = url.replace(stock_uri, short_stock_uri) + date_interval
+        # dated_url = url.replace(stock_uri, short_stock_uri) + date_interval
+        dated_url = url + date_interval
         soup = scrap.get_soup_code_from_url(driver, dated_url)
         scrap.save_soup_to_file(soup, file_name)
     scrap.close_driver(driver)

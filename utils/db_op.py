@@ -11,6 +11,12 @@ def get_index_names():
     return index_list
 
 
+def get_stock_names_and_history_url():
+    with dataset.connect(CST.DATABASE) as database:
+        stock_and_history_url_list = [[item[CST.COLUMN_URI], item[CST.COLUMN_MARKET_PLACE]] for item in database[CST.TABLE_STOCKS]]
+    return stock_and_history_url_list
+
+
 def get_stock_names():
     with dataset.connect(CST.DATABASE) as database:
         stock_list = [item[CST.COLUMN_URI] for item in database[CST.TABLE_STOCKS]]
@@ -31,8 +37,8 @@ def create_index_url_list(base_url):
 
 
 def create_stock_history_url_list(base_url):
-    stock_list = get_stock_names()
-    url_list = [base_url + stock + CST.EXCHANGE_APPENDIX for stock in stock_list]
+    stock_history_list = get_stock_names_and_history_url()
+    url_list = [base_url + stock[0] + '/' + stock[1] for stock in stock_history_list]
     return url_list
 
 
@@ -145,7 +151,7 @@ def get_latest_date_from_stock_history(stock_uri):
         return result['maxdate']
 
 
-def write_single_overview_data_to_db(stock_uri, market_cap, stock_indizes, stock_sectors):
+def write_single_overview_data_to_db(stock_uri, market_cap, stock_indizes, stock_sectors, market_place):
     current_date = date.get_current_date()
     with dataset.connect(CST.DATABASE) as database:
         try:
@@ -162,6 +168,12 @@ def write_single_overview_data_to_db(stock_uri, market_cap, stock_indizes, stock
                            'WHERE AktienURI = "%s" AND Datum = "%s"'
                            % (CST.TABLE_COMPANY_DATA, market_cap, str(stock_indizes),
                               str(stock_sectors), stock_uri, current_date))
+            pass
+        try:
+            data = dict(URI=stock_uri,
+                        Handelsplatz=market_place)
+            database[CST.TABLE_STOCKS].update(data, ['URI'])
+        except sqlalchemy.exc.IntegrityError:
             pass
 
 
