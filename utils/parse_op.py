@@ -129,7 +129,7 @@ def convert_market_cap(market_cap_string):
             market_cap_value /= 1000
         return market_cap_value
     except ValueError:
-        print('Market Cap Error: %s' % market_cap_string)   # TODO Return Value to COnsole / Log, market_cap_string usually empty
+        print('Market Cap Error: %s' % market_cap_string)
         pass
 
 

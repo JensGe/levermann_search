@@ -40,6 +40,8 @@ def write_stock_overview_data_to_db():
 
         try:
             market_cap = parse.get_market_cap(stock_overview_soup)
+            if market_cap is None or len(market_cap) == 0:
+                print('Market Cap Empty for %s' % stock_uri)
             stock_indizes = parse.get_listed_indizes(stock_overview_soup)
             stock_sectors = parse.get_sectors(stock_overview_soup)
             market_place = parse.get_market_place(stock_overview_soup)

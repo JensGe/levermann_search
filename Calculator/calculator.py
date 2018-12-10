@@ -34,7 +34,10 @@ def levermann_02():
 
         ebit = round(operative_result / sales_revenue, 2)
 
-        # ToDo Check for Finance Company
+        if db.check_is_financial_company(stock):
+            db.save_ebit_to_db(stock, 0, 0)
+            continue
+
         if ebit > 0.12:
             lev_value = 1
         elif ebit < 0.06:
@@ -55,7 +58,16 @@ def levermann_03():
 
         equity_ratio = round(equity_capital / balance, 2)
 
-        # ToDo Check for Finance Company
+        if db.check_is_financial_company(stock):
+            if equity_ratio > 0.10:
+                lev_value = 1
+            elif equity_ratio < 0.05:
+                lev_value = -1
+            else:
+                lev_value = 0
+            db.save_equity_ratio_to_db(stock, equity_ratio, lev_value)
+            continue
+
         if equity_ratio > 0.25:
             lev_value = 1
         elif equity_ratio < 0.15:

@@ -92,8 +92,14 @@ class TestDatabase(unittest.TestCase):
         self.assertEqual([1, 0, 0], ratings)
 
     def test_caps(self):
-        is_cap = db.is_small_cap('ab_inbev-Aktie')
-        self.assertFalse(is_cap)
+        is_small_cap = db.is_small_cap('ab_inbev-Aktie')
+        self.assertFalse(is_small_cap)
+
+        is_small_cap_2 = db.is_small_cap('just_eat-Aktie')
+        self.assertFalse(is_small_cap_2)
+
+        is_small_cap_3 = db.is_small_cap('bechtle-Aktie')
+        self.assertTrue(is_small_cap_3)
 
     def test_get_closing_stock_price(self):
         stock_uri = 'credit_suisse-Aktie'
@@ -117,6 +123,12 @@ class TestDatabase(unittest.TestCase):
         index_uri = db.get_index_of_stock(stock_uri)
         self.assertEqual('SMI', index_uri)
 
+    def test_get_indizes_of_stock(self):
+        stock_uri = 'adidas-Aktie'
+        index_list = db.get_indizes_of_stock(stock_uri)
+        asserted_index_list = sorted(['dax', 'Euro_Stoxx_50'])
+        self.assertEqual(asserted_index_list, index_list)
+
     def test_get_stock_names(self):
         asserted_stock_list = ['aktie1', 'aktie2', 'aktie3']
         stock_names = db.get_stock_names()
@@ -133,12 +145,26 @@ class TestDatabase(unittest.TestCase):
                              'https://www.boerse-online.de/kurse/historisch/aktie3/FSE']
         self.assertEqual(asserted_url_list, url_list)
 
-
     def test_calculate_list_change(self):
         input_list = [100, 90, 99, 49.5]
         asserted_list = [-0.1, 0.1, -0.5]
         self.assertEqual(asserted_list, db.calculate_list_changes(input_list))
 
+    def test_check_financial_companies(self):
+        stock_uri = '3i-Aktie'
+        self.assertTrue(db.check_is_financial_company(stock_uri))
+
+        stock_uri_2 = 'abbvie-Aktie'
+        self.assertFalse(db.check_is_financial_company(stock_uri_2))
+
+        stock_uri_3 = 'affiliated_managers_group-Aktie'
+        self.assertTrue(db.check_is_financial_company(stock_uri_3))
+
+        stock_uri_4 = 'amazon-Aktie'
+        self.assertFalse(db.check_is_financial_company(stock_uri_4))
+
+        stock_uri_5 = 'bbva-Aktie'
+        self.assertTrue(db.check_is_financial_company(stock_uri_5))
 
     def tearDown(self):
         pass

@@ -26,10 +26,10 @@ URL_STOCK_TARGETS_EXT = ''
 URL_STOCK_DATES_EXT = ''
 URL_STOCK_ESTIMATES_EXT = ''
 
-
+# Todo Delete
 EXCHANGE_APPENDIX = '/FSE'
 ALT_EXCHANGE_APPENDIX = '/XETRA'
-# TODO Get History URL from overview scrap
+
 
 # Scraping Parts
 NO_DATA_AVAILABLE = 'Keine Daten verfügbar'
@@ -122,6 +122,7 @@ COLUMN_ANALYST_SELL = 'Analysten_Sell'
 COLUMN_MARKET_CAP = 'Marktkapitalisierung'
 COLUMN_MARKET_PLACE = 'Handelsplatz'
 COLUMN_DATE = 'Datum'
+COLUMN_SECTORS = 'Branchen'
 
 # Date Enums
 DT_MINUS = 'minus'
@@ -132,3 +133,21 @@ DT_MONTH = 'month'
 
 # Data
 MARKET_CAP_THRESHOLD = 5000
+
+# Financial Sector List
+FINANCE_SECTORS = ['Banken',
+                   'Finanzdienstleister',
+                   'Immobilien',
+                   'Investmentbanken / Broker',
+                   'Rückversicherungen',
+                   'Versicherungen']
+
+
+LARGE_CAPS_INDIZES = ['CAC_40',
+                      'dax',
+                      'dow_jones',
+                      'Euro_Stoxx_50',
+                      'FTSE_100',
+                      'SMI']
+
+

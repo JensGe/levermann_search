@@ -340,6 +340,23 @@ def get_sales_revenue(stock_uri):
             pass
 
 
+def check_is_financial_company(stock_uri):
+    fin_list = CST.FINANCE_SECTORS
+    with dataset.connect(CST.DATABASE) as database:
+        try:
+            results = database.query("SELECT %s FROM %s WHERE AktienURI = '%s' ORDER BY Datum DESC"
+                                     % (CST.COLUMN_SECTORS, CST.TABLE_COMPANY_DATA, stock_uri))
+            result_list = [item for item in results][0][CST.COLUMN_SECTORS]
+            return any(i in result_list for i in fin_list)
+        except ValueError:
+            pass
+        except IndexError:
+            pass
+        except TypeError:
+            pass
+
+
+
 def save_ebit_to_db(stock_uri, ebit, lev_score):
     current_date = date.get_current_date()
     with dataset.connect(CST.DATABASE) as database:
@@ -519,13 +536,17 @@ def save_rating_to_db(stock_uri, rating, rating_score):
 
 
 def is_small_cap(stock_uri):
-    # ToDo Check if in Large Cap Index (if market Cap low)
     with dataset.connect(CST.DATABASE) as database:
         try:
-            results = database.query("SELECT * FROM %s WHERE AktienURI = '%s' ORDER BY Datum DESC"
-                                     % (CST.TABLE_COMPANY_DATA, stock_uri))
-            market_cap = float([item for item in results][0][CST.COLUMN_MARKET_CAP])
-            return True if market_cap < CST.MARKET_CAP_THRESHOLD else False
+            market_cap_results = database.query("SELECT * FROM %s WHERE AktienURI = '%s' ORDER BY Datum DESC" %
+                                                (CST.TABLE_COMPANY_DATA, stock_uri))
+            market_cap = float([item for item in market_cap_results][0][CST.COLUMN_MARKET_CAP])
+            if market_cap > CST.MARKET_CAP_THRESHOLD:
+                return False
+            else:
+                indizes_list = get_indizes_of_stock(stock_uri)
+                return not any(i in indizes_list for i in CST.LARGE_CAPS_INDIZES)
+
         except ValueError:
             pass
         except IndexError:
@@ -592,6 +613,21 @@ def get_index_of_stock(aktien_uri):
                                      % (CST.TABLE_INDEX_CONTENTS, aktien_uri))
             index_uri = [item for item in results][0][CST.COLUMN_INDEX_URI]
             return index_uri
+        except ValueError:
+            print(aktien_uri)
+        except IndexError:
+            print(aktien_uri)
+        except TypeError:
+            pass
+
+
+def get_indizes_of_stock(aktien_uri):
+    with dataset.connect(CST.DATABASE) as database:
+        try:
+            results = database.query("SELECT * FROM %s WHERE AktienURI = '%s'"
+                                     % (CST.TABLE_INDEX_CONTENTS, aktien_uri))
+            index_uri = {item[CST.COLUMN_INDEX_URI] for item in results}
+            return sorted(index_uri)
         except ValueError:
             print(aktien_uri)
         except IndexError:
