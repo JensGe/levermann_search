@@ -28,6 +28,12 @@ class TestDate(unittest.TestCase):
         self.assertEqual(asserted_last_months, last_months)
 
 
+    def test_get_year_and_week_string(self):
+        test_date_string = '22.12.2018'
+        test_date = date.string_to_datetime(test_date_string)
+        asserted_string = '2018-51'
+        self.assertEqual(asserted_string, date.get_year_and_week_string(test_date))
+
 
     def tearDown(self):
         pass

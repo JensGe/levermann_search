@@ -2,9 +2,11 @@ from utils import constants as CST
 from _datetime import datetime
 from _datetime import date
 
+import random
 import dateutil.relativedelta
 
 
+# Date and Strings
 def date_to_string(date):
     try:
         return datetime.strftime(date, '%d.%m.%Y')
@@ -26,6 +28,12 @@ def string_to_datetime(string):
         return datetime.strptime(string, '%d.%m.%y')
 
 
+def get_year_and_week_string(date_time):
+    year_and_week = '%d-%d' % (datetime.date(date_time).isocalendar()[0], datetime.date(date_time).isocalendar()[1])
+    return year_and_week
+
+
+# Date
 def get_current_date():
     return datetime.now().date()
 
@@ -69,3 +77,20 @@ def get_last_days_of_last_four_months():
     last_day_forth_last_month = edit_date(first_day_third_last_month, CST.DT_MINUS, 1, CST.DT_DAY)
 
     return [last_day_forth_last_month, last_day_third_last_month, last_day_second_last_month, last_day_last_month]
+
+
+# Times
+def long_waiting_time():
+    return CST.LONG_WAIT
+
+
+def short_waiting_time():
+    return CST.SHORT_WAIT
+
+
+def long_random_waiting_time():
+    return CST.LONG_WAIT + random.uniform(0, CST.RANDOM_WAIT_RANGE)
+
+
+def short_random_waiting_time():
+    return CST.SHORT_WAIT + random.uniform(0, CST.RANDOM_WAIT_RANGE)

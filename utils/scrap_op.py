@@ -23,14 +23,14 @@ def init_driver():
     # driver_profile = webdriver.FirefoxProfile('/home/jens/.mozilla/firefox/ietjlzx1.DriverProfile')
     driver_profile = webdriver.FirefoxProfile('/home/jens/.mozilla/firefox/xjpzl3z6.Driver_N')
     driver = webdriver.Firefox(driver_profile)
-    driver.wait = WebDriverWait(driver, CST.LONG_WAIT)
-    time.sleep(CST.LONG_WAIT)
+    driver.wait = WebDriverWait(driver, date.long_waiting_time())
+    time.sleep(date.long_waiting_time())
     return driver
 
 
 def get_soup_code_from_url(driver, url):
-    driver.wait = WebDriverWait(driver, CST.LONG_WAIT)
-    time.sleep(CST.SHORT_WAIT+random.uniform(0, CST.RANDOM_WAIT_RANGE))
+    driver.wait = WebDriverWait(driver, date.long_waiting_time())
+    time.sleep(date.short_random_waiting_time())
     driver.get(url)
     soup = BeautifulSoup(driver.page_source, CST.PARSER)
 
@@ -46,8 +46,8 @@ def get_soup_code_from_url(driver, url):
 
 
 def get_soup_from_history_url(driver, url):
-    driver.wait = WebDriverWait(driver, CST.LONG_WAIT)
-    time.sleep(CST.LONG_WAIT+random.uniform(0, CST.RANDOM_WAIT_RANGE))
+    driver.wait = WebDriverWait(driver, date.long_waiting_time())
+    time.sleep(date.long_random_waiting_time())
     driver.get(url)
     soup = BeautifulSoup(driver.page_source, CST.PARSER)
 
@@ -96,24 +96,6 @@ def save_soup_to_file(soup, file):
     with open(file, 'w', encoding='UTF-8') as file:
         file.write(soup)
     return True
-
-
-# def create_stock_download_list(stock_short_link):
-#     url_list = []
-#     stock_shorter_link = stock_short_link[:-6]
-#     date_today = date.get_todays_date()
-#     date_before_one_year = date.subtract_one_year(date_today)
-#     date_today_str = date.date_to_string(date_today)
-#     date_before_one_year_str = date.date_to_string(date_before_one_year)
-#     url_list.append(urls['overview'][0] + stock_short_link)
-#     url_list.append(urls['history'][0] + stock_shorter_link + urls['history'][1] +
-#                     date_before_one_year_str + '_' + date_today_str)
-#     url_list.append(urls['guv'][0] + stock_shorter_link)
-#     url_list.append(urls['estimate'][0] + stock_shorter_link)
-#     url_list.append(urls['company'][0] + stock_shorter_link)
-#     url_list.append(urls['events'][0] + stock_shorter_link)
-#     url_list.append(urls['goals'][0] + stock_shorter_link)
-#     return url_list
 
 
 def close_driver(driver):
