@@ -38,16 +38,17 @@ def write_stock_overview_data_to_db():
             print('File not found or empty for stock: %s' % str(file))
             continue
 
-        try:
-            market_cap = parse.get_market_cap(stock_overview_soup)
-            if market_cap is None or len(market_cap) == 0:
-                print('Market Cap Empty for %s' % stock_uri)
-            stock_indizes = parse.get_listed_indizes(stock_overview_soup)
-            stock_sectors = parse.get_sectors(stock_overview_soup)
-            market_place = parse.get_market_place(stock_overview_soup)
-            db.write_single_overview_data_to_db(stock_uri, market_cap, stock_indizes, stock_sectors, market_place)
-        except:
-            print('# Overview Processing Error')
+        # try:
+        market_cap = parse.get_market_cap(stock_overview_soup)
+        if market_cap is None:
+            print('Market Cap Empty for %s, set to -1.00' % stock_uri)
+            market_cap = -1.00
+        stock_indizes = parse.get_listed_indizes(stock_overview_soup)
+        stock_sectors = parse.get_sectors(stock_overview_soup)
+        market_place = parse.get_market_place(stock_overview_soup)
+        db.write_single_overview_data_to_db(stock_uri, market_cap, stock_indizes, stock_sectors, market_place)
+        # except:
+            # print('# Overview Processing Error')
 
 
 def write_stock_histories_from_html_to_db():

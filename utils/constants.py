@@ -1,7 +1,7 @@
 # Scraping Settings
-SHORT_WAIT = 0.4             # Seconds
-LONG_WAIT = 2               # Seconds
-RANDOM_WAIT_RANGE = 0.2     # Seconds
+SHORT_WAIT = 1           # Seconds
+LONG_WAIT = 4               # Seconds
+RANDOM_WAIT_RANGE = 0.8     # Seconds
 
 # Parser Settings
 PARSER = 'html.parser'

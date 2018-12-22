@@ -50,11 +50,10 @@ def scrap_stock_histories():
     driver = scrap.init_driver()
     for url in scrap_list:
         stock_uri = url.split('/')[-2]
-        # short_stock_uri = stock_uri[:-6]
         end_date = date.get_current_date()
         start_date = date.subtract_one_year(date.get_current_date())
-        max_db_date = db.get_latest_date_from_stock_history(stock_uri)
-        file_name = CST.PATH_STOCK_HISTORY + short_stock_uri + CST.HTML_EXTENSION
+        max_db_date = db.get_latest_date_from_stock_history(stock_uri + '-Aktie')
+        file_name = CST.PATH_STOCK_HISTORY + stock_uri + CST.HTML_EXTENSION
         if os.path.isfile(file_name):
             print('File already existing - skipping')
             continue
@@ -71,7 +70,8 @@ def scrap_stock_histories():
                         '_' + date.date_to_string(end_date)
         # dated_url = url.replace(stock_uri, short_stock_uri) + date_interval
         dated_url = url + date_interval
-        soup = scrap.get_soup_code_from_url(driver, dated_url)
+        print(dated_url)
+        soup = scrap.get_soup_from_history_url(driver, dated_url)
         scrap.save_soup_to_file(soup, file_name)
     scrap.close_driver(driver)
 
