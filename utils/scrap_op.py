@@ -1,8 +1,7 @@
 import time
 import os
-import random
 
-from utils import db_op as db
+
 from utils import date_op as date
 from utils import constants as CST
 
