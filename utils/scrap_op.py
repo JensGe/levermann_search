@@ -1,5 +1,6 @@
 import time
 import os
+import logging
 
 
 from utils import date_op as date
@@ -8,8 +9,11 @@ from utils import constants as CST
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.firefox.options import Options
+from selenium.common import exceptions
 
 from bs4 import BeautifulSoup
+
+logger = logging.getLogger(__name__)
 
 
 def init_driver():
@@ -30,8 +34,20 @@ def init_driver():
 def get_soup_code_from_url(driver, url):
     driver.wait = WebDriverWait(driver, date.long_waiting_time())
     time.sleep(date.short_random_waiting_time())
-    driver.get(url)
-    soup = BeautifulSoup(driver.page_source, CST.PARSER)
+    try:
+        driver.get(url)
+    except exceptions.TimeoutException:
+        logger.ERROR('Get Soup Code TimeoutException')
+        return ''
+
+    try:
+        soup = BeautifulSoup(driver.page_source, CST.PARSER)
+    except exceptions.UnexpectedAlertPresentException:
+        logger.ERROR('Make Soup UnexpectedAlertPresentException')
+        return ''
+    except exceptions.NoSuchWindowException:
+        logger.ERROR('Make Soup NoSuchWindowException')
+        return ''
 
     max_page = get_max_page(soup)
     if max_page == 1:
@@ -47,7 +63,12 @@ def get_soup_code_from_url(driver, url):
 def get_soup_from_history_url(driver, url):
     driver.wait = WebDriverWait(driver, date.long_waiting_time())
     time.sleep(date.long_random_waiting_time())
-    driver.get(url)
+    try:
+        driver.get(url)
+    except exceptions.TimeoutException:
+        logger.ERROR('Timeout')
+        return ''
+
     soup = BeautifulSoup(driver.page_source, CST.PARSER)
 
     if not is_data_available(soup):

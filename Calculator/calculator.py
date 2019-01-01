@@ -350,3 +350,14 @@ def levermann_13():
 
         db.save_profit_growth_to_db(stock, eps_ratio, lev_score_12)
 
+
+def run_all():
+    levermann_02()
+    levermann_03()
+    levermann_04_05()
+    levermann_06()
+    levermann_07()
+    levermann_08()
+    levermann_09_10_11()
+    levermann_12()
+    levermann_13()

@@ -3,15 +3,8 @@ from Parser import parser
 from Calculator import calculator
 from Displayer import displayer
 from utils import constants as CST
-import logging
-import logging.config
-
 
 def main():
-
-    # Logging
-    logging.config.fileConfig('logging.conf')
-    logger = logging.getLogger(__name__)
 
     root_menu = True
 
@@ -150,25 +143,12 @@ def main():
                     calculator.levermann_08()
                 elif menu_3_selection == '9':
                     calculator.levermann_09_10_11()
-                elif menu_3_selection == '10':
-                    continue
-                elif menu_3_selection == '11':
-                    continue
                 elif menu_3_selection == '12':
                     calculator.levermann_12()
                 elif menu_3_selection == '13':
                     calculator.levermann_13()
                 elif menu_3_selection == 'a':
-                    calculator.levermann_01()
-                    calculator.levermann_02()
-                    calculator.levermann_03()
-                    calculator.levermann_04_05()
-                    calculator.levermann_06()
-                    calculator.levermann_07()
-                    calculator.levermann_08()
-                    calculator.levermann_09_10_11()
-                    calculator.levermann_12()
-                    calculator.levermann_13()
+                    calculator.run_all()
                 elif menu_3_selection == 'u':
                     menu_3 = False
                 elif menu_3_selection == 'x':
@@ -180,7 +160,7 @@ def main():
             while menu_4:
                 print('Sub Menu 3: Show Results')
                 print('#(1) Show Levermann Buy Recommendation')
-                print('#(1) Show Levermann Hold Recommendation (w/o Buy)')
+                print('#(2) Show Levermann Hold Recommendation (w/o Buy)')
                 print('------------------------')
                 print('(a) Run All')
                 print('(u) Up')
