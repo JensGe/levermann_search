@@ -13,7 +13,7 @@ from selenium.common import exceptions
 
 from bs4 import BeautifulSoup
 
-logger = logging.getLogger(__name__)
+# logger = logging.getLogger(__name__)
 
 
 def init_driver():
@@ -37,16 +37,16 @@ def get_soup_code_from_url(driver, url):
     try:
         driver.get(url)
     except exceptions.TimeoutException:
-        logger.ERROR('Get Soup Code TimeoutException')
+        print('Get Soup Code TimeoutException')
         return ''
 
     try:
         soup = BeautifulSoup(driver.page_source, CST.PARSER)
     except exceptions.UnexpectedAlertPresentException:
-        logger.ERROR('Make Soup UnexpectedAlertPresentException')
+        print('Make Soup UnexpectedAlertPresentException')
         return ''
     except exceptions.NoSuchWindowException:
-        logger.ERROR('Make Soup NoSuchWindowException')
+        print('Make Soup NoSuchWindowException')
         return ''
 
     max_page = get_max_page(soup)
@@ -66,7 +66,7 @@ def get_soup_from_history_url(driver, url):
     try:
         driver.get(url)
     except exceptions.TimeoutException:
-        logger.ERROR('Timeout')
+        print('Timeout')
         return ''
 
     soup = BeautifulSoup(driver.page_source, CST.PARSER)

@@ -96,8 +96,8 @@ TABLE_INDEX_CONTENTS = 'Indexinhalte'
 TABLE_COMPANY_DATA = 'Unternehmensdaten'
 TABLE_LEVERMANN = 'Levermannscores'
 
-VIEW_LEVERMANN_BUY = 'Levermann_Buy'
-VIEW_LEVERMANN_HOLD = 'Levermann_Hold'
+VIEW_LEVERMANN_BUY = 'Levermann_Latest_Buy'
+VIEW_LEVERMANN_HOLD = 'Levermann_Latest_Hold'
 
 
 # Database Columns

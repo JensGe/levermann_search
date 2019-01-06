@@ -4,6 +4,7 @@ from Calculator import calculator
 from Displayer import displayer
 from utils import constants as CST
 
+
 def main():
 
     root_menu = True

@@ -44,7 +44,7 @@ def create_stock_history_url_list(base_url):
         stock_uri, market_place = stock[0][:-6], stock[1]
         if market_place is None:
             market_place = CST.EXCHANGE_APPENDIX
-        url_list.append(base_url + stock_uri + '/' + market_place)
+        url_list.append(base_url + stock_uri + market_place)
     print(url_list)
     return url_list
 
