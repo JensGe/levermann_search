@@ -1,10 +1,22 @@
+import sys
+
 from Scraper import scraper
 from Parser import parser
 from Calculator import calculator
 from Displayer import displayer
 from utils import constants as CST
+from loguru import logger
 
 
+logger.configure(handlers=[dict(sink="levermann_{time:YYYY-DDDD}.log",
+                                format="{time:YYY-MM-DD HH:mm:ss} | {level} | {message}",
+                                rotation="weekly",
+                                level="INFO")],
+                 activation=[("Displayer.displayer", True),
+                             ("Parser.parser", True)])
+
+
+@logger.catch()
 def main():
 
     root_menu = True
@@ -50,6 +62,8 @@ def main():
                     parser.write_index_histories_from_html_to_db()
                 elif menu_1_selection == 'u':
                     menu_1 = False
+                elif menu_1_selection == 'y':
+                    displayer.divide()
                 elif menu_1_selection == 'x':
                     menu_1 = False
                     root_menu = False
