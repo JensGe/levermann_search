@@ -1,3 +1,5 @@
+from loguru import logger
+
 from utils import date_op as date
 from utils import constants as CST
 import sqlalchemy
@@ -787,6 +789,7 @@ def save_profit_growth_to_db(stock_uri, diff, lev_score):
 def get_levermann_buy():
     with dataset.connect(CST.DATABASE) as database:
         try:
+            logger.info("Query DB Levermann BUY View")
             results = database.query("SELECT * "
                                      "FROM %s " % CST.VIEW_LEVERMANN_BUY)
             return results

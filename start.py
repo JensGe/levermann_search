@@ -9,11 +9,17 @@ from loguru import logger
 
 
 logger.configure(handlers=[dict(sink="levermann_{time:YYYY-DDDD}.log",
-                                format="{time:YYY-MM-DD HH:mm:ss} | {level} | {message}",
+                                format="{time:YYYY-MM-DD HH:mm:ss} | {level} | {message}",
                                 rotation="weekly",
                                 level="INFO")],
                  activation=[("Displayer.displayer", True),
-                             ("Parser.parser", True)])
+                             ("Parser.parser", True),
+                             ("Calculator.calculator", True),
+                             ("utils.date_op", True),
+                             ("utils.db_op", True),
+                             ("utils.file_op", True),
+                             ("utils.parse_op", True),
+                             ("utils.scrap_op", True)])
 
 
 @logger.catch()
