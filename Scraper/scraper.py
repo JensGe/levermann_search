@@ -7,6 +7,9 @@ from utils import db_op as db
 from utils import date_op as date
 from utils import constants as CST
 
+from selenium.common import exceptions
+from loguru import logger
+
 
 def scrap_index_content_sites():
     scrap_list = db.create_index_url_list(CST.URL_INDEX_CONTENT)
@@ -29,8 +32,10 @@ def scrap_index_histories():
         max_db_date = db.get_latest_date_from_index_history(index_uri)
         file_name = CST.PATH_INDEX_HISTORY + index_uri + CST.HTML_EXTENSION
         if max_db_date is None:
+            logger.warning("Scrap Index Histories: MaxDate is None for %s" % url)
             pass
         elif date.add_one_day(max_db_date) == end_date:
+            logger.info("Scrap Index Histories: EndDate = MaxDate")
             scrap.save_soup_to_file('', file_name)
             continue
         elif max_db_date > start_date:
@@ -55,7 +60,7 @@ def scrap_stock_histories():
         max_db_date = db.get_latest_date_from_stock_history(stock_uri + '-Aktie')
         file_name = CST.PATH_STOCK_HISTORY + stock_uri + CST.HTML_EXTENSION
         if os.path.isfile(file_name):
-            print('File already existing - skipping')
+            logger.info("Scrap Stock Histories: Skip existing File for stock: %s" % stock_uri)
             continue
 
         if max_db_date is None:
@@ -68,7 +73,6 @@ def scrap_stock_histories():
 
         date_interval = '/' + date.date_to_string(start_date) +\
                         '_' + date.date_to_string(end_date)
-        # dated_url = url.replace(stock_uri, short_stock_uri) + date_interval
         dated_url = url + date_interval
         print(dated_url)
         soup = scrap.get_soup_from_history_url(driver, dated_url)
@@ -86,12 +90,17 @@ def scrap_stock_info(scrap_url, save_path):
         stock_uri = url.split('/')[-1]
         file_name = save_path + stock_uri + CST.HTML_EXTENSION
         if os.path.isfile(file_name):
-            print('File already existing - skipping')
+            logger.info("Scrap Stock Histories: Skip existing File for stock: %s" % stock_uri)
             continue
         else:
             time.sleep(CST.SHORT_WAIT + random.uniform(0, CST.RANDOM_WAIT_RANGE))
-        soup = scrap.get_soup_code_from_url(driver, url)
-        scrap.save_soup_to_file(soup, file_name)
+        try:
+            soup = scrap.get_soup_code_from_url(driver, url)
+            scrap.save_soup_to_file(soup, file_name)
+        except exceptions.WebDriverException:
+            logger.exception('WebDriverException for URL %s' % url)
+            continue
+
     scrap.close_driver(driver)
 
 

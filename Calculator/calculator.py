@@ -1,6 +1,7 @@
 from utils import constants as CST
 from utils import db_op as db
 from utils import date_op as date
+from loguru import logger
 
 
 def levermann_01():
@@ -9,6 +10,7 @@ def levermann_01():
         earnings_before_tax = db.get_earnings_after_tax(stock)
         equity_capital = db.get_equity_capital(stock)
         if earnings_before_tax is None or equity_capital is None or equity_capital == 0:
+            logger.info("Calculate Lev01: Earnings before Tax or Equity Capital is None for stock: %s" % stock)
             continue
 
         return_on_equity = round(earnings_before_tax / equity_capital, 2)
@@ -30,11 +32,13 @@ def levermann_02():
         sales_revenue = db.get_sales_revenue(stock)
 
         if operative_result is None or sales_revenue is None:
+            logger.info("Calculate Lev02: Operative Result or Sales Revenue is None for stock: %s" % stock)
             continue
 
         ebit = round(operative_result / sales_revenue, 2)
 
         if db.check_is_financial_company(stock):
+            logger.info("Calculate Lev02: %s is financial Stock" % stock)
             db.save_ebit_to_db(stock, 0, 0)
             continue
 
@@ -54,6 +58,7 @@ def levermann_03():
         balance = db.get_balance(stock)
 
         if equity_capital is None or balance is None or balance == 0:
+            logger.info("Calculate Lev03: Equity Capital or Balance is None or 0 for stock: %s" % stock)
             continue
 
         equity_ratio = round(equity_capital / balance, 2)
@@ -84,6 +89,7 @@ def levermann_04_05():
         eps = db.get_eps(stock)
 
         if current_stock_price is None or eps is None:
+            logger.info("Calculate Lev04/05: Current Stockprice or EPS is None for stock: %s" % stock)
             continue
 
         eps_0 = eps[3]
@@ -134,6 +140,7 @@ def levermann_06():
         rating_count = sum(ratings)
 
         if rating_count == 0:
+            logger.info("Calculate Lev06: Zero Rating for stock: %s" % stock)
             db.save_rating_to_db(stock, 0, 0)
             continue
 
@@ -167,6 +174,7 @@ def levermann_07():
         quaterly_date = db.get_quarterly_date(stock)
 
         if quaterly_date is None:
+            logger.info("Calculate Lev07: Quaterly Date is None for stock: %s" % stock)
             db.save_quarterly_reaction_to_db(stock, 0, 0)
             continue
 
@@ -175,6 +183,7 @@ def levermann_07():
         quaterly_stock_pack = db.get_closing_stock_price(quaterly_date, stock)
         quaterly_index_pack = db.get_closing_index_price(quaterly_date, index)
         if quaterly_stock_pack is None or quaterly_index_pack is None:
+            logger.info("Calculate Lev07: Quaterly Date Pack or Quaterly Index Pack is None for stock: %s" % stock)
             continue
 
         quaterly_stock_closing_price, quarterly_stock_actual_date = quaterly_stock_pack
@@ -188,6 +197,7 @@ def levermann_07():
 
         if compare_price_stock is None or compare_price_index == 0 \
                 or compare_price_index is None or compare_price_index == 0:
+            logger.info("Calculate Lev07: Compare Price Stock or Index is None or 0 for stock: %s" % stock)
             continue
         stock_diff = (quaterly_stock_closing_price / compare_price_stock) - 1
         index_diff = (quaterly_index_closing_price / compare_price_index) - 1
@@ -213,9 +223,11 @@ def levermann_08():
         eps_last = db.get_older_eps(stock)
 
         if eps_current is None:
+            logger.info("Calculate Lev08: Current EPS is None for stock: %s" % stock)
             continue
 
         if eps_last is None:
+            logger.info("Calculate Lev08: Last EPS is None for stock: %s" % stock)
             db.save_eps_revision_to_db(stock, 0, 0)
             continue
 
@@ -253,6 +265,7 @@ def levermann_09_10_11():
         price_12_month_ago_pack = db.get_closing_stock_price(date_minus_12_month, stock)
 
         if current_price_pack is None or price_6_month_ago_pack is None or price_12_month_ago_pack is None:
+            logger.info("Calculate Lev09-11: Current Price or Price before 6M or 12M is None for stock: %s" % stock)
             continue
 
         current_price = current_price_pack[0]
@@ -260,6 +273,7 @@ def levermann_09_10_11():
         price_12_month_ago = price_12_month_ago_pack[0]
 
         if price_6_month_ago == 0 or price_12_month_ago == 0:
+            logger.info("Calculate Lev09-11:  Price before 6M or 12M is 0 for stock: %s" % stock)
             continue
 
         ratio_6_month = round((current_price / price_6_month_ago) - 1, 2)
@@ -310,8 +324,6 @@ def levermann_12():
             stock_changes = db.calculate_list_changes(last_stock_prices_of_month)
             index_changes = db.calculate_list_changes(last_index_prices_of_month)
 
-
-
             differences = []
             for i in range(len(stock_changes)):
                 differences.append(stock_changes[i]-index_changes[i])
@@ -327,6 +339,7 @@ def levermann_12():
 
             db.save_reversal_to_db(stock, avg_diff, lev_score_12)
         except TypeError:
+            logger.exception("Calculate Lev12 TypeError at stock: %s" % stock)
             continue
 
 
@@ -335,6 +348,7 @@ def levermann_13():
     for stock in stock_list:
         eps = db.get_eps(stock)
         if eps is None:
+            logger.info("Calculate Lev13: EPS is None for stock: %s" % stock)
             continue
         if eps[3] != 0:
             eps_ratio = round((eps[4] / eps[3]) - 1, 2)

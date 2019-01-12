@@ -1,7 +1,6 @@
 import unittest
 from utils import date_op as date
 from utils import db_op as db
-from Parser import db_refresher
 from utils import constants as CST
 
 
@@ -15,11 +14,6 @@ class TestDatabase(unittest.TestCase):
         calc_price = db.get_closing_price_from_date(query_date, 'dax')
         asserted_price = '11.959,63'
         self.assertEqual(asserted_price, calc_price)
-
-    def test_get_intervall(self):
-        start, end = db_refresher.select_index_intervall("dax")
-        asserted_start = "06.10.2018"
-        self.assertEqual(start, asserted_start)
 
     def test_get_max_date(self):
         max_date = db.get_max_date_of_index_history("dax")

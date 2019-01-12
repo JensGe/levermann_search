@@ -1,7 +1,5 @@
 import time
 import os
-import logging
-
 
 from utils import date_op as date
 from utils import constants as CST
@@ -12,8 +10,7 @@ from selenium.webdriver.firefox.options import Options
 from selenium.common import exceptions
 
 from bs4 import BeautifulSoup
-
-# logger = logging.getLogger(__name__)
+from loguru import logger
 
 
 def init_driver():
@@ -37,16 +34,16 @@ def get_soup_code_from_url(driver, url):
     try:
         driver.get(url)
     except exceptions.TimeoutException:
-        print('Get Soup Code TimeoutException')
+        logger.exception('Get Soup Code TimeoutException')
         return ''
 
     try:
         soup = BeautifulSoup(driver.page_source, CST.PARSER)
     except exceptions.UnexpectedAlertPresentException:
-        print('Make Soup UnexpectedAlertPresentException')
+        logger.exception('Make Soup UnexpectedAlertPresentException')
         return ''
     except exceptions.NoSuchWindowException:
-        print('Make Soup NoSuchWindowException')
+        logger.exception('Make Soup NoSuchWindowException')
         return ''
 
     max_page = get_max_page(soup)
@@ -95,7 +92,7 @@ def is_data_available(soup):
 
 def get_max_page(soup):
     try:
-        pagination = soup.find(CST.HTML_DIV, {CST.HTML_CLASS: CST.TEXT_PAGINATION })
+        pagination = soup.find(CST.HTML_DIV, {CST.HTML_CLASS: CST.TEXT_PAGINATION})
         link_list = pagination.find_all('a')
         return int(link_list[-1].text)
     except:

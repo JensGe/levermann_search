@@ -1,5 +1,3 @@
-import sys
-
 from Scraper import scraper
 from Parser import parser
 from Calculator import calculator
@@ -8,18 +6,12 @@ from utils import constants as CST
 from loguru import logger
 
 
-logger.configure(handlers=[dict(sink="levermann_{time:YYYY-DDDD}.log",
+logger.configure(handlers=[dict(sink="logs/levermann_{time:YYYY-DDDD}.log",
                                 format="{time:YYYY-MM-DD HH:mm:ss} | {level} | {message}",
-                                rotation="weekly",
-                                level="INFO")],
-                 activation=[("Displayer.displayer", True),
-                             ("Parser.parser", True),
-                             ("Calculator.calculator", True),
-                             ("utils.date_op", True),
-                             ("utils.db_op", True),
-                             ("utils.file_op", True),
-                             ("utils.parse_op", True),
-                             ("utils.scrap_op", True)])
+                                rotation="weekly", level="INFO")],
+                 activation=[("Displayer.displayer", True), ("Parser.parser", True), ("Calculator.calculator", True),
+                             ("utils.date_op", True), ("utils.db_op", True), ("utils.file_op", True),
+                             ("utils.parse_op", True), ("utils.scrap_op", True)])
 
 
 @logger.catch()
@@ -68,8 +60,6 @@ def main():
                     parser.write_index_histories_from_html_to_db()
                 elif menu_1_selection == 'u':
                     menu_1 = False
-                elif menu_1_selection == 'y':
-                    displayer.divide()
                 elif menu_1_selection == 'x':
                     menu_1 = False
                     root_menu = False
@@ -86,6 +76,8 @@ def main():
                 print('(6) Scrap & Write Stock Dates')
                 print('------------------------------')
                 print('(a) Run All')
+                print('(s) Scrap All')
+                print('(p) Parse All')
                 print('(u) Up')
                 print('(x) Exit')
                 menu_2_selection = str(input('> '))
@@ -119,6 +111,20 @@ def main():
                     scraper.scrap_stock_info(CST.URL_STOCK_TARGETS, CST.PATH_STOCK_TARGETS)
                     parser.write_stock_targets_data_to_db()
                     scraper.scrap_stock_info(CST.URL_STOCK_DATES, CST.PATH_STOCK_DATES)
+                    parser.write_stock_last_quarterly_figures_date_to_db()
+                elif menu_2_selection == 's':
+                    scraper.scrap_stock_info(CST.URL_STOCK_OVERVIEW, CST.PATH_STOCK_OVERVIEW)
+                    scraper.scrap_stock_histories()
+                    scraper.scrap_stock_info(CST.URL_STOCK_BALANCE, CST.PATH_STOCK_BALANCE)
+                    scraper.scrap_stock_info(CST.URL_STOCK_ESTIMATES, CST.PATH_STOCK_ESTIMATES)
+                    scraper.scrap_stock_info(CST.URL_STOCK_TARGETS, CST.PATH_STOCK_TARGETS)
+                    scraper.scrap_stock_info(CST.URL_STOCK_DATES, CST.PATH_STOCK_DATES)
+                elif menu_2_selection == 'p':
+                    parser.write_stock_overview_data_to_db()
+                    parser.write_stock_histories_from_html_to_db()
+                    parser.write_stock_balance_data_to_db()
+                    parser.write_stock_estimates_data_to_db()
+                    parser.write_stock_targets_data_to_db()
                     parser.write_stock_last_quarterly_figures_date_to_db()
                 elif menu_2_selection == 'u':
                     menu_2 = False

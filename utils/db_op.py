@@ -47,7 +47,6 @@ def create_stock_history_url_list(base_url):
         if market_place is None:
             market_place = CST.EXCHANGE_APPENDIX
         url_list.append(base_url + stock_uri + market_place)
-    print(url_list)
     return url_list
 
 
@@ -107,11 +106,12 @@ def write_index_history_to_db(index_history, index_uri):
             try:
                 end = float(item[2].replace('.', '').replace(',', '.'))
             except ValueError:
-                print(item[2])
+                logger.exception("Write Index History to DB: ValueError with Item: %s" % item[2])
             try:
                 database[CST.TABLE_INDEX_HISTORIES].insert(dict(IndexURI=index_uri, Datum=date_,
                                                                 Eroeffnungswert=start, Schlusswert=end))
             except sqlalchemy.exc.IntegrityError:
+                logger.exception("Write Index History to DB: Integrity Error with Item: %s" % index_uri)
                 pass
 
 
@@ -122,12 +122,12 @@ def write_stock_history_to_db(stock_history, stock_uri):
             try:
                 start = float(item[1].replace('.', '').replace(',', '.'))
             except ValueError:
-                print('Missing start value for %s at %s' % (stock_uri, str(date_)))
+                logger.exception("ValueError: Missing start value for %s at %s" % (stock_uri, str(date_)))
                 start = None
             try:
                 end = float(item[2].replace('.', '').replace(',', '.'))
             except ValueError:
-                print('Missing end value for %s at %s' % (stock_uri, str(date_)))
+                logger.exception("ValueError: Missing end value for %s at %s" % (stock_uri, str(date_)))
                 end = None
             try:
                 database[CST.TABLE_STOCKS_HISTORIES].insert(dict(AktienURI=stock_uri, Datum=date_,
@@ -144,6 +144,7 @@ def get_latest_date_from_index_history(index_uri):
         try:
             result = [item for item in results][0]
         except IndexError:
+            logger.exception("Get Latest Date from Index History: IndexError for %s" % index_uri)
             return False
         return result['maxdate']
 
@@ -156,6 +157,7 @@ def get_latest_date_from_stock_history(stock_uri):
         try:
             result = [item for item in results][0]
         except IndexError:
+            logger.exception("Get Latest Date from Stock History: IndexError for %s" % stock_uri)
             return False
         return result['maxdate']
 
@@ -179,11 +181,12 @@ def write_single_overview_data_to_db(stock_uri, market_cap, stock_indizes, stock
                               str(stock_sectors), stock_uri, current_date))
             pass
         try:
-            data = dict(URI=stock_uri,
-                        Handelsplatz=market_place)
-            database[CST.TABLE_STOCKS].update(data, ['URI'])
-        except sqlalchemy.exc.IntegrityError:
-            print('Integrity Error from Marketplace Update')
+            database.query('UPDATE %s SET '
+                           'Handelsplatz = "%s" '
+                           'WHERE AktienURI = "%s"'
+                           % (CST.TABLE_STOCKS, market_place, stock_uri))
+        except:
+            logger.exception('Exception at Marketplace Insertation')
             pass
 
 
@@ -203,7 +206,6 @@ def write_single_balance_data_to_db(stock_uri, result_after_tax, operative_resul
                                                          EPS_minus_2=eps_minus_2,
                                                          EPS_minus_1=eps_minus_1))
         except sqlalchemy.exc.IntegrityError:
-            print('Primary Key Existent - Update')
             database.query('UPDATE %s SET '
                            'Ergebnis_nach_Steuern = %s, '
                            'Operatives_Ergebnis = %s, '
@@ -228,7 +230,6 @@ def write_single_estimate_data_to_db(stock_uri, eps_0, eps_plus_1):
                                                          EPS_0=eps_0,
                                                          EPS_plus_1=eps_plus_1))
         except sqlalchemy.exc.IntegrityError:
-            print('Primary Key Existent - Update')
             database.query('UPDATE %s SET '
                            'EPS_0 = %s, '
                            'EPS_plus_1 = %s '
@@ -247,7 +248,6 @@ def write_single_targets_data_to_db(stock_uri, analyst_buy, analyst_hold, analys
                                                          Analysten_Hold=analyst_hold,
                                                          Analysten_Sell=analyst_sell))
         except sqlalchemy.exc.IntegrityError:
-            print('Primary Key Existent - Update')
             database.query('UPDATE %s SET '
                            'Analysten_Buy = %s, '
                            'Analysten_Hold = %s, '
@@ -264,7 +264,6 @@ def write_single_stock_dates_data_to_db(stock_uri, figures_date):
                                                         Datum=figures_date,
                                                         Terminart='Quarterly/Yearly'))
         except sqlalchemy.exc.IntegrityError:
-            print('Primary Key Existent - Update')
             database.query('UPDATE %s SET '
                            'Datum = %s '
                            'WHERE AktienURI = "%s"'
@@ -280,11 +279,8 @@ def get_earnings_after_tax(stock_uri):
             results = database.query("SELECT %s FROM %s WHERE AktienURI = '%s' ORDER BY Datum DESC"
                                      % (CST.COLUMN_EARNINGS_AT, CST.TABLE_COMPANY_DATA, stock_uri))
             return float([item for item in results][0][CST.COLUMN_EARNINGS_AT])
-        except ValueError:
-            pass
-        except IndexError:
-            pass
-        except TypeError:
+        except:
+            logger.exception("Exception at get_earnings_after_tax for %s" %stock_uri)
             pass
 
 
@@ -294,11 +290,8 @@ def get_equity_capital(stock_uri):
             results = database.query("SELECT %s FROM %s WHERE AktienURI = '%s' ORDER BY Datum DESC"
                                      % (CST.COLUMN_EQUITY_CAPITAL, CST.TABLE_COMPANY_DATA, stock_uri))
             return float([item for item in results][0][CST.COLUMN_EQUITY_CAPITAL])
-        except ValueError:
-            pass
-        except IndexError:
-            pass
-        except TypeError:
+        except:
+            logger.exception("Exception at get_equity_capital for %s" %stock_uri)
             pass
 
 
@@ -311,7 +304,6 @@ def save_roe_to_db(stock_uri, roe, lev_score):
                                                       Lev01_Wert=roe,
                                                       Lev01_Score=lev_score))
         except sqlalchemy.exc.IntegrityError:
-            print('Primary Key Existent - Update')
             database.query('UPDATE %s SET '
                            'Lev01_Wert = %s, '
                            'Lev01_Score = %s '
@@ -328,11 +320,8 @@ def get_operative_result(stock_uri):
             results = database.query("SELECT %s FROM %s WHERE AktienURI = '%s' ORDER BY Datum DESC"
                                      % (CST.COLUMN_OPERATIVE_RESULT, CST.TABLE_COMPANY_DATA, stock_uri))
             return float([item for item in results][0][CST.COLUMN_OPERATIVE_RESULT])
-        except ValueError:
-            pass
-        except IndexError:
-            pass
-        except TypeError:
+        except:
+            logger.exception("Exception at get_operative_result for %s" %stock_uri)
             pass
 
 
@@ -342,11 +331,8 @@ def get_sales_revenue(stock_uri):
             results = database.query("SELECT %s FROM %s WHERE AktienURI = '%s' ORDER BY Datum DESC"
                                      % (CST.COLUMN_SALES_REVENUE, CST.TABLE_COMPANY_DATA, stock_uri))
             return float([item for item in results][0][CST.COLUMN_SALES_REVENUE])
-        except ValueError:
-            pass
-        except IndexError:
-            pass
-        except TypeError:
+        except:
+            logger.exception("Exception at get_sales_revenue for %s" %stock_uri)
             pass
 
 
@@ -358,13 +344,9 @@ def check_is_financial_company(stock_uri):
                                      % (CST.COLUMN_SECTORS, CST.TABLE_COMPANY_DATA, stock_uri))
             result_list = [item for item in results][0][CST.COLUMN_SECTORS]
             return any(i in result_list for i in fin_list)
-        except ValueError:
+        except:
+            logger.exception("Exception at check_is_financial_company for %s" %stock_uri)
             pass
-        except IndexError:
-            pass
-        except TypeError:
-            pass
-
 
 
 def save_ebit_to_db(stock_uri, ebit, lev_score):
@@ -376,7 +358,6 @@ def save_ebit_to_db(stock_uri, ebit, lev_score):
                                                       Lev02_Wert=ebit,
                                                       Lev02_Score=lev_score))
         except sqlalchemy.exc.IntegrityError:
-            print('Primary Key Existent - Update')
             database.query('UPDATE %s SET '
                            'Lev02_Wert = %s, '
                            'Lev02_Score = %s '
@@ -393,11 +374,8 @@ def get_balance(stock_uri):
             results = database.query("SELECT %s FROM %s WHERE AktienURI = '%s' ORDER BY Datum DESC"
                                      % (CST.COLUMN_BALANCE, CST.TABLE_COMPANY_DATA, stock_uri))
             return float([item for item in results][0][CST.COLUMN_BALANCE])
-        except ValueError:
-            pass
-        except IndexError:
-            pass
-        except TypeError:
+        except:
+            logger.exception("Exception at get_balance for %s" % stock_uri)
             pass
 
 
@@ -410,7 +388,6 @@ def save_equity_ratio_to_db(stock_uri, equity_ratio, lev_score):
                                                       Lev03_Wert=equity_ratio,
                                                       Lev03_Score=lev_score))
         except sqlalchemy.exc.IntegrityError:
-            print('Primary Key Existent - Update')
             database.query('UPDATE %s SET '
                            'Lev03_Wert = %s, '
                            'Lev03_Score = %s '
@@ -427,11 +404,8 @@ def get_latest_stock_price(stock_uri):
             results = database.query("SELECT %s FROM %s WHERE AktienURI = '%s' ORDER BY Datum DESC"
                                      % (CST.COLUMN_CLOSING_VALUE, CST.TABLE_STOCKS_HISTORIES, stock_uri))
             return float([item for item in results][0][CST.COLUMN_CLOSING_VALUE])
-        except ValueError:
-            pass
-        except IndexError:
-            pass
-        except TypeError:
+        except:
+            logger.exception("Exception at get_latest_stock_price for %s" % stock_uri)
             pass
 
 
@@ -445,11 +419,8 @@ def get_eps(stock_uri):
                         float(eps_s[CST.COLUMN_EPS_M1]), float(eps_s[CST.COLUMN_EPS_0]),
                         float(eps_s[CST.COLUMN_EPS_P1])]
             return eps_list
-        except ValueError:
-            pass
-        except IndexError:
-            pass
-        except TypeError:
+        except:
+            logger.exception("Exception at get_eps for %s" % stock_uri)
             pass
 
 
@@ -463,11 +434,8 @@ def get_older_eps(stock_uri):
                         float(eps_s[CST.COLUMN_EPS_M1]), float(eps_s[CST.COLUMN_EPS_0]),
                         float(eps_s[CST.COLUMN_EPS_P1])]
             return eps_list
-        except ValueError:
-            pass
-        except IndexError:
-            pass
-        except TypeError:
+        except:
+            logger.exception("Exception at get_older_eps for %s" % stock_uri)
             pass
 
 
@@ -480,7 +448,6 @@ def save_kgv5_to_db(stock_uri, kgv5, kgv5_score):
                                                       Lev04_Wert=kgv5,
                                                       Lev04_Score=kgv5_score))
         except sqlalchemy.exc.IntegrityError:
-            print('Primary Key Existent - Update')
             database.query('UPDATE %s SET '
                            'Lev04_Wert = %s, '
                            'Lev04_Score = %s '
@@ -498,7 +465,6 @@ def save_kgv0_to_db(stock_uri, kgv0, kgv0_score):
                                                       Lev05_Wert=kgv0,
                                                       Lev05_Score=kgv0_score))
         except sqlalchemy.exc.IntegrityError:
-            print('Primary Key Existent - Update')
             database.query('UPDATE %s SET '
                            'Lev05_Wert = %s, '
                            'Lev05_Score = %s '
@@ -519,11 +485,8 @@ def get_analyst_ratings(stock_uri):
                            int(ratings[CST.COLUMN_ANALYST_HOLD]),
                            int(ratings[CST.COLUMN_ANALYST_SELL])]
             return rating_list
-        except ValueError:
-            pass
-        except IndexError:
-            pass
-        except TypeError:
+        except:
+            logger.exception("Exception at get_analyst_ratings for %s" % stock_uri)
             pass
 
 
@@ -536,7 +499,6 @@ def save_rating_to_db(stock_uri, rating, rating_score):
                                                       Lev06_Wert=rating,
                                                       Lev06_Score=rating_score))
         except sqlalchemy.exc.IntegrityError:
-            print('Primary Key Existent - Update')
             database.query('UPDATE %s SET '
                            'Lev06_Wert = %s, '
                            'Lev06_Score = %s '
@@ -557,11 +519,8 @@ def is_small_cap(stock_uri):
                 indizes_list = get_indizes_of_stock(stock_uri)
                 return not any(i in indizes_list for i in CST.LARGE_CAPS_INDIZES)
 
-        except ValueError:
-            pass
-        except IndexError:
-            pass
-        except TypeError:
+        except:
+            logger.exception("Exception at is_small_cap for %s" % stock_uri)
             pass
 
 
@@ -574,28 +533,22 @@ def get_quarterly_date(stock_uri):
                                      % (CST.TABLE_STOCK_DATES, stock_uri))
             quarterly_date = [item for item in results][0][CST.COLUMN_DATE]
             return quarterly_date
-        except ValueError:
-            pass
-        except IndexError:
-            pass
-        except TypeError:
+        except:
+            logger.exception("Exception at get_quarterly_date for %s" % stock_uri)
             pass
 
 
-def get_closing_stock_price(request_date, aktien_uri):
+def get_closing_stock_price(request_date, stock_uri):
     with dataset.connect(CST.DATABASE) as database:
         try:
             results = database.query("SELECT * FROM %s WHERE AktienURI = '%s' and Datum <= '%s' ORDER BY Datum DESC"
-                                     % (CST.TABLE_STOCKS_HISTORIES, aktien_uri, request_date))
+                                     % (CST.TABLE_STOCKS_HISTORIES, stock_uri, request_date))
             result = [item for item in results][0]
             closing_price = result[CST.COLUMN_CLOSING_VALUE]
             actual_date = result[CST.COLUMN_DATE]
             return closing_price, actual_date
-        except ValueError:
-            pass
-        except IndexError:
-            pass
-        except TypeError:
+        except:
+            logger.exception("Exception at get_closing_stock_price for %s" % stock_uri)
             pass
 
 
@@ -608,41 +561,32 @@ def get_closing_index_price(request_date, index_uri):
             closing_price = result[CST.COLUMN_CLOSING_VALUE]
             actual_date = result[CST.COLUMN_DATE]
             return closing_price, actual_date
-        except ValueError:
-            pass
-        except IndexError:
-            pass
-        except TypeError:
+        except:
+            logger.exception("Exception at get_closing_index_price for %s" % index_uri)
             pass
 
 
-def get_index_of_stock(aktien_uri):
+def get_index_of_stock(stock_uri):
     with dataset.connect(CST.DATABASE) as database:
         try:
             results = database.query("SELECT * FROM %s WHERE AktienURI = '%s'"
-                                     % (CST.TABLE_INDEX_CONTENTS, aktien_uri))
+                                     % (CST.TABLE_INDEX_CONTENTS, stock_uri))
             index_uri = [item for item in results][0][CST.COLUMN_INDEX_URI]
             return index_uri
-        except ValueError:
-            print(aktien_uri)
-        except IndexError:
-            print(aktien_uri)
-        except TypeError:
+        except:
+            logger.exception("Exception at get_index_of_stock for %s" % stock_uri)
             pass
 
 
-def get_indizes_of_stock(aktien_uri):
+def get_indizes_of_stock(stock_uri):
     with dataset.connect(CST.DATABASE) as database:
         try:
             results = database.query("SELECT * FROM %s WHERE AktienURI = '%s'"
-                                     % (CST.TABLE_INDEX_CONTENTS, aktien_uri))
+                                     % (CST.TABLE_INDEX_CONTENTS, stock_uri))
             index_uri = {item[CST.COLUMN_INDEX_URI] for item in results}
             return sorted(index_uri)
-        except ValueError:
-            print(aktien_uri)
-        except IndexError:
-            print(aktien_uri)
-        except TypeError:
+        except:
+            logger.exception("Exception at get_indizes_of_stock for %s" % stock_uri)
             pass
 
 
@@ -655,7 +599,6 @@ def save_quarterly_reaction_to_db(stock_uri, quarterly_diff, lev_score):
                                                       Lev07_Wert=quarterly_diff,
                                                       Lev07_Score=lev_score))
         except sqlalchemy.exc.IntegrityError:
-            print('Primary Key Existent - Update')
             database.query('UPDATE %s SET '
                            'Lev07_Wert = %s, '
                            'Lev07_Score = %s '
@@ -675,7 +618,6 @@ def save_eps_revision_to_db(stock_uri, eps_diff, lev_score):
                                                       Lev08_Wert=eps_diff,
                                                       Lev08_Score=lev_score))
         except sqlalchemy.exc.IntegrityError:
-            print('Primary Key Existent - Update')
             database.query('UPDATE %s SET '
                            'Lev08_Wert = %s, '
                            'Lev08_Score = %s '
@@ -695,7 +637,6 @@ def save_6_months_ratio_to_db(stock_uri, ratio, lev_score):
                                                       Lev09_Wert=ratio,
                                                       Lev09_Score=lev_score))
         except sqlalchemy.exc.IntegrityError:
-            print('Primary Key Existent - Update')
             database.query('UPDATE %s SET '
                            'Lev09_Wert = %s, '
                            'Lev09_Score = %s '
@@ -713,7 +654,6 @@ def save_12_months_ratio_to_db(stock_uri, ratio, lev_score):
                                                       Lev10_Wert=ratio,
                                                       Lev10_Score=lev_score))
         except sqlalchemy.exc.IntegrityError:
-            print('Primary Key Existent - Update')
             database.query('UPDATE %s SET '
                            'Lev10_Wert = %s, '
                            'Lev10_Score = %s '
@@ -730,7 +670,6 @@ def save_momentum_to_db(stock_uri, lev_score):
                                                       Datum=current_date,
                                                       Lev11_Score=lev_score))
         except sqlalchemy.exc.IntegrityError:
-            print('Primary Key Existent - Update')
             database.query('UPDATE %s SET '
                            'Lev11_Score = %s '
                            'WHERE AktienURI = "%s" AND Datum = "%s"'
@@ -757,7 +696,6 @@ def save_reversal_to_db(stock_uri, diff, lev_score):
                                                       Lev12_Wert=diff,
                                                       Lev12_Score=lev_score))
         except sqlalchemy.exc.IntegrityError:
-            print('Primary Key Existent - Update')
             database.query('UPDATE %s SET '
                            'Lev12_Wert = %s, '
                            'Lev12_Score = %s '
@@ -777,7 +715,6 @@ def save_profit_growth_to_db(stock_uri, diff, lev_score):
                                                       Lev13_Wert=diff,
                                                       Lev13_Score=lev_score))
         except sqlalchemy.exc.IntegrityError:
-            print('Primary Key Existent - Update')
             database.query('UPDATE %s SET '
                            'Lev13_Wert = %s, '
                            'Lev13_Score = %s '
@@ -793,11 +730,8 @@ def get_levermann_buy():
             results = database.query("SELECT * "
                                      "FROM %s " % CST.VIEW_LEVERMANN_BUY)
             return results
-        except ValueError:
-            pass
-        except IndexError:
-            pass
-        except TypeError:
+        except:
+            logger.exception("Exception at get_levermann_buy")
             pass
 
 
@@ -807,10 +741,7 @@ def get_levermann_hold():
             results = database.query("SELECT * "
                                      "FROM %s " % CST.VIEW_LEVERMANN_HOLD)
             return results
-        except ValueError:
-            pass
-        except IndexError:
-            pass
-        except TypeError:
+        except:
+            logger.exception("Exception at get_levermann_hold")
             pass
 
