@@ -7,9 +7,15 @@ import sqlalchemy
 import dataset
 
 
-def get_index_names():
+def get_all_index_names():
     with dataset.connect(CST.DATABASE) as database:
         index_list = [item[CST.COLUMN_URI] for item in database[CST.TABLE_INDIZES]]
+    return index_list
+
+
+def get_active_index_names():
+    with dataset.connect(CST.DATABASE) as database:
+        index_list = [item[CST.COLUMN_URI] for item in database[CST.TABLE_INDIZES] if item[CST.COLUMN_ACTIVE] == b'1']
     return index_list
 
 
@@ -32,8 +38,14 @@ def get_pages_count(index_name):
         return int(result[0])
 
 
-def create_index_url_list(base_url):
-    index_list = get_index_names()
+def create_all_index_url_list(base_url):
+    index_list = get_all_index_names()
+    url_list = [base_url + index for index in index_list]
+    return url_list
+
+
+def create_active_index_url_list(base_url):
+    index_list = get_active_index_names()
     url_list = [base_url + index for index in index_list]
     return url_list
 

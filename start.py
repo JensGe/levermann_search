@@ -25,7 +25,7 @@ def main():
         print('(2) Stocks Processing')
         print('(3) Calculate')
         print('---------------')
-        print('(4) Show Best Stocks')
+        print('(4) Show Results')
         print('---------------')
         print('(x) Exit')
 
@@ -185,11 +185,10 @@ def main():
         elif menu_selection == '4':
             menu_4 = True
             while menu_4:
-                print('Sub Menu 3: Show Results')
+                print('Sub Menu 4: Show Results')
                 print('#(1) Show Levermann Buy Recommendation')
                 print('#(2) Show Levermann Hold Recommendation (w/o Buy)')
                 print('------------------------')
-                print('(a) Run All')
                 print('(u) Up')
                 print('(x) Exit')
                 menu_4_selection = str(input('> '))

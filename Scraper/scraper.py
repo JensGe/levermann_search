@@ -12,7 +12,7 @@ from loguru import logger
 
 
 def scrap_index_content_sites():
-    scrap_list = db.create_index_url_list(CST.URL_INDEX_CONTENT)
+    scrap_list = db.create_active_index_url_list(CST.URL_INDEX_CONTENT)
     driver = scrap.init_driver()
     for url in scrap_list:
         index_uri = url.split('/')[-1]
@@ -23,7 +23,7 @@ def scrap_index_content_sites():
 
 
 def scrap_index_histories():
-    scrap_list = db.create_index_url_list(CST.URL_INDEX_HISTORY)
+    scrap_list = db.create_active_index_url_list(CST.URL_INDEX_HISTORY)
     driver = scrap.init_driver()
     for url in scrap_list:
         index_uri = url.split('/')[-1]

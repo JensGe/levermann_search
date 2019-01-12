@@ -74,8 +74,8 @@ def get_market_cap(soup):
 
 def get_market_place(soup):
     try:
-        market_place_container = soup.find(CST.HTML_A, {CST.HTML_ID: 'exchanges-drop-down'})
-        return market_place_container.contents[0].strip()
+        market_place_loc = soup.find(text=re.compile(CST.TEXT_MARKET_PLACE))
+        return market_place_loc.find_next(CST.HTML_DIV).contents[0].strip()
     except AttributeError:
         logger.error('Get Market Place: AttributeError')
         pass

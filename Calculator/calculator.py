@@ -366,6 +366,7 @@ def levermann_13():
 
 
 def run_all():
+    levermann_01()
     levermann_02()
     levermann_03()
     levermann_04_05()

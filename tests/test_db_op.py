@@ -9,20 +9,15 @@ class TestDatabase(unittest.TestCase):
     def setUp(self):
         pass
 
-    def test_get_closingprice_from_date(self):
-        query_date = date.string_to_date("07.09.2018")
-        calc_price = db.get_closing_price_from_date(query_date, 'dax')
-        asserted_price = '11.959,63'
-        self.assertEqual(asserted_price, calc_price)
-
-    def test_get_max_date(self):
-        max_date = db.get_max_date_of_index_history("dax")
-        asserted_max_date = "05.10.2018"
-        self.assertEqual(max_date, asserted_max_date)
-
-    def test_get_index_names(self):
-        index_list = db.get_index_names()
+    def test_get_all_index_names(self):
+        index_list = db.get_all_index_names()
         asserted_list = ['CAC_40', 'dax', 'dow_jones', 'Euro_Stoxx_50', 'FTSE_100', 'SMI']
+        self.assertEqual(asserted_list, index_list)
+
+    def test_get_active_index_names(self):
+        index_list = db.get_active_index_names()
+        asserted_list = ['CAC_40', 'dax', 'dow_jones', 'Euro_Stoxx_50', 'FTSE_100',
+                         'mdax', 'nasdaq_100', 's&p_500', 'sdax', 'SMI', 'tecdax']
         self.assertEqual(asserted_list, index_list)
 
     def test_get_pages_count(self):
@@ -34,7 +29,7 @@ class TestDatabase(unittest.TestCase):
         self.assertEqual(asserted_pages_2, pages_2)
 
     def test_create_index_content_url_list(self):
-        url_list = db.create_index_url_list(CST.URL_INDEX_CONTENT)
+        url_list = db.create_all_index_url_list(CST.URL_INDEX_CONTENT)
         asserted_url_list = ['https://www.boerse-online.de/index/liste/CAC_40',
                              'https://www.boerse-online.de/index/liste/dax',
                              'https://www.boerse-online.de/index/liste/dow_jones',
@@ -42,32 +37,6 @@ class TestDatabase(unittest.TestCase):
                              'https://www.boerse-online.de/index/liste/FTSE_100',
                              'https://www.boerse-online.de/index/liste/SMI']
         self.assertEqual(asserted_url_list, url_list[:6])
-
-
-    # DB Tests
-    ####################
-    # def test_check_if_exists(self):
-    #     search = '010101'
-    #     table = 'Aktien'
-    #     column = 'ISIN'
-    #     self.assertEqual(True, db.check_if_exists(search, table, column))
-    #
-    # def test_write_stock_to_stock_table(self):
-    #     stock = ['Test1', 'XX00X0XX000', 'Test-Aktie']
-    #     db.write_stock_to_stock_table(stock)
-    #
-    # def test_write_stock_to_stock_content_table(self):
-    #     stock = 'XX00X0XX000'
-    #     index_name = 'dax'
-    #     current_date = date.get_todays_date()
-    #     db.write_stock_to_stock_contents_table(stock, index_name, current_date)
-    #
-    # def test_write_stock_history_to_db(self):
-    #     index_URI = 'CAC_40'
-    #     index_history = [['01.10.2018', 9127.05, 9094.28],
-    #                      ['02.10.2018', 9087.32, 9076.57],
-    #                      ['03.10.2018', 9175.21, 9126.31]]
-    #     db.write_stock_history_to_db(index_history, index_URI)
 
     def test_get_earnings_after_tax(self):
         result = db.get_earnings_after_tax('ab_inbev-Aktie')
