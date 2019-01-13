@@ -10,17 +10,6 @@ class TestScrapping(unittest.TestCase):
     def setUp(self):
         pass
 
-    def test_index_history_list_extract(self):
-        soup = scrap.get_soup_code_from_file('data/bo_index_history.html')
-        history_table = soup.find_all('div', {'id': 'historic-price-list'})
-        table_list = parse.extract_history_table_to_list(history_table)
-        asserted_list = [['06.09.2018', '11.955,25', '11.995,81', '12.091,98', '11.944,50'],
-                         ['07.09.2018', '11.959,63', '11.960,10', '11.990,81', '11.888,57'],
-                         ['10.09.2018', '11.986,34', '11.950,55', '12.039,22', '11.930,30'],
-                         ['11.09.2018', '11.970,27', '12.013,01', '12.017,73', '11.865,47'],
-                         ['12.09.2018', '12.032,30', '11.989,27', '12.046,66', '11.952,49']]
-        self.assertEqual(asserted_list, table_list[:5])
-
     def test_index_stocks_list_extract(self):
         soup = scrap.get_soup_code_from_file('data/bo_index_stocks.html')
         stocks_table = soup.find_all('div', {'id': 'index-list-container'})

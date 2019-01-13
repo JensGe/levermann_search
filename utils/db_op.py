@@ -183,7 +183,7 @@ def write_single_overview_data_to_db(stock_uri, market_cap, stock_indizes, stock
         try:
             database.query('UPDATE %s SET '
                            'Handelsplatz = "%s" '
-                           'WHERE AktienURI = "%s"'
+                           'WHERE URI = "%s"'
                            % (CST.TABLE_STOCKS, market_place, stock_uri))
         except:
             logger.exception('Exception at Marketplace Insertation')

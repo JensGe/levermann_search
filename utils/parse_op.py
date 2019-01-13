@@ -1,12 +1,10 @@
 import re
-import time
 
-from utils import db_op as db
+
 from utils import date_op as date
-from utils import scrap_op as scrap
 from utils import constants as CST
 
-from bs4 import BeautifulSoup
+from loguru import logger
 
 
 # Index Histories
@@ -25,97 +23,16 @@ def get_historic_prices(soup):
 
 
 def convert_index_history_list(index_history):
-    return [[list_[0], float(list_[1].replace('.','').replace(',','.')), float(list_[2].replace('.','').replace(',','.'))] for list_ in index_history]
+    return [[list_[0], float(list_[1].replace('.', '').replace(',', '.')),
+             float(list_[2].replace('.', '').replace(',', '.'))] for list_ in index_history]
 
-
-def extract_history_table_to_list(input_table):
-    index_history = []
-    table_rows = []
-
-    for rows in input_table:
-        table_rows = rows.find_all(CST.HTML_TR)
-        row_items = []
-        for items in table_rows[1:]:
-            row_items = items.find_all(CST.HTML_TD)
-            tds = [td.text for td in row_items]
-            index_history.append(tds)
-    return index_history
-
-
-def save_index_history_to_db(input_table, name):
-    print('---- Writing %d items to table' % (len(input_table)))
-    for i in range(len(input_table)):
-        db.write_data('index_histories', dict(index=name,
-                                              datum=input_table[i][0],
-                                              schluss=input_table[i][1],
-                                              eroeffnung=input_table[i][2],
-                                              tageshoch=input_table[i][3],
-                                              tagestief=input_table[i][3]))
-    return True
-
-
-# Index Stocks
-def get_index_stocks_content(driver, url, index):
-    driver.get(url + index)
-    soup = BeautifulSoup(driver.page_source, CST.PARSER)
-    stock_list = soup.find_all(CST.HTML_DIV, {CST.HTML_ID: CST.TEXT_INDEX_LIST_CONTAINER})
-    max_page = scrap.get_max_page(soup)
-
-    if max_page == 1:
-        return [stock_list]
-    else:
-        complete_stock_list = [stock_list]
-        for i in range(1,max_page):
-            time.sleep(5)
-            driver.get(url + index + '?p=' + str(i+1))
-            soup = BeautifulSoup(driver.page_source, CST.PARSER)
-            stock_list = soup.find_all(CST.HTML_DIV, {CST.HTML_ID: CST.TEXT_INDEX_LIST_CONTAINER})
-            complete_stock_list.append(stock_list)
-    return complete_stock_list
-
-
-def update_index_stocks_db(input_table, name):
-    print('---- Writing %d items to table' % (len(input_table)))
-    db.clear_index_contents('index_stocks', name)
-    for i in range(len(input_table)):
-        db.write_data('index_stocks', dict(index=name,
-                                           stock_name=input_table[i][0],
-                                           ISIN=input_table[i][1],
-                                           stock_link=input_table[i][2],
-                                           last_update=date.date_to_string(date.get_current_date())))
-    return True
-
-
-# Stock Histories
-def get_stock_history_content(driver, url, start_date, end_date):
-    driver.get(url[:-6] + CST.EXCHANGE_APPENDIX + '/' + start_date + "_" + end_date)
-    soup = BeautifulSoup(driver.page_source, CST.PARSER)
-    history_table = soup.find_all(CST.HTML_DIV, {CST.HTML_ID: CST.HISTORIC_PRICE_LIST})
-    return history_table
-
-
-def save_stock_history_to_db(input_table, index_name, stock_name, isin):
-    print('---- Writing %d items to table' % (len(input_table)))
-    for i in range(len(input_table)):
-        db.write_data('stock_histories', dict(stock=stock_name,
-                                              isin=isin,
-                                              index=index_name,
-                                              datum=input_table[i][0],
-                                              schluss=input_table[i][1],
-                                              eroeffnung=input_table[i][2],
-                                              tageshoch=input_table[i][3],
-                                              tagestief=input_table[i][3]))
-    return True
-
-
-# V2
-# Stock / Company Infos
 
 def is_data_available(soup):
     try:
         info = soup.find(CST.HTML_DIV, {CST.HTML_CLASS: 'state_content'})
         return info.text.strip() != CST.NO_DATA_AVAILABLE_LONG
     except AttributeError:
+        logger.error('Parsing Data available Check: AttributeError')
         return True
 
 
@@ -129,7 +46,10 @@ def convert_market_cap(market_cap_string):
             market_cap_value /= 1000
         return market_cap_value
     except ValueError:
-        print('Market Cap Error: %s' % market_cap_string)
+        if market_cap_string is None:
+            logger.error('Convert Market Cap Error: market_cap_string empty')
+        else:
+            logger.error('Convert Market Cap Error: %s' % market_cap_string)
         pass
 
 
@@ -138,6 +58,7 @@ def convert_ger_to_en_numeric(string):
         en_numeric = float(string.replace('.', '').replace(',', '.'))
         return en_numeric
     except ValueError:
+        logger.error('Convert ger2en Numeric Error for %s' % string)
         return 0
 
 
@@ -147,6 +68,7 @@ def get_market_cap(soup):
         market_cap = market_cap_loc.find_next(CST.HTML_TD).contents[0].strip()
         return convert_market_cap(market_cap)
     except AttributeError:
+        logger.error('Get Market Cap: AttributeError')
         pass
 
 
@@ -155,6 +77,7 @@ def get_market_place(soup):
         market_place_container = soup.find(CST.HTML_A, {CST.HTML_ID: 'exchanges-drop-down'})
         return market_place_container.contents[0].strip()
     except AttributeError:
+        logger.error('Get Market Place: AttributeError')
         pass
 
 
@@ -204,6 +127,7 @@ def get_latest_date_of_list(date_list):
     try:
         return max(date_list_past)
     except ValueError:
+        logger.error('Get Latest Date of List: AttributeError')
         return None
 
 

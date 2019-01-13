@@ -20,7 +20,6 @@ def init_driver():
     for option in start_options:
         options.add_argument(option)
 
-    # driver_profile = webdriver.FirefoxProfile('/home/jens/.mozilla/firefox/ietjlzx1.DriverProfile')
     driver_profile = webdriver.FirefoxProfile('/home/jens/.mozilla/firefox/xjpzl3z6.Driver_N')
     driver = webdriver.Firefox(driver_profile)
     driver.wait = WebDriverWait(driver, date.long_waiting_time())
@@ -34,16 +33,16 @@ def get_soup_code_from_url(driver, url):
     try:
         driver.get(url)
     except exceptions.TimeoutException:
-        logger.exception('Get Soup Code TimeoutException')
+        logger.exception('Get Soup Code TimeoutException for %s' %url)
         return ''
 
     try:
         soup = BeautifulSoup(driver.page_source, CST.PARSER)
     except exceptions.UnexpectedAlertPresentException:
-        logger.exception('Make Soup UnexpectedAlertPresentException')
+        logger.exception('Make Soup UnexpectedAlertPresentException for %s' %url)
         return ''
     except exceptions.NoSuchWindowException:
-        logger.exception('Make Soup NoSuchWindowException')
+        logger.exception('Make Soup NoSuchWindowException for %s' %url)
         return ''
 
     max_page = get_max_page(soup)
@@ -63,21 +62,13 @@ def get_soup_from_history_url(driver, url):
     try:
         driver.get(url)
     except exceptions.TimeoutException:
-        print('Timeout')
+        logger.exception('Get Soup Code from History URL: TimeoutException for %s' %url)
         return ''
 
     soup = BeautifulSoup(driver.page_source, CST.PARSER)
 
     if not is_data_available(soup):
-        new_url = url.replace(CST.EXCHANGE_APPENDIX, CST.ALT_EXCHANGE_APPENDIX)
-        ####
-        print('URL Change: %s -> %s' % (url, new_url))
-        ####
-        driver.wait = WebDriverWait(driver, CST.SHORT_WAIT)
-        driver.get(new_url)
-        soup = BeautifulSoup(driver.page_source, CST.PARSER)
-        if not is_data_available(soup):
-            print('*** CHECK STOCK: %s' % new_url)
+        logger.warning('Get Soup Code from History URL: No Data Available for %s' % url)
 
     return soup.prettify()
 
@@ -87,6 +78,7 @@ def is_data_available(soup):
         info = soup.find(CST.HTML_DIV, {CST.HTML_ID: CST.HISTORIC_PRICE_LIST})
         return info.text.strip() != CST.NO_DATA_AVAILABLE
     except AttributeError:
+        logger.exception('Data Available Check: AttributeError')
         return True
 
 
@@ -96,6 +88,7 @@ def get_max_page(soup):
         link_list = pagination.find_all('a')
         return int(link_list[-1].text)
     except:
+        logger.exception('Max Page Number Check: Exception')
         return 1
 
 
@@ -105,6 +98,7 @@ def get_soup_code_from_file(file):
             file_content = file.read()
         return BeautifulSoup(file_content, CST.PARSER)
     except FileNotFoundError:
+        logger.exception('get_soup_code_from_file : FileNotFoundError for %s' % str(file))
         pass
 
 
