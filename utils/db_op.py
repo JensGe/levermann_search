@@ -84,28 +84,55 @@ def check_if_exists(search, table, column):
         return result[column] == search
 
 
+# def write_stock_list_to_db(stock_list, index_name):
+#     for stock in stock_list:
+#         if not check_if_exists(stock[1], 'Aktien', 'ISIN'):
+#             write_stock_to_stock_table(stock)
+#         write_stock_to_index_contents_table(stock[1], index_name, date.get_current_date())
+#     return True
+#
+#
+# def write_stock_to_stock_table(stock):
+#     with dataset.connect(CST.DATABASE) as database:
+#         try:
+#             database[CST.TABLE_STOCKS].insert(dict(Name=stock[0], URI=stock[1]))
+#         except sqlalchemy.exc.IntegrityError:
+#             pass
+#
+#
+# def write_stock_to_index_contents_table(aktien_uri, index_name, current_date):
+#     with dataset.connect(CST.DATABASE) as database:
+#         try:
+#             database[CST.TABLE_INDEX_CONTENTS].insert(dict(IndexURI=index_name,
+#                                                            AktienURI=aktien_uri,
+#                                                            Abrufdatum=current_date))
+#         except sqlalchemy.exc.IntegrityError:
+#             pass
+
+
 def write_stock_list_to_db(stock_list, index_name):
-    for stock in stock_list:
-        if not check_if_exists(stock[1], 'Aktien', 'ISIN'):
-            write_stock_to_stock_table(stock)
-        write_stock_to_stock_contents_table(stock[1], index_name, date.get_current_date())
+    current_date = date.get_current_date()
+    stocks = [dict(Name=stock[0], URI=stock[1]) for stock in stock_list]
+    write_stocks_to_stock_table(stocks)
+
+    index_contents = [dict(IndexURI=index_name, AktienURI=stock[1], Abrufdatum=current_date) for stock in stock_list]
+    write_stock_to_index_contents_table(index_contents)
     return True
 
 
-def write_stock_to_stock_table(stock):
+def write_stocks_to_stock_table(stocks):
     with dataset.connect(CST.DATABASE) as database:
         try:
-            database[CST.TABLE_STOCKS].insert(dict(Name=stock[0], URI=stock[1]))
+            for stock in stocks:
+                database[CST.TABLE_STOCKS].insert_ignore(stock, ['URI'])
         except sqlalchemy.exc.IntegrityError:
             pass
 
 
-def write_stock_to_stock_contents_table(aktien_uri, index_name, current_date):
+def write_stock_to_index_contents_table(index_contents):
     with dataset.connect(CST.DATABASE) as database:
         try:
-            database[CST.TABLE_INDEX_CONTENTS].insert(dict(IndexURI=index_name,
-                                                           AktienURI=aktien_uri,
-                                                           Abrufdatum=current_date))
+            database[CST.TABLE_INDEX_CONTENTS].insert_many(index_contents)
         except sqlalchemy.exc.IntegrityError:
             pass
 

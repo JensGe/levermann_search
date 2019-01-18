@@ -137,6 +137,9 @@ class TestDatabase(unittest.TestCase):
         stock_uri_5 = 'bbva-Aktie'
         self.assertTrue(db.check_is_financial_company(stock_uri_5))
 
+    def test_write_list_to_db(self):
+        pass
+
     def tearDown(self):
         pass
 
