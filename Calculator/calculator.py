@@ -31,7 +31,7 @@ def levermann_02():
         operative_result = db.get_operative_result(stock)
         sales_revenue = db.get_sales_revenue(stock)
 
-        if operative_result is None or sales_revenue is None:
+        if operative_result is None or sales_revenue is None or sales_revenue == 0:
             logger.info("Calculate Lev02: Operative Result or Sales Revenue is None for stock: %s" % stock)
             continue
 
@@ -170,7 +170,7 @@ def levermann_06():
 def levermann_07():
     stock_list = db.get_stock_names()
     for stock in stock_list:
-
+        logger.info("Calculating Lev07 for %s" %stock)
         quaterly_date = db.get_quarterly_date(stock)
 
         if quaterly_date is None:
@@ -272,7 +272,11 @@ def levermann_09_10_11():
         price_6_month_ago = price_6_month_ago_pack[0]
         price_12_month_ago = price_12_month_ago_pack[0]
 
-        if price_6_month_ago == 0 or price_12_month_ago == 0:
+        if current_price is None:
+            logger.info("Calculate Lev09-11: Current Price is None for stock: %s" % stock)
+            continue
+
+        if price_6_month_ago == 0 or price_12_month_ago == 0 or price_6_month_ago is None or price_12_month_ago is None:
             logger.info("Calculate Lev09-11:  Price before 6M or 12M is 0 for stock: %s" % stock)
             continue
 

@@ -7,7 +7,8 @@ RANDOM_WAIT_RANGE = 0.8     # Seconds
 PARSER = 'html.parser'
 
 # Selenium Driver Settings
-SELENIUM_SETTINGS = 'utils/driver_starting_settings.txt'
+# SELENIUM_SETTINGS = 'utils/driver_starting_settings.txt'
+SELENIUM_SETTINGS = 'utils/driver_host_rules.txt'
 
 # Base Scraping URLs
 URL_INDEX_CONTENT = 'https://www.boerse-online.de/index/liste/'
@@ -27,8 +28,8 @@ URL_STOCK_DATES_EXT = ''
 URL_STOCK_ESTIMATES_EXT = ''
 
 # Todo Delete
-EXCHANGE_APPENDIX = '/FSE'
-ALT_EXCHANGE_APPENDIX = '/XETRA'
+EXCHANGE_APPENDIX = 'FSE'
+ALT_EXCHANGE_APPENDIX = 'XETRA'
 
 
 # Scraping Parts
@@ -47,6 +48,7 @@ TEXT_OPERATIVE_RESULT = 'Operatives Ergebnis'
 TEXT_SALES_REVENUE = 'Umsatzerlöse'
 TEXT_TOTAL_ASSETS = 'Bilanzsumme'
 TEXT_EQUITY_CAPITAL = 'Eigenkapital'
+TEXT_HISTORIC_PRICES = 'Historische Kurse'
 
 # HTML Attributes
 TEXT_HISTORIC_RATING = 'historicRatingTdContent'
@@ -58,6 +60,8 @@ TEXT_PAGINATION = 'finando_paging'
 
 # HTML Elements
 HTML_H2 = 'h2'
+HTML_TABLE = 'table'
+HTML_TBODY = 'tbody'
 HTML_TD = 'td'
 HTML_TR = 'tr'
 HTML_DIV = 'div'
@@ -66,6 +70,7 @@ HTML_CLASS = 'class'
 HTML_ID = 'id'
 HTML_SPAN = 'span'
 HTML_HREF = 'href'
+
 
 
 # Local Paths

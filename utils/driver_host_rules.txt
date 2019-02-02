@@ -1,0 +1,119 @@
+--host-resolver-rules=MAP *.2mdn.net 127.0.0.1
+
+--host-resolver-rules=MAP *.adboost.sk 127.0.0.1
+--host-resolver-rules=MAP *.addthis.com 127.0.0.1
+--host-resolver-rules=MAP *.adform.net 127.0.0.1
+--host-resolver-rules=MAP *.adhigh.net 127.0.0.1
+--host-resolver-rules=MAP *.adition.com 127.0.0.1
+--host-resolver-rules=MAP *.adnxs.com 127.0.0.1
+--host-resolver-rules=MAP *.adsafety.com 127.0.0.1
+--host-resolver-rules=MAP *.adscale.de 127.0.0.1
+--host-resolver-rules=MAP *.adsrvr.org 127.0.0.1
+--host-resolver-rules=MAP *.advertising.com 127.0.0.1
+--host-resolver-rules=MAP *.advolution.de 127.0.0.1
+--host-resolver-rules=MAP *.agkn.com 127.0.0.1
+--host-resolver-rules=MAP *.atdmt.com 127.0.0.1
+--host-resolver-rules=MAP *.audiencemanager.de 127.0.0.1
+--host-resolver-rules=MAP *.avocet.io 127.0.0.1
+
+--host-resolver-rules=MAP *.bannerflow.com 127.0.0.1
+--host-resolver-rules=MAP *.bet-at-home.de 127.0.0.1
+--host-resolver-rules=MAP *.bidr.io 127.0.0.1
+--host-resolver-rules=MAP *.bidswitch.net 127.0.0.1
+--host-resolver-rules=MAP *.bidtheatre.com 127.0.0.1
+--host-resolver-rules=MAP *.bluekai.com 127.0.0.1
+--host-resolver-rules=MAP *.brillen.de 127.0.0.1
+
+--host-resolver-rules=MAP *.casalemedia.com 127.0.0.1
+--host-resolver-rules=MAP *.criteo.com 127.0.0.1
+--host-resolver-rules=MAP *.ctnsnet.com 127.0.0.1
+
+--host-resolver-rules=MAP *.de17a.com 127.0.0.1
+--host-resolver-rules=MAP *.demdex.net 127.0.0.1
+--host-resolver-rules=MAP *.digitru.st 127.0.0.1
+--host-resolver-rules=MAP *.doubleclick.net 127.0.0.1
+--host-resolver-rules=MAP *.dyntrk.com 127.0.0.1
+
+--host-resolver-rules=MAP *.eprimo.de 127.0.0.1
+--host-resolver-rules=MAP *.erne.co 127.0.0.1
+--host-resolver-rules=MAP *.everesttech.net 127.0.0.1
+--host-resolver-rules=MAP *.exactag.com 127.0.0.1
+--host-resolver-rules=MAP *.eyeota 127.0.0.1
+
+--host-resolver-rules=MAP *.facebook.com 127.0.0.1
+--host-resolver-rules=MAP *.facebook.net 127.0.0.1
+--host-resolver-rules=MAP *.flashtalking.com 127.0.0.1
+--host-resolver-rules=MAP *.fwmrm.net 127.0.0.1
+
+--host-resolver-rules=MAP *.google.com 127.0.0.1
+--host-resolver-rules=MAP *.google-analytics.com 127.0.0.1
+--host-resolver-rules=MAP *.googlesyndication.com 127.0.0.1
+--host-resolver-rules=MAP *.googletagmanager.com 127.0.0.1
+--host-resolver-rules=MAP *.googletagservice.com 127.0.0.1
+
+--host-resolver-rules=MAP *.ibillboard.com 127.0.0.1
+--host-resolver-rules=MAP *.impdesk.com 127.0.0.1
+--host-resolver-rules=MAP *.innovid.com 127.0.0.1
+--host-resolver-rules=MAP *.insightexpressai.com 127.0.0.1
+--host-resolver-rules=MAP *.intelliad.de 127.0.0.1
+--host-resolver-rules=MAP *.ioam.de 127.0.0.1
+
+--host-resolver-rules=MAP *.jwpcdn.com 127.0.0.1
+
+--host-resolver-rules=MAP *.ligatus.com 127.0.0.1
+
+--host-resolver-rules=MAP *.m6r.eu 127.0.0.1
+--host-resolver-rules=MAP *.mathteg.com 127.0.0.1
+--host-resolver-rules=MAP *.media.net 127.0.0.1
+--host-resolver-rules=MAP *.meetrics.com 127.0.0.1
+--host-resolver-rules=MAP *.mookie1.com 127.0.0.1
+--host-resolver-rules=MAP *.mp-success.com 127.0.0.1
+--host-resolver-rules=MAP mp-success.com 127.0.0.1
+--host-resolver-rules=MAP https://mp-success.com 127.0.0.1
+--host-resolver-rules=MAP http://mp-success.com 127.0.0.1
+--host-resolver-rules=MAP *.mpnrs.com 127.0.0.1
+--host-resolver-rules=MAP www1.mpnrs.com 127.0.0.1
+--host-resolver-rules=MAP www2.mpnrs.com 127.0.0.1
+--host-resolver-rules=MAP www3.mpnrs.com 127.0.0.1
+--host-resolver-rules=MAP *.mxcdn.net 127.0.0.1
+
+--host-resolver-rules=MAP *.netmng.com 127.0.0.1
+--host-resolver-rules=MAP *.newrelic.com 127.0.0.1
+--host-resolver-rules=MAP *.nr-data.net 127.0.0.1
+--host-resolver-rules=MAP *.nuggad.net 127.0.0.1
+
+--host-resolver-rules=MAP *.onaudience.com 127.0.0.1
+--host-resolver-rules=MAP *.openx.net 127.0.0.1
+--host-resolver-rules=MAP *.otto.de 127.0.0.1
+
+--host-resolver-rules=MAP *.plista.com 127.0.0.1
+--host-resolver-rules=MAP *.powerlinks.com 127.0.0.1
+--host-resolver-rules=MAP *.pubmatic.com 127.0.0.1
+
+--host-resolver-rules=MAP *.quantserve.com 127.0.0.1
+
+--host-resolver-rules=MAP *.refinedads.com 127.0.0.1
+--host-resolver-rules=MAP *.rfihub.com 127.0.0.1
+--host-resolver-rules=MAP *.rutarget.ru 127.0.0.1
+
+--host-resolver-rules=MAP *.seadform.net 127.0.0.1
+--host-resolver-rules=MAP *.simpli.fi 127.0.0.1
+--host-resolver-rules=MAP *.smartadserver.com 127.0.0.1
+--host-resolver-rules=MAP *.smartstream.tv 127.0.0.1
+--host-resolver-rules=MAP *.solocpm 127.0.0.1
+--host-resolver-rules=MAP *.spotxchange.com 127.0.0.1
+--host-resolver-rules=MAP *.spotx.tv 127.0.0.1
+--host-resolver-rules=MAP *.stickyadstv.com 127.0.0.1
+
+--host-resolver-rules=MAP *.teads.tv 127.0.0.1
+--host-resolver-rules=MAP *.turn.com 127.0.0.1
+--host-resolver-rules=MAP *.twiago.com 127.0.0.1
+
+--host-resolver-rules=MAP *.vodafone.de 127.0.0.1
+
+--host-resolver-rules=MAP *.w55c.net 127.0.0.1
+--host-resolver-rules=MAP *.wbtrk.net 127.0.0.1
+
+--host-resolver-rules=MAP *.yieldlab.net 127.0.0.1
+
+--host-resolver-rules=MAP *.zemanta.com 127.0.0.1

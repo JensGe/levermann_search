@@ -56,9 +56,9 @@ def create_stock_history_url_list(base_url):
     url_list = []
     for stock in stock_history_list:
         stock_uri, market_place = stock[0][:-6], stock[1]
-        if market_place is None:
+        if market_place is None or market_place == 'None':
             market_place = CST.EXCHANGE_APPENDIX
-        url_list.append(base_url + stock_uri + market_place)
+        url_list.append(base_url + stock_uri + '/' + market_place)
     return url_list
 
 
@@ -141,16 +141,21 @@ def write_index_history_to_db(index_history, index_uri):
     with dataset.connect(CST.DATABASE) as database:
         for item in index_history:
             date_ = date.string_to_date(item[0])
-            start = float(item[1].replace('.', '').replace(',', '.'))
+            try:
+                start = float(item[1].replace('.', '').replace(',', '.'))
+            except ValueError:
+                logger.warning("ValueError: Missing start value for %s at %s" % (index_uri, str(date_)))
+                start = None
             try:
                 end = float(item[2].replace('.', '').replace(',', '.'))
             except ValueError:
-                logger.exception("Write Index History to DB: ValueError with Item: %s" % item[2])
+                logger.warning("ValueError: Missing end value for %s at %s" % (index_uri, str(date_)))
+                end = None
             try:
                 database[CST.TABLE_INDEX_HISTORIES].insert(dict(IndexURI=index_uri, Datum=date_,
                                                                 Eroeffnungswert=start, Schlusswert=end))
             except sqlalchemy.exc.IntegrityError:
-                logger.exception("Write Index History to DB: Integrity Error with Item: %s" % index_uri)
+                logger.warning("Write Index History to DB: Integrity Error with Item: %s" % index_uri)
                 pass
 
 
@@ -161,12 +166,12 @@ def write_stock_history_to_db(stock_history, stock_uri):
             try:
                 start = float(item[1].replace('.', '').replace(',', '.'))
             except ValueError:
-                logger.exception("ValueError: Missing start value for %s at %s" % (stock_uri, str(date_)))
+                logger.warning("ValueError: Missing start value for %s at %s" % (stock_uri, str(date_)))
                 start = None
             try:
                 end = float(item[2].replace('.', '').replace(',', '.'))
             except ValueError:
-                logger.exception("ValueError: Missing end value for %s at %s" % (stock_uri, str(date_)))
+                logger.warning("ValueError: Missing end value for %s at %s" % (stock_uri, str(date_)))
                 end = None
             try:
                 database[CST.TABLE_STOCKS_HISTORIES].insert(dict(AktienURI=stock_uri, Datum=date_,
@@ -183,7 +188,7 @@ def get_latest_date_from_index_history(index_uri):
         try:
             result = [item for item in results][0]
         except IndexError:
-            logger.exception("Get Latest Date from Index History: IndexError for %s" % index_uri)
+            logger.warning("Get Latest Date from Index History: IndexError for %s" % index_uri)
             return False
         return result['maxdate']
 
@@ -196,7 +201,7 @@ def get_latest_date_from_stock_history(stock_uri):
         try:
             result = [item for item in results][0]
         except IndexError:
-            logger.exception("Get Latest Date from Stock History: IndexError for %s" % stock_uri)
+            logger.warning("Get Latest Date from Stock History: IndexError for %s" % stock_uri)
             return False
         return result['maxdate']
 
@@ -572,6 +577,8 @@ def get_quarterly_date(stock_uri):
                                      % (CST.TABLE_STOCK_DATES, stock_uri))
             quarterly_date = [item for item in results][0][CST.COLUMN_DATE]
             return quarterly_date
+        except TypeError:
+            logger.error("TypeError in get_quaterly_date at %s" % stock_uri)
         except:
             logger.exception("Exception at get_quarterly_date for %s" % stock_uri)
             pass

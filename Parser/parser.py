@@ -26,7 +26,10 @@ def write_index_histories_from_html_to_db():
         index_history_list = parse.get_historic_prices(index_history_soup)
 
         index_uri = file.split('/')[-1][:-5]
-        db.write_index_history_to_db(index_history_list, index_uri)
+        try:
+            db.write_index_history_to_db(index_history_list, index_uri)
+        except:
+            logger.exception("")
 
 
 def write_stock_overview_data_to_db():

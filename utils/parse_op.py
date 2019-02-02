@@ -22,6 +22,17 @@ def get_historic_prices(soup):
     return index_history
 
 
+def get_historic_prices_from_overview(soup):
+    history_table = soup.find(CST.HTML_H2, text=re.compile(CST.TEXT_HISTORIC_PRICES)).next_sibling.next_sibling
+    return_history = []
+    for row in history_table.find_all(CST.HTML_TR)[:-1]:
+        tr_items = []
+        for items in row.find_all(CST.HTML_TD)[:2]:
+            tr_items.append(items.text.strip())
+        return_history.append(tr_items)
+    return return_history
+
+
 def convert_index_history_list(index_history):
     return [[list_[0], float(list_[1].replace('.', '').replace(',', '.')),
              float(list_[2].replace('.', '').replace(',', '.'))] for list_ in index_history]

@@ -198,6 +198,16 @@ class TestScrapping(unittest.TestCase):
                          ['03.10.2018', '9.175,21', '9.126,31', '9.194,99', '9.123,48']]
         self.assertEqual(asserted_list, table_list[:3])
 
+    def test_get_historic_prices_from_overview(self):
+        soup = scrap.get_soup_code_from_file('data/bo_3i-Aktie_overview.html')
+        table_list = parse.get_historic_prices_from_overview(soup)
+        asserted_list = [['29.11.2018', '9,87'],
+                         ['28.11.2018', '9,69'],
+                         ['27.11.2018', '9,75'],
+                         ['26.11.2018', '9,62'],
+                         ['23.11.2018', '9,44']]
+        self.assertEqual(asserted_list, table_list)
+
     def test_convert_index_history_list(self):
         insert_list = [['01.10.2018', '9.127,05', '9.094,28', '9.155,65', '9.084,22'],
                        ['02.10.2018', '9.087,32', '9.076,57', '9.090,46', '9.050,50'],

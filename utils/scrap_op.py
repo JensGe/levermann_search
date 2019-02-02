@@ -13,14 +13,23 @@ from bs4 import BeautifulSoup
 from loguru import logger
 
 
-def init_driver():
+def init_driver(third_party_cookies=True):
     options = Options()
     with open(CST.SELENIUM_SETTINGS) as f:
         start_options = f.readlines()
     for option in start_options:
         options.add_argument(option)
 
-    driver_profile = webdriver.FirefoxProfile('/home/jens/.mozilla/firefox/xjpzl3z6.Driver_N')
+    if third_party_cookies:
+        # Third Party Cookies activated
+        logger.info('Using Firefox Profile with Third Party Cookies activated')
+        firefox_profile_path = '/home/jens/.mozilla/firefox/xjpzl3z6.Driver_3P_activated'
+    else:
+        # Third Party Cookies deactivated
+        logger.info('Using Firefox Profile with Third Party Cookies deactivated')
+        firefox_profile_path = '/home/jens/.mozilla/firefox/ietjlzx1.Driver_3P_deactivated'
+
+    driver_profile = webdriver.FirefoxProfile(firefox_profile_path)
     driver = webdriver.Firefox(driver_profile)
     driver.wait = WebDriverWait(driver, date.long_waiting_time())
     time.sleep(date.long_waiting_time())
@@ -33,16 +42,16 @@ def get_soup_code_from_url(driver, url):
     try:
         driver.get(url)
     except exceptions.TimeoutException:
-        logger.exception('Get Soup Code TimeoutException for %s' %url)
+        logger.warning('Get Soup Code TimeoutException for %s' %url)
         return ''
 
     try:
         soup = BeautifulSoup(driver.page_source, CST.PARSER)
     except exceptions.UnexpectedAlertPresentException:
-        logger.exception('Make Soup UnexpectedAlertPresentException for %s' %url)
+        logger.warning('Make Soup UnexpectedAlertPresentException for %s' %url)
         return ''
     except exceptions.NoSuchWindowException:
-        logger.exception('Make Soup NoSuchWindowException for %s' %url)
+        logger.warning('Make Soup NoSuchWindowException for %s' %url)
         return ''
 
     max_page = get_max_page(soup)
@@ -62,7 +71,7 @@ def get_soup_from_history_url(driver, url):
     try:
         driver.get(url)
     except exceptions.TimeoutException:
-        logger.exception('Get Soup Code from History URL: TimeoutException for %s' %url)
+        logger.warning('Get Soup Code from History URL: TimeoutException for %s' %url)
         return ''
 
     soup = BeautifulSoup(driver.page_source, CST.PARSER)
@@ -78,7 +87,7 @@ def is_data_available(soup):
         info = soup.find(CST.HTML_DIV, {CST.HTML_ID: CST.HISTORIC_PRICE_LIST})
         return info.text.strip() != CST.NO_DATA_AVAILABLE
     except AttributeError:
-        logger.exception('Data Available Check: AttributeError')
+        logger.warning('Data Available Check: AttributeError')
         return True
 
 
@@ -87,9 +96,11 @@ def get_max_page(soup):
         pagination = soup.find(CST.HTML_DIV, {CST.HTML_CLASS: CST.TEXT_PAGINATION})
         link_list = pagination.find_all('a')
         return int(link_list[-1].text)
-    except:
-        logger.exception('Max Page Number Check: Exception')
+    except AttributeError:
         return 1
+    except:
+        logger.exception('Exception at Getting Max Pagination')
+        pass
 
 
 def get_soup_code_from_file(file):
@@ -98,7 +109,7 @@ def get_soup_code_from_file(file):
             file_content = file.read()
         return BeautifulSoup(file_content, CST.PARSER)
     except FileNotFoundError:
-        logger.exception('get_soup_code_from_file : FileNotFoundError for %s' % str(file))
+        logger.warning('get_soup_code_from_file : FileNotFoundError for %s' % str(file))
         pass
 
 

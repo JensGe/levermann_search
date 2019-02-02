@@ -13,7 +13,7 @@ from loguru import logger
 
 def scrap_index_content_sites():
     scrap_list = db.create_active_index_url_list(CST.URL_INDEX_CONTENT)
-    driver = scrap.init_driver()
+    driver = scrap.init_driver(third_party_cookies=False)
     for url in scrap_list:
         index_uri = url.split('/')[-1]
         file_name = CST.PATH_INDEX_CONTENT + index_uri + CST.HTML_EXTENSION
@@ -24,7 +24,7 @@ def scrap_index_content_sites():
 
 def scrap_index_histories():
     scrap_list = db.create_active_index_url_list(CST.URL_INDEX_HISTORY)
-    driver = scrap.init_driver()
+    driver = scrap.init_driver(third_party_cookies=True)
     for url in scrap_list:
         index_uri = url.split('/')[-1]
         end_date = date.get_current_date()
@@ -52,7 +52,7 @@ def scrap_index_histories():
 
 def scrap_stock_histories():
     scrap_list = db.create_stock_history_url_list(CST.URL_STOCK_HISTORY)
-    driver = scrap.init_driver()
+    driver = scrap.init_driver(third_party_cookies=True)
     for url in scrap_list:
         stock_uri = url.split('/')[-2]
         end_date = date.get_current_date()
@@ -74,7 +74,6 @@ def scrap_stock_histories():
         date_interval = '/' + date.date_to_string(start_date) +\
                         '_' + date.date_to_string(end_date)
         dated_url = url + date_interval
-        print(dated_url)
         soup = scrap.get_soup_from_history_url(driver, dated_url)
         scrap.save_soup_to_file(soup, file_name)
     scrap.close_driver(driver)
@@ -85,7 +84,7 @@ def scrap_stock_info(scrap_url, save_path):
         scrap_list = db.create_stock_overview_url_list(scrap_url)
     else:
         scrap_list = db.create_stock_info_url_list(scrap_url)
-    driver = scrap.init_driver()
+    driver = scrap.init_driver(third_party_cookies=False)
     for url in scrap_list:
         stock_uri = url.split('/')[-1]
         file_name = save_path + stock_uri + CST.HTML_EXTENSION
