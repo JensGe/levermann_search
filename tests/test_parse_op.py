@@ -66,7 +66,7 @@ class TestScrapping(unittest.TestCase):
     def test_stock_in_which_index_multiple(self):
         soup = scrap.get_soup_code_from_file('data/bo_sap-aktie.html')
         link_items = parse.get_listed_indizes(soup)
-        asserted_indizes_values = ['TecDAX', 'DAX', 'STOXX 50', 'EURO STOXX 50', 'S&P 400 MidCap',
+        asserted_idx_values = ['TecDAX', 'DAX', 'STOXX 50', 'EURO STOXX 50', 'S&P 400 MidCap',
                                    'EURO STOXX Technology', 'Prime All Share', 'LDAX', 'LTecDAX',
                                    'HDAX', 'DivDAX','NYSE International 100','CDAX','EURO STOXX',
                                    'TecDAX Kursindex', 'DAX Kursindex', 'BX Swiss -  EMEA', 'XDAX',
@@ -74,7 +74,7 @@ class TestScrapping(unittest.TestCase):
                                    'QIX Deutschland', 'DAXglobal Sarasin Sustainability Germany',
                                    'Schatten-Index-TecDAX']
 
-        self.assertEqual(asserted_indizes_values, link_items)
+        self.assertEqual(asserted_idx_values, link_items)
 
         soup2 = scrap.get_soup_code_from_file('data/bo_3i-Aktie_overview.html')
         link_items2 = parse.get_listed_indizes(soup2)

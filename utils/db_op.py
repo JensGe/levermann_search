@@ -7,28 +7,37 @@ import sqlalchemy
 import dataset
 
 
+def db_connection(func):
+    def f(*args, **kwargs):
+        with dataset.connect(CST.DATABASE) as database:
+            rv = func(*args, **kwargs)
+            return rv
+    return f
+
+
+@db_connection
 def get_all_index_names():
     with dataset.connect(CST.DATABASE) as database:
         index_list = [item[CST.COLUMN_URI] for item in database[CST.TABLE_INDIZES]]
-    return index_list
+        return index_list
 
 
 def get_active_index_names():
     with dataset.connect(CST.DATABASE) as database:
         index_list = [item[CST.COLUMN_URI] for item in database[CST.TABLE_INDIZES] if item[CST.COLUMN_ACTIVE] == b'1']
-    return index_list
+        return index_list
 
 
 def get_stock_names_and_history_url():
     with dataset.connect(CST.DATABASE) as database:
         stock_and_history_url_list = [[item[CST.COLUMN_URI], item[CST.COLUMN_MARKET_PLACE]] for item in database[CST.TABLE_STOCKS]]
-    return stock_and_history_url_list
+        return stock_and_history_url_list
 
 
 def get_stock_names():
     with dataset.connect(CST.DATABASE) as database:
         stock_list = [item[CST.COLUMN_URI] for item in database[CST.TABLE_STOCKS]]
-    return stock_list
+        return stock_list
 
 
 def get_pages_count(index_name):
