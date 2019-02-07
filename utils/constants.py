@@ -90,6 +90,8 @@ HTML_EXTENSION = '.html'
 
 # Database
 DATABASE = 'mysql://root:toor@localhost/levermann'
+TEST_DATABASE = 'sqlite:///testdb.sqlite'
+
 
 
 # Database Tables

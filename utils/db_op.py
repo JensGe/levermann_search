@@ -7,37 +7,64 @@ import sqlalchemy
 import dataset
 
 
-def db_connection(func):
-    def f(*args, **kwargs):
-        with dataset.connect(CST.DATABASE) as database:
-            rv = func(*args, **kwargs)
-            return rv
-    return f
+# CRUD
+def db_select(table, columns, condition=None, test=None):
+    if not test:
+        database = CST.DATABASE
+    else:
+        database = CST.TEST_DATABASE
+
+    if not condition:
+        if isinstance(columns, str):
+            print('String')
+            with dataset.connect(database) as db:
+                return [item[columns] for item in db[table]]
+        elif isinstance(columns, list):
+            print('list')
+            with dataset.connect(database) as db:
+                return [[item[column] for column in columns] for item in db[table]]
+
+    else:
+        if isinstance(columns, str):
+            print('String')
+            with dataset.connect(database) as db:
+                return [item[columns] for item in db[table] if item[condition[0]] == condition[1]]
+        elif isinstance(columns, list):
+            print('list')
+            with dataset.connect(database) as db:
+                return [[item[column] for column in columns] for item in db[table]
+                        if item[condition[0]] == condition[1]]
 
 
-@db_connection
-def get_all_index_names():
-    with dataset.connect(CST.DATABASE) as database:
-        index_list = [item[CST.COLUMN_URI] for item in database[CST.TABLE_INDIZES]]
-        return index_list
+def get_stock_names(test=None):
+    return db_select(table=CST.TABLE_STOCKS, columns=CST.COLUMN_URI)
+
+# OLD
 
 
-def get_active_index_names():
-    with dataset.connect(CST.DATABASE) as database:
-        index_list = [item[CST.COLUMN_URI] for item in database[CST.TABLE_INDIZES] if item[CST.COLUMN_ACTIVE] == b'1']
-        return index_list
+# def get_all_index_names():
+#     with dataset.connect(CST.DATABASE) as database:
+#         index_list = [item[CST.COLUMN_URI] for item in database[CST.TABLE_INDIZES]]
+#         return index_list
 
 
-def get_stock_names_and_history_url():
-    with dataset.connect(CST.DATABASE) as database:
-        stock_and_history_url_list = [[item[CST.COLUMN_URI], item[CST.COLUMN_MARKET_PLACE]] for item in database[CST.TABLE_STOCKS]]
-        return stock_and_history_url_list
+# def get_active_index_names():
+#     with dataset.connect(CST.DATABASE) as database:
+#         index_list = [item[CST.COLUMN_URI] for item in database[CST.TABLE_INDIZES] if item[CST.COLUMN_ACTIVE] == b'1']
+#         return index_list
 
 
-def get_stock_names():
-    with dataset.connect(CST.DATABASE) as database:
-        stock_list = [item[CST.COLUMN_URI] for item in database[CST.TABLE_STOCKS]]
-        return stock_list
+# def get_stock_url_and_market_place():
+#     with dataset.connect(CST.DATABASE) as database:
+#         stock_and_history_url_list = [[item[CST.COLUMN_URI], item[CST.COLUMN_MARKET_PLACE]]
+#                                       for item in database[CST.TABLE_STOCKS]]
+#         return stock_and_history_url_list
+
+#
+# def get_stock_names():
+#     with dataset.connect(CST.DATABASE) as database:
+#         stock_list = [item[CST.COLUMN_URI] for item in database[CST.TABLE_STOCKS]]
+#         return stock_list
 
 
 def get_pages_count(index_name):
@@ -48,19 +75,22 @@ def get_pages_count(index_name):
 
 
 def create_all_index_url_list(base_url):
-    index_list = get_all_index_names()
+    # old index_list = get_all_index_names()
+    index_list = db_select(table=CST.TABLE_INDIZES, columns=CST.COLUMN_URI)
     url_list = [base_url + index for index in index_list]
     return url_list
 
 
 def create_active_index_url_list(base_url):
-    index_list = get_active_index_names()
+    index_list = db_select(table=CST.TABLE_INDIZES,
+                           columns=CST.COLUMN_URI,
+                           condition=[CST.COLUMN_ACTIVE, True])
     url_list = [base_url + index for index in index_list]
     return url_list
 
 
 def create_stock_history_url_list(base_url):
-    stock_history_list = get_stock_names_and_history_url()
+    stock_history_list = db_select(table=CST.TABLE_STOCKS, columns=[CST.COLUMN_URI, CST.COLUMN_MARKET_PLACE])
     # url_list = [base_url + stock[0] + '/' + stock[1] for stock in stock_history_list]
     url_list = []
     for stock in stock_history_list:
@@ -91,32 +121,6 @@ def check_if_exists(search, table, column):
         except IndexError:
             return False
         return result[column] == search
-
-
-# def write_stock_list_to_db(stock_list, index_name):
-#     for stock in stock_list:
-#         if not check_if_exists(stock[1], 'Aktien', 'ISIN'):
-#             write_stock_to_stock_table(stock)
-#         write_stock_to_index_contents_table(stock[1], index_name, date.get_current_date())
-#     return True
-#
-#
-# def write_stock_to_stock_table(stock):
-#     with dataset.connect(CST.DATABASE) as database:
-#         try:
-#             database[CST.TABLE_STOCKS].insert(dict(Name=stock[0], URI=stock[1]))
-#         except sqlalchemy.exc.IntegrityError:
-#             pass
-#
-#
-# def write_stock_to_index_contents_table(aktien_uri, index_name, current_date):
-#     with dataset.connect(CST.DATABASE) as database:
-#         try:
-#             database[CST.TABLE_INDEX_CONTENTS].insert(dict(IndexURI=index_name,
-#                                                            AktienURI=aktien_uri,
-#                                                            Abrufdatum=current_date))
-#         except sqlalchemy.exc.IntegrityError:
-#             pass
 
 
 def write_stock_list_to_db(stock_list, index_name):

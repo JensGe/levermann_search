@@ -6,7 +6,7 @@ from loguru import logger
 
 
 def write_index_contents_from_html_to_db():
-    index_list = db.get_active_index_names()
+    index_list = db.db_select(table=CST.TABLE_INDIZES, columns=CST.COLUMN_URI, condition=[CST.COLUMN_ACTIVE, True])
     file_list = [CST.PATH_INDEX_CONTENT + index + CST.HTML_EXTENSION for index in index_list]
 
     for file in file_list:
@@ -19,7 +19,7 @@ def write_index_contents_from_html_to_db():
 
 
 def write_index_histories_from_html_to_db():
-    index_list = db.get_active_index_names()
+    index_list = db.db_select(table=CST.TABLE_INDIZES, columns=CST.COLUMN_URI, condition=[CST.COLUMN_ACTIVE, True])
     file_list = [CST.PATH_INDEX_HISTORY + index + CST.HTML_EXTENSION for index in index_list]
     for file in file_list:
         index_history_soup = scrap.get_soup_code_from_file(file)

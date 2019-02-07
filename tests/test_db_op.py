@@ -9,16 +9,52 @@ class TestDatabase(unittest.TestCase):
     def setUp(self):
         pass
 
-    def test_get_all_index_names(self):
-        index_list = db.get_all_index_names()
-        asserted_list = ['CAC_40', 'dax', 'dow_jones', 'Euro_Stoxx_50', 'FTSE_100', 'SMI']
+    def test_db_select(self):
+        index_list = db.db_select(table=CST.TABLE_INDIZES, columns=CST.COLUMN_URI, test=True)
+        asserted_list = ['dax', 'CAC_40', 'dow_jones']
         self.assertEqual(asserted_list, index_list)
 
-    def test_get_active_index_names(self):
-        index_list = db.get_active_index_names()
-        asserted_list = ['CAC_40', 'dax', 'dow_jones', 'Euro_Stoxx_50', 'FTSE_100',
-                         'mdax', 'nasdaq_100', 's&p_500', 'sdax', 'SMI', 'tecdax']
-        self.assertEqual(asserted_list, index_list)
+        index_list_2 = db.db_select(table=CST.TABLE_INDIZES, columns=CST.COLUMN_URI,
+                                    condition=[CST.COLUMN_ACTIVE, True], test=True)
+        asserted_list_2 = ['dax', 'CAC_40']
+        self.assertEqual(asserted_list_2, index_list_2)
+
+    def test_get_stock_names_and_history_url_db(self):
+        stock_list = db.db_select(table=CST.TABLE_STOCKS, columns=[CST.COLUMN_URI, CST.COLUMN_MARKET_PLACE], test=True)
+        asserted_list = [['BP', 'DAX'], ['SHELL', 'Dow Jones']]
+        self.assertEqual(asserted_list, stock_list)
+
+    def test_get_stock_names_db(self):
+        stock_list = db.get_stock_names(test=True)
+        asserted_list = ['BP', 'SHELL']
+        self.assertEqual(asserted_list, stock_list)
+
+# OLD
+
+    # def test_get_all_index_names(self):
+    #     index_list = db.get_all_index_names()
+    #     asserted_list = ['CAC_40', 'dax', 'dow_jones', 'Euro_Stoxx_50', 'FTSE_100', 'SMI']
+    #     self.assertEqual(asserted_list, index_list)
+
+    # def test_get_active_index_names(self):
+    #     index_list = db.get_active_index_names()
+    #     asserted_list = ['CAC_40', 'dax', 'dow_jones', 'Euro_Stoxx_50', 'FTSE_100',
+    #                      'mdax', 'nasdaq_100', 's&p_500', 'sdax', 'SMI', 'tecdax']
+    #     self.assertEqual(asserted_list, index_list)
+
+    # def test_get_stock_url_and_market_place(self):
+    #     stock_and_history_url_list = db.get_stock_url_and_market_place()
+    #     asserted_list = [['21st_century_fox_a-Aktie', 'FSE'],
+    #                      ['21st_century_fox_b-Aktie', 'FSE'],
+    #                      ['3i-Aktie', 'FSE']]
+    #     print(stock_and_history_url_list)
+    #     self.assertEqual(asserted_list, stock_and_history_url_list[:3])
+
+    # def test_get_stock_names(self):
+    #     asserted_stock_list = ['aktie1', 'aktie2', 'aktie3']
+    #     stock_names = db.get_stock_names()
+    #     self.assertEqual(asserted_stock_list, stock_names[:3])
+
 
     def test_get_pages_count(self):
         pages_1 = db.get_pages_count('FTSE_100')
@@ -91,19 +127,6 @@ class TestDatabase(unittest.TestCase):
         index_list = db.get_indizes_of_stock(stock_uri)
         asserted_index_list = sorted(['dax', 'Euro_Stoxx_50'])
         self.assertEqual(asserted_index_list, index_list)
-
-    def test_get_stock_names(self):
-        asserted_stock_list = ['aktie1', 'aktie2', 'aktie3']
-        stock_names = db.get_stock_names()
-        self.assertEqual(asserted_stock_list, stock_names[:3])
-
-    def test_get_stock_names_and_history_url(self):
-        stock_and_history_url_list = db.get_stock_names_and_history_url()
-        asserted_list = [['21st_century_fox_a-Aktie', 'FSE'],
-                         ['21st_century_fox_b-Aktie', 'FSE'],
-                         ['3i-Aktie', 'FSE']]
-        print(stock_and_history_url_list)
-        self.assertEqual(asserted_list, stock_and_history_url_list[:3])
 
     def test_get_stock_history_url_list(self):
         stock_history_list = [['aktie1-Aktie', 'FSE'],
