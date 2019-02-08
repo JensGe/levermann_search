@@ -6,7 +6,7 @@ from loguru import logger
 
 
 def write_index_contents_from_html_to_db():
-    index_list = db.db_select(table=CST.TABLE_INDIZES, columns=CST.COLUMN_URI, condition=[CST.COLUMN_ACTIVE, True])
+    index_list = db.get_list(table=CST.TABLE_INDIZES, columns=CST.COLUMN_URI, condition=[CST.COLUMN_ACTIVE, True])
     file_list = [CST.PATH_INDEX_CONTENT + index + CST.HTML_EXTENSION for index in index_list]
 
     for file in file_list:
@@ -19,7 +19,7 @@ def write_index_contents_from_html_to_db():
 
 
 def write_index_histories_from_html_to_db():
-    index_list = db.db_select(table=CST.TABLE_INDIZES, columns=CST.COLUMN_URI, condition=[CST.COLUMN_ACTIVE, True])
+    index_list = db.get_list(table=CST.TABLE_INDIZES, columns=CST.COLUMN_URI, condition=[CST.COLUMN_ACTIVE, True])
     file_list = [CST.PATH_INDEX_HISTORY + index + CST.HTML_EXTENSION for index in index_list]
     for file in file_list:
         index_history_soup = scrap.get_soup_code_from_file(file)
@@ -33,7 +33,7 @@ def write_index_histories_from_html_to_db():
 
 
 def write_stock_overview_data_to_db():
-    stock_list = db.get_stock_names()
+    stock_list = db.get_list(table=CST.TABLE_STOCKS, columns=CST.COLUMN_URI)
     file_list = [CST.PATH_STOCK_OVERVIEW + stock + CST.HTML_EXTENSION for stock in stock_list]
     for file in file_list:
         stock_uri = file.split('/')[-1][:-5]
@@ -53,7 +53,7 @@ def write_stock_overview_data_to_db():
 
 
 def write_stock_histories_from_html_to_db():
-    stock_list = db.get_stock_names()
+    stock_list = db.get_list(table=CST.TABLE_STOCKS, columns=CST.COLUMN_URI)
     file_list = [CST.PATH_STOCK_HISTORY + stock[:-6] + CST.HTML_EXTENSION for stock in stock_list]
     for file in file_list:
         stock_history_soup = scrap.get_soup_code_from_file(file)
@@ -67,7 +67,7 @@ def write_stock_histories_from_html_to_db():
 
 
 def write_stock_balance_data_to_db():
-    stock_list = db.get_stock_names()
+    stock_list = db.get_list(table=CST.TABLE_STOCKS, columns=CST.COLUMN_URI)
     file_list = [CST.PATH_STOCK_BALANCE + stock[:-6] + CST.HTML_EXTENSION for stock in stock_list]
     for file in file_list:
         stock_uri = file.split('/')[-1][:-5] + '-Aktie'
@@ -97,7 +97,7 @@ def write_stock_balance_data_to_db():
 
 
 def write_stock_estimates_data_to_db():
-    stock_list = db.get_stock_names()
+    stock_list = db.get_list(table=CST.TABLE_STOCKS, columns=CST.COLUMN_URI)
     file_list = [CST.PATH_STOCK_ESTIMATES + stock[:-6] + CST.HTML_EXTENSION for stock in stock_list]
     for file in file_list:
         stock_uri = file.split('/')[-1][:-5] + '-Aktie'
@@ -116,7 +116,7 @@ def write_stock_estimates_data_to_db():
 
 
 def write_stock_targets_data_to_db():
-    stock_list = db.get_stock_names()
+    stock_list = db.get_list(table=CST.TABLE_STOCKS, columns=CST.COLUMN_URI)
     file_list = [CST.PATH_STOCK_TARGETS + stock[:-6] + CST.HTML_EXTENSION for stock in stock_list]
     for file in file_list:
         stock_uri = file.split('/')[-1][:-5] + '-Aktie'
@@ -134,7 +134,7 @@ def write_stock_targets_data_to_db():
 
 
 def write_stock_last_quarterly_figures_date_to_db():
-    stock_list = db.get_stock_names()
+    stock_list = db.get_list(table=CST.TABLE_STOCKS, columns=CST.COLUMN_URI)
     file_list = [CST.PATH_STOCK_DATES + stock[:-6] + CST.HTML_EXTENSION for stock in stock_list]
     for file in file_list:
         stock_uri = file.split('/')[-1][:-5] + '-Aktie'

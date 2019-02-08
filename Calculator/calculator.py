@@ -5,7 +5,7 @@ from loguru import logger
 
 
 def levermann_01():
-    stock_list = db.get_stock_names()
+    stock_list = db.get_list(table=CST.TABLE_STOCKS, columns=CST.COLUMN_URI)
     for stock in stock_list:
         earnings_before_tax = db.get_earnings_after_tax(stock)
         equity_capital = db.get_equity_capital(stock)
@@ -26,7 +26,7 @@ def levermann_01():
 
 
 def levermann_02():
-    stock_list = db.get_stock_names()
+    stock_list = db.get_list(table=CST.TABLE_STOCKS, columns=CST.COLUMN_URI)
     for stock in stock_list:
         operative_result = db.get_operative_result(stock)
         sales_revenue = db.get_sales_revenue(stock)
@@ -52,7 +52,7 @@ def levermann_02():
 
 
 def levermann_03():
-    stock_list = db.get_stock_names()
+    stock_list = db.get_list(table=CST.TABLE_STOCKS, columns=CST.COLUMN_URI)
     for stock in stock_list:
         equity_capital = db.get_equity_capital(stock)
         balance = db.get_balance(stock)
@@ -83,7 +83,7 @@ def levermann_03():
 
 
 def levermann_04_05():
-    stock_list = db.get_stock_names()
+    stock_list = db.get_list(table=CST.TABLE_STOCKS, columns=CST.COLUMN_URI)
     for stock in stock_list:
         current_stock_price = db.get_latest_stock_price(stock)
         eps = db.get_eps(stock)
@@ -134,7 +134,7 @@ def levermann_04_05():
 
 
 def levermann_06():
-    stock_list = db.get_stock_names()
+    stock_list = db.get_list(table=CST.TABLE_STOCKS, columns=CST.COLUMN_URI)
     for stock in stock_list:
         ratings = db.get_analyst_ratings(stock)
         rating_count = sum(ratings)
@@ -168,7 +168,7 @@ def levermann_06():
 
 
 def levermann_07():
-    stock_list = db.get_stock_names()
+    stock_list = db.get_list(table=CST.TABLE_STOCKS, columns=CST.COLUMN_URI)
     for stock in stock_list:
         logger.info("Calculating Lev07 for %s" %stock)
         quaterly_date = db.get_quarterly_date(stock)
@@ -217,7 +217,7 @@ def levermann_07():
 
 
 def levermann_08():
-    stock_list = db.get_stock_names()
+    stock_list = db.get_list(table=CST.TABLE_STOCKS, columns=CST.COLUMN_URI)
     for stock in stock_list:
         eps_current = db.get_eps(stock)
         eps_last = db.get_older_eps(stock)
@@ -254,7 +254,7 @@ def levermann_08():
 
 
 def levermann_09_10_11():
-    stock_list = db.get_stock_names()
+    stock_list = db.get_list(table=CST.TABLE_STOCKS, columns=CST.COLUMN_URI)
     for stock in stock_list:
         current_date = date.get_current_date()
         date_minus_6_month = date.edit_date(current_date, CST.DT_MINUS, 6, CST.DT_MONTH)
@@ -312,7 +312,7 @@ def levermann_09_10_11():
 
 
 def levermann_12():
-    stock_list = db.get_stock_names()
+    stock_list = db.get_list(table=CST.TABLE_STOCKS, columns=CST.COLUMN_URI)
     for stock in stock_list:
         if db.is_small_cap(stock):
             db.save_reversal_to_db(stock, 0, 0)
@@ -348,7 +348,7 @@ def levermann_12():
 
 
 def levermann_13():
-    stock_list = db.get_stock_names()
+    stock_list = db.get_list(table=CST.TABLE_STOCKS, columns=CST.COLUMN_URI)
     for stock in stock_list:
         eps = db.get_eps(stock)
         if eps is None:

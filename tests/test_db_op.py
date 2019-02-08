@@ -10,24 +10,23 @@ class TestDatabase(unittest.TestCase):
         pass
 
     def test_db_select(self):
-        index_list = db.db_select(table=CST.TABLE_INDIZES, columns=CST.COLUMN_URI, test=True)
+        index_list = db.get_list(table=CST.TABLE_INDIZES, columns=CST.COLUMN_URI, test=True)
         asserted_list = ['dax', 'CAC_40', 'dow_jones']
         self.assertEqual(asserted_list, index_list)
 
-        index_list_2 = db.db_select(table=CST.TABLE_INDIZES, columns=CST.COLUMN_URI,
-                                    condition=[CST.COLUMN_ACTIVE, True], test=True)
+        index_list_2 = db.get_list(table=CST.TABLE_INDIZES, columns=CST.COLUMN_URI,
+                                   condition=[CST.COLUMN_ACTIVE, True], test=True)
         asserted_list_2 = ['dax', 'CAC_40']
         self.assertEqual(asserted_list_2, index_list_2)
 
-    def test_get_stock_names_and_history_url_db(self):
-        stock_list = db.db_select(table=CST.TABLE_STOCKS, columns=[CST.COLUMN_URI, CST.COLUMN_MARKET_PLACE], test=True)
-        asserted_list = [['BP', 'DAX'], ['SHELL', 'Dow Jones']]
-        self.assertEqual(asserted_list, stock_list)
+        stock_list_3 = db.get_list(table=CST.TABLE_STOCKS, columns=[CST.COLUMN_URI, CST.COLUMN_MARKET_PLACE], test=True)
+        asserted_list_3 = [['adidas-Aktie', 'FSE'], ['coca-cola-Aktie', 'FSE']]
+        self.assertEqual(asserted_list_3, stock_list_3)
 
-    def test_get_stock_names_db(self):
-        stock_list = db.get_stock_names(test=True)
-        asserted_list = ['BP', 'SHELL']
-        self.assertEqual(asserted_list, stock_list)
+        stock_list_4 = db.get_list(table=CST.TABLE_STOCKS, columns=CST.COLUMN_URI, test=True)
+        asserted_list_4 = ['adidas-Aktie', 'coca-cola-Aktie']
+        self.assertEqual(asserted_list_4, stock_list_4)
+
 
 # OLD
 
@@ -56,13 +55,13 @@ class TestDatabase(unittest.TestCase):
     #     self.assertEqual(asserted_stock_list, stock_names[:3])
 
 
-    def test_get_pages_count(self):
-        pages_1 = db.get_pages_count('FTSE_100')
-        pages_2 = db.get_pages_count('SMI')
-        asserted_pages_1 = 3
-        asserted_pages_2 = 1
-        self.assertEqual(asserted_pages_1, pages_1)
-        self.assertEqual(asserted_pages_2, pages_2)
+    # def test_get_pages_count(self):
+    #     pages_1 = db.get_pages_count('FTSE_100')
+    #     pages_2 = db.get_pages_count('SMI')
+    #     asserted_pages_1 = 3
+    #     asserted_pages_2 = 1
+    #     self.assertEqual(asserted_pages_1, pages_1)
+    #     self.assertEqual(asserted_pages_2, pages_2)
 
     def test_create_index_content_url_list(self):
         url_list = db.create_all_index_url_list(CST.URL_INDEX_CONTENT)

@@ -8,90 +8,66 @@ import dataset
 
 
 # CRUD
-def db_select(table, columns, condition=None, test=None):
-    if not test:
-        database = CST.DATABASE
-    else:
-        database = CST.TEST_DATABASE
+
+def get_list(table, columns, condition=None, test=None):
+    database = CST.DATABASE if not test else CST.TEST_DATABASE
 
     if not condition:
         if isinstance(columns, str):
-            print('String')
             with dataset.connect(database) as db:
                 return [item[columns] for item in db[table]]
         elif isinstance(columns, list):
-            print('list')
             with dataset.connect(database) as db:
                 return [[item[column] for column in columns] for item in db[table]]
 
     else:
         if isinstance(columns, str):
-            print('String')
             with dataset.connect(database) as db:
                 return [item[columns] for item in db[table] if item[condition[0]] == condition[1]]
         elif isinstance(columns, list):
-            print('list')
             with dataset.connect(database) as db:
                 return [[item[column] for column in columns] for item in db[table]
                         if item[condition[0]] == condition[1]]
 
 
-def get_stock_names(test=None):
-    return db_select(table=CST.TABLE_STOCKS, columns=CST.COLUMN_URI)
+def write_stocks_to_stock_table(stocks, test=None):
+    database = CST.DATABASE if not test else CST.TEST_DATABASE
 
-# OLD
-
-
-# def get_all_index_names():
-#     with dataset.connect(CST.DATABASE) as database:
-#         index_list = [item[CST.COLUMN_URI] for item in database[CST.TABLE_INDIZES]]
-#         return index_list
-
-
-# def get_active_index_names():
-#     with dataset.connect(CST.DATABASE) as database:
-#         index_list = [item[CST.COLUMN_URI] for item in database[CST.TABLE_INDIZES] if item[CST.COLUMN_ACTIVE] == b'1']
-#         return index_list
+    with dataset.connect(database) as db:
+        try:
+            for stock in stocks:
+                db[CST.TABLE_STOCKS].insert_ignore(stock, ['URI'])
+        except sqlalchemy.exc.IntegrityError:
+            pass
 
 
-# def get_stock_url_and_market_place():
-#     with dataset.connect(CST.DATABASE) as database:
-#         stock_and_history_url_list = [[item[CST.COLUMN_URI], item[CST.COLUMN_MARKET_PLACE]]
-#                                       for item in database[CST.TABLE_STOCKS]]
-#         return stock_and_history_url_list
-
-#
-# def get_stock_names():
-#     with dataset.connect(CST.DATABASE) as database:
-#         stock_list = [item[CST.COLUMN_URI] for item in database[CST.TABLE_STOCKS]]
-#         return stock_list
+def write_stock_to_index_contents_table(index_contents, test=None):
+    database = CST.DATABASE if not test else CST.TEST_DATABASE
+    with dataset.connect(database) as db:
+        try:
+            db[CST.TABLE_INDEX_CONTENTS].insert_many(index_contents)
+        except sqlalchemy.exc.IntegrityError:
+            pass
 
 
-def get_pages_count(index_name):
-    with dataset.connect(CST.DATABASE) as database:
-        table = database[CST.TABLE_INDIZES].find(URI=index_name)
-        result = [item[CST.COLUMN_PAGES] for item in table]
-        return int(result[0])
-
+# List Calculations
 
 def create_all_index_url_list(base_url):
-    # old index_list = get_all_index_names()
-    index_list = db_select(table=CST.TABLE_INDIZES, columns=CST.COLUMN_URI)
+    index_list = get_list(table=CST.TABLE_INDIZES, columns=CST.COLUMN_URI)
     url_list = [base_url + index for index in index_list]
     return url_list
 
 
 def create_active_index_url_list(base_url):
-    index_list = db_select(table=CST.TABLE_INDIZES,
-                           columns=CST.COLUMN_URI,
-                           condition=[CST.COLUMN_ACTIVE, True])
+    index_list = get_list(table=CST.TABLE_INDIZES,
+                          columns=CST.COLUMN_URI,
+                          condition=[CST.COLUMN_ACTIVE, True])
     url_list = [base_url + index for index in index_list]
     return url_list
 
 
 def create_stock_history_url_list(base_url):
-    stock_history_list = db_select(table=CST.TABLE_STOCKS, columns=[CST.COLUMN_URI, CST.COLUMN_MARKET_PLACE])
-    # url_list = [base_url + stock[0] + '/' + stock[1] for stock in stock_history_list]
+    stock_history_list = get_list(table=CST.TABLE_STOCKS, columns=[CST.COLUMN_URI, CST.COLUMN_MARKET_PLACE])
     url_list = []
     for stock in stock_history_list:
         stock_uri, market_place = stock[0][:-6], stock[1]
@@ -102,25 +78,15 @@ def create_stock_history_url_list(base_url):
 
 
 def create_stock_overview_url_list(base_url):
-    stock_list = get_stock_names()
+    stock_list = get_list(table=CST.TABLE_STOCKS, columns=CST.COLUMN_URI)
     url_list = [base_url + stock for stock in stock_list]
     return url_list
 
 
 def create_stock_info_url_list(base_url):
-    stock_list = get_stock_names()
+    stock_list = get_list(table=CST.TABLE_STOCKS, columns=CST.COLUMN_URI)
     url_list = [base_url + stock[:-6] for stock in stock_list]
     return url_list
-
-
-def check_if_exists(search, table, column):
-    with dataset.connect(CST.DATABASE) as database:
-        results = database.query("SELECT %s FROM %s WHERE %s = '%s'" % (column, table, column, search))
-        try:
-            result = [item for item in results][0]
-        except IndexError:
-            return False
-        return result[column] == search
 
 
 def write_stock_list_to_db(stock_list, index_name):
@@ -133,21 +99,6 @@ def write_stock_list_to_db(stock_list, index_name):
     return True
 
 
-def write_stocks_to_stock_table(stocks):
-    with dataset.connect(CST.DATABASE) as database:
-        try:
-            for stock in stocks:
-                database[CST.TABLE_STOCKS].insert_ignore(stock, ['URI'])
-        except sqlalchemy.exc.IntegrityError:
-            pass
-
-
-def write_stock_to_index_contents_table(index_contents):
-    with dataset.connect(CST.DATABASE) as database:
-        try:
-            database[CST.TABLE_INDEX_CONTENTS].insert_many(index_contents)
-        except sqlalchemy.exc.IntegrityError:
-            pass
 
 
 def write_index_history_to_db(index_history, index_uri):
