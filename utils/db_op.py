@@ -61,7 +61,7 @@ def create_all_index_url_list(base_url):
 def create_active_index_url_list(base_url):
     index_list = get_list(table=CST.TABLE_INDIZES,
                           columns=CST.COLUMN_URI,
-                          condition=[CST.COLUMN_ACTIVE, True])
+                          condition=[CST.COLUMN_ACTIVE, b'1'])
     url_list = [base_url + index for index in index_list]
     return url_list
 

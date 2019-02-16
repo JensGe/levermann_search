@@ -15,7 +15,7 @@ class TestDatabase(unittest.TestCase):
         self.assertEqual(asserted_list, index_list)
 
         index_list_2 = db.get_list(table=CST.TABLE_INDIZES, columns=CST.COLUMN_URI,
-                                   condition=[CST.COLUMN_ACTIVE, True], test=True)
+                                   condition=[CST.COLUMN_ACTIVE, 1], test=True)
         asserted_list_2 = ['dax', 'CAC_40']
         self.assertEqual(asserted_list_2, index_list_2)
 

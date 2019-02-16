@@ -112,4 +112,3 @@ def scrap_stock_infos():
 
 
 
-

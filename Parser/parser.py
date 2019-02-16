@@ -6,7 +6,7 @@ from loguru import logger
 
 
 def write_index_contents_from_html_to_db():
-    index_list = db.get_list(table=CST.TABLE_INDIZES, columns=CST.COLUMN_URI, condition=[CST.COLUMN_ACTIVE, True])
+    index_list = db.get_list(table=CST.TABLE_INDIZES, columns=CST.COLUMN_URI, condition=[CST.COLUMN_ACTIVE, b'1'])
     file_list = [CST.PATH_INDEX_CONTENT + index + CST.HTML_EXTENSION for index in index_list]
 
     for file in file_list:
@@ -19,7 +19,7 @@ def write_index_contents_from_html_to_db():
 
 
 def write_index_histories_from_html_to_db():
-    index_list = db.get_list(table=CST.TABLE_INDIZES, columns=CST.COLUMN_URI, condition=[CST.COLUMN_ACTIVE, True])
+    index_list = db.get_list(table=CST.TABLE_INDIZES, columns=CST.COLUMN_URI, condition=[CST.COLUMN_ACTIVE, b'1'])
     file_list = [CST.PATH_INDEX_HISTORY + index + CST.HTML_EXTENSION for index in index_list]
     for file in file_list:
         index_history_soup = scrap.get_soup_code_from_file(file)
@@ -50,6 +50,9 @@ def write_stock_overview_data_to_db():
         stock_sectors = parse.get_sectors(stock_overview_soup)
         market_place = parse.get_market_place(stock_overview_soup)
         db.write_single_overview_data_to_db(stock_uri, market_cap, stock_indizes, stock_sectors, market_place)
+
+        stock_history_list = parse.get_historic_prices(stock_overview_soup)
+        db.write_stock_history_to_db(stock_history_list, stock_uri)
 
 
 def write_stock_histories_from_html_to_db():
