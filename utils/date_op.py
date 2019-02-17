@@ -3,6 +3,7 @@ from _datetime import datetime
 from _datetime import date
 
 import random
+import calendar
 import dateutil.relativedelta
 
 
@@ -94,3 +95,30 @@ def long_random_waiting_time():
 
 def short_random_waiting_time():
     return CST.SHORT_WAIT + random.uniform(0, CST.RANDOM_WAIT_RANGE)
+
+
+# Queue Calculator
+def get_monthly_date_list(year):
+    month_list = []
+    for month_ in range(1, 13):
+        month_calendar = calendar.monthcalendar(year, month_)
+        week1 = month_calendar[0]
+        week2 = month_calendar[1]
+
+        if week1[calendar.FRIDAY] != 0:
+            week_day_no = date(year=year, month=month_, day=week1[calendar.FRIDAY])
+        else:
+            week_day_no = date(year=year, month=month_, day=week2[calendar.FRIDAY])
+
+        month_list.append(week_day_no)
+
+    return month_list
+
+
+def get_biweekly_date_list(year):
+    monthly_date_list = get_monthly_date_list(year=year)
+    biweekly_list = []
+    for date_ in monthly_date_list:
+        biweekly_list.append(date_)
+        biweekly_list.append(edit_date(date_, CST.DT_PLUS, 14, CST.DT_DAY))
+    return biweekly_list

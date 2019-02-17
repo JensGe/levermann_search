@@ -31,6 +31,20 @@ class TestDate(unittest.TestCase):
         asserted_string = '2018-51'
         self.assertEqual(asserted_string, date.get_year_and_week_string(test_date))
 
+    def test_get_biweekly_date_list(self):
+        asserted_date_string_list = ['04.01.2019', '18.01.2019',
+                                     '01.02.2019', '15.02.2019',
+                                     '01.03.2019', '15.03.2019',
+                                     '05.04.2019', '19.04.2019',
+                                     '03.05.2019', '17.05.2019']
+        asserted_date_list = [date.string_to_date(datestring) for datestring in asserted_date_string_list]
+        self.assertEqual(asserted_date_list, date.get_biweekly_date_list(2019)[:10])
+
+    def test_get_monthly_date_list(self):
+        asserted_date_string_list = ['04.01.2019', '01.02.2019', '01.03.2019', '05.04.2019', '03.05.2019']
+        asserted_date_list = [date.string_to_date(datestring) for datestring in asserted_date_string_list]
+        self.assertEqual(asserted_date_list, date.get_monthly_date_list(2019)[:5])
+
     def tearDown(self):
         pass
 
