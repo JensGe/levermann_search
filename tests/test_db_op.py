@@ -7,7 +7,23 @@ from utils import constants as CST
 class TestDatabase(unittest.TestCase):
 
     def setUp(self):
-        pass
+        """
+        create table Aktien (
+            ISIN varchar(127),
+            WKN varchar(127),
+            Name varchar(255) not null,
+            Waehrung varchar(5),
+            URI varchar(255) primary key,
+            Handelsplatz varchar(15));
+
+        ...
+        """
+
+
+
+
+
+    pass
 
     def test_db_select(self):
         index_list = db.get_list(table=CST.TABLE_INDIZES, columns=CST.COLUMN_URI, test=True)
