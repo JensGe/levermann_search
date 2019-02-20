@@ -27,42 +27,6 @@ class TestDatabase(unittest.TestCase):
         asserted_list_4 = ['adidas-Aktie', 'coca-cola-Aktie']
         self.assertEqual(asserted_list_4, stock_list_4)
 
-
-# OLD
-
-    # def test_get_all_index_names(self):
-    #     index_list = db.get_all_index_names()
-    #     asserted_list = ['CAC_40', 'dax', 'dow_jones', 'Euro_Stoxx_50', 'FTSE_100', 'SMI']
-    #     self.assertEqual(asserted_list, index_list)
-
-    # def test_get_active_index_names(self):
-    #     index_list = db.get_active_index_names()
-    #     asserted_list = ['CAC_40', 'dax', 'dow_jones', 'Euro_Stoxx_50', 'FTSE_100',
-    #                      'mdax', 'nasdaq_100', 's&p_500', 'sdax', 'SMI', 'tecdax']
-    #     self.assertEqual(asserted_list, index_list)
-
-    # def test_get_stock_url_and_market_place(self):
-    #     stock_and_history_url_list = db.get_stock_url_and_market_place()
-    #     asserted_list = [['21st_century_fox_a-Aktie', 'FSE'],
-    #                      ['21st_century_fox_b-Aktie', 'FSE'],
-    #                      ['3i-Aktie', 'FSE']]
-    #     print(stock_and_history_url_list)
-    #     self.assertEqual(asserted_list, stock_and_history_url_list[:3])
-
-    # def test_get_stock_names(self):
-    #     asserted_stock_list = ['aktie1', 'aktie2', 'aktie3']
-    #     stock_names = db.get_stock_names()
-    #     self.assertEqual(asserted_stock_list, stock_names[:3])
-
-
-    # def test_get_pages_count(self):
-    #     pages_1 = db.get_pages_count('FTSE_100')
-    #     pages_2 = db.get_pages_count('SMI')
-    #     asserted_pages_1 = 3
-    #     asserted_pages_2 = 1
-    #     self.assertEqual(asserted_pages_1, pages_1)
-    #     self.assertEqual(asserted_pages_2, pages_2)
-
     def test_create_index_content_url_list(self):
         url_list = db.create_all_index_url_list(CST.URL_INDEX_CONTENT)
         asserted_url_list = ['https://www.boerse-online.de/index/liste/CAC_40',
@@ -72,6 +36,24 @@ class TestDatabase(unittest.TestCase):
                              'https://www.boerse-online.de/index/liste/FTSE_100',
                              'https://www.boerse-online.de/index/liste/SMI']
         self.assertEqual(asserted_url_list, url_list[:6])
+
+    def test_get_latest_date_from_index_history(self):
+        asserted_latest_date = '2019-01-25'
+        actual_latest_date = db.get_item(table=CST.TABLE_INDEX_HISTORIES, column='max(Datum)',
+                                         condition=[CST.COLUMN_INDEX_URI, 'dax'], test=True)
+        self.assertEqual(asserted_latest_date, actual_latest_date)
+
+        actual_latest_date_2 = db.get_item(table=CST.TABLE_INDEX_HISTORIES, column='max(Datum)',
+                                           condition=[CST.COLUMN_INDEX_URI, 'dow_jones'], test=True)
+        self.assertIsNone(actual_latest_date_2)
+
+        actual_latest_date_3 = db.get_item(table=CST.TABLE_STOCKS_HISTORIES, column='max(Datum)',
+                                           condition=[CST.COLUMN_STOCK_URI, 'Adidas-Aktie'], test=True)
+        self.assertTrue(actual_latest_date_3)
+
+#
+#
+# ToDo renew with Testdatabase
 
     def test_get_earnings_after_tax(self):
         result = db.get_earnings_after_tax('ab_inbev-Aktie')
@@ -109,12 +91,6 @@ class TestDatabase(unittest.TestCase):
         closing_price, actual_date = db.get_closing_stock_price(quarterly_we, stock_uri)
         self.assertEqual(10.92, float(closing_price))
         self.assertEqual('26.10.2018', date.date_to_string(actual_date))
-
-    def test_get_latest_date_from_history(self):
-        index_uri = 'dax'
-        latest_date = db.get_latest_date_from_index_history(index_uri)
-        asserted_date = date.string_to_date('29.10.2018')
-        self.assertEqual(asserted_date, latest_date)
 
     def test_get_index_of_stock(self):
         stock_uri = 'credit_suisse-Aktie'

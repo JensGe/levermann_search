@@ -30,6 +30,43 @@ def get_list(table, columns, condition=None, test=None):
                         if item[condition[0]] == condition[1]]
 
 
+def get_item(table, column, condition=None, order_column=None, order='asc', test=None):
+    database = CST.DATABASE if not test else CST.TEST_DATABASE
+
+    with dataset.connect(database) as db:
+        results = db.query("SELECT %s as result "
+                           "FROM %s "
+                           "WHERE %s = '%s'" % (column, table, condition[0], condition[1]))
+        result = [item for item in results][0]
+    return result['result']
+
+
+def insert_list():
+    pass
+
+
+def insert_item():
+    pass
+
+
+def update_list():
+    pass
+
+
+def update_item():
+    pass
+
+
+def delete_list():
+    pass
+
+
+def delete_item():
+    pass
+
+
+# enhanced CRUD
+
 def write_stocks_to_stock_table(stocks, test=None):
     database = CST.DATABASE if not test else CST.TEST_DATABASE
 
@@ -99,6 +136,45 @@ def write_stock_list_to_db(stock_list, index_name):
     return True
 
 
+# Information Gathering
+
+
+# def get_latest_date_from_index_history(index_uri):
+#     with dataset.connect(CST.DATABASE) as database:
+#         results = database.query("SELECT max(Datum) as maxdate "
+#                                  "FROM %s WHERE IndexURI = '%s'"
+#                                  % (CST.TABLE_INDEX_HISTORIES, index_uri))
+#         try:
+#             result = [item for item in results][0]
+#         except IndexError:
+#             logger.warning("Get Latest Date from Index History: IndexError for %s" % index_uri)
+#             return False
+#         return result['maxdate']
+
+# def get_latest_date_from_stock_history(stock_uri):
+#     with dataset.connect(CST.DATABASE) as database:
+#         results = database.query("SELECT max(Datum) as maxdate "
+#                                  "FROM %s WHERE AktienURI = '%s'"
+#                                  % (CST.TABLE_STOCKS_HISTORIES, stock_uri))
+#         try:
+#             result = [item for item in results][0]
+#         except IndexError:
+#             logger.warning("Get Latest Date from Stock History: IndexError for %s" % stock_uri)
+#             return False
+#         return result['maxdate']
+
+def get_latest_date_from_index_history(index_uri):
+    return get_item(table=CST.TABLE_INDEX_HISTORIES, column='max(Datum)', condition=[CST.COLUMN_INDEX_URI, index_uri])
+
+
+def get_latest_date_from_stock_history(stock_uri):
+    return get_item(table=CST.TABLE_STOCKS_HISTORIES, column='max(Datum)', condition=[CST.COLUMN_STOCK_URI, stock_uri])
+#
+#
+#
+#
+#
+# ToDo Refactor below
 
 
 def write_index_history_to_db(index_history, index_uri):
@@ -143,31 +219,6 @@ def write_stock_history_to_db(stock_history, stock_uri):
             except sqlalchemy.exc.IntegrityError:
                 pass
 
-
-def get_latest_date_from_index_history(index_uri):
-    with dataset.connect(CST.DATABASE) as database:
-        results = database.query("SELECT max(Datum) as maxdate "
-                                 "FROM %s WHERE IndexURI = '%s'"
-                                 % (CST.TABLE_INDEX_HISTORIES, index_uri))
-        try:
-            result = [item for item in results][0]
-        except IndexError:
-            logger.warning("Get Latest Date from Index History: IndexError for %s" % index_uri)
-            return False
-        return result['maxdate']
-
-
-def get_latest_date_from_stock_history(stock_uri):
-    with dataset.connect(CST.DATABASE) as database:
-        results = database.query("SELECT max(Datum) as maxdate "
-                                 "FROM %s WHERE AktienURI = '%s'"
-                                 % (CST.TABLE_STOCKS_HISTORIES, stock_uri))
-        try:
-            result = [item for item in results][0]
-        except IndexError:
-            logger.warning("Get Latest Date from Stock History: IndexError for %s" % stock_uri)
-            return False
-        return result['maxdate']
 
 
 def write_single_overview_data_to_db(stock_uri, market_cap, stock_indizes, stock_sectors, market_place):
