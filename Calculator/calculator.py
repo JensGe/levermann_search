@@ -137,6 +137,8 @@ def levermann_06():
     stock_list = db.get_list(table=CST.TABLE_STOCKS, columns=CST.COLUMN_URI)
     for stock in stock_list:
         ratings = db.get_analyst_ratings(stock)
+        if ratings is None:
+            continue
         rating_count = sum(ratings)
 
         if rating_count == 0:
