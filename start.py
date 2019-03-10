@@ -2,16 +2,19 @@ from Scraper import scraper
 from Parser import parser
 from Calculator import calculator
 from Displayer import displayer
+from Worker import worker
 from utils import constants as CST
 from loguru import logger
 
 
-logger.configure(handlers=[dict(sink="logs/levermann_{time:YYYY-DDDD}.log",
+logger.configure(handlers=[dict(sink="logs/levermann_{time:YYYY-MM-DD}.log",
                                 format="{time:YYYY-MM-DD HH:mm:ss} | {level} | {message}",
-                                rotation="weekly", level="INFO")],
-                 activation=[("Displayer.displayer", True), ("Parser.parser", True), ("Calculator.calculator", True),
-                             ("utils.date_op", True), ("utils.db_op", True), ("utils.file_op", True),
-                             ("utils.parse_op", True), ("utils.scrap_op", True)])
+                                rotation="2400 kB", retention="2 week", level="INFO")],
+                 activation=[("Displayer.displayer", True), ("Parser.parser", True),
+                             ("Calculator.calculator", True),
+                             ("utils.date_op", True), ("utils.db_op", True),
+                             ("utils.file_op", True), ("utils.parse_op", True),
+                             ("utils.scrap_op", True)])
 
 
 @logger.catch()
@@ -21,6 +24,7 @@ def main():
 
     while root_menu:
         print('Main Menu')
+        print('(0) Full Walkthrough')
         print('(1) Index Processing')
         print('(2) Stocks Processing')
         print('(3) Calculate')
@@ -31,7 +35,10 @@ def main():
 
         menu_selection = str(input('> '))
 
-        if menu_selection == '1':
+        if menu_selection == '0':
+            worker.start_complete_workflow()
+
+        elif menu_selection == '1':
             menu_1 = True
             while menu_1:
                 print('Sub Menu 1: Index Processing')
