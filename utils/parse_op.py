@@ -1,6 +1,5 @@
 import re
 
-
 from utils import date_op as date
 from utils import constants as CST
 
@@ -47,6 +46,32 @@ def is_data_available(soup):
         return True
 
 
+def get_stock_list_of_single_index(soup):
+    stock_table = soup.find_all(CST.HTML_DIV, {CST.HTML_ID: CST.TEXT_INDEX_LIST_CONTAINER})
+    stock_list = extract_index_stocks_to_list(stock_table)
+    return stock_list
+
+
+def extract_index_stocks_to_list(input_table):
+    index_stock_list = []
+    table_rows = []
+    for rows in input_table:
+        table_rows = rows.find_all(CST.HTML_TR)
+        row_items = []
+        for items in table_rows[1:]:
+            row_items = items.find_all(CST.HTML_TD)
+            links = items.find_all(CST.HTML_A)
+            tds = []
+            for td in row_items[:1]:
+                tds.append(td.text.strip().split('\n')[0])
+                # tds.append(td.text.strip().split('\n')[3].strip())
+            for a in links[:1]:
+                tds.append(a[CST.HTML_HREF].split('/')[-1])
+            index_stock_list.append(tds)
+    return index_stock_list
+
+
+# Stocks - Overview
 def convert_market_cap(market_cap_string):
     try:
         market_cap_value, market_cap_multiplier = market_cap_string.split(' ')
@@ -118,19 +143,7 @@ def get_sectors(soup):
     return link_items
 
 
-def get_current_value_of_attribute(soup, attribute):
-    for elem in soup.find_all(CST.HTML_TD, text=re.compile(attribute)):
-        if elem.text.strip() == attribute:
-            return convert_ger_to_en_numeric(elem.parent.find_all(CST.HTML_TD)[-1].text.strip())
-
-
-def get_current_value_of_attribute_old(soup, attribute):
-    result_td = soup.find(CST.HTML_TD, text=re.compile(attribute))
-    result_tr = result_td.parent
-    result = result_tr.find_all(CST.HTML_TD)[-1].text.strip()
-    return result
-
-
+# Stock - Dates
 def get_latest_date_of_list(date_list):
     current_date = date.get_current_date()
     quarter_year_ago = date.edit_date(current_date, CST.DT_MINUS, 3, CST.DT_MONTH)
@@ -149,12 +162,46 @@ def get_last_quarterly_figures_date(soup):
     :param soup:
     :return: date
     """
-    result_td = soup.find(CST.HTML_H2, text=re.compile(CST.TEXT_LAST_DATES))
+    result_td = soup.find(CST.HTML_H2, text=re.compile(CST.TEXT_BYGONE_DATES))
     parent_div = result_td.parent
     dates = parent_div.find_all(CST.HTML_TD, {CST.HTML_CLASS: CST.TEXT_TEXT_RIGHT})
     date_list = [date.string_to_date(date_.text.strip()) for date_ in dates]
     latest_date = get_latest_date_of_list(date_list)
     return latest_date
+
+
+def get_future_dates(soup):
+    result_header = soup.find(CST.HTML_H1, text=re.compile(CST.TEXT_FUTURE_DATES))
+    parent_div = result_header.parent
+    result_trs = parent_div.find_all(CST.HTML_TR)
+    return_list = []
+    for tr in result_trs[1:]:
+        temp_list = [td.text.strip() for td in tr if td != '\n']
+        return_list.append(temp_list)
+
+    return return_list
+
+
+def get_bygone_dates(soup):
+    result_header = soup.find(CST.HTML_H2, text=re.compile(CST.TEXT_BYGONE_DATES))
+    parent_div = result_header.parent
+    result_trs = parent_div.find_all(CST.HTML_TR)
+    return_list = []
+    for tr in result_trs[1:]:
+        temp_list = [td.text.strip() for td in tr if td != '\n']
+        return_list.append(temp_list)
+
+    return return_list
+
+    # dates = parent_div.find_all(CST.HTML_TD, {CST.HTML_CLASS: CST.TEXT_TEXT_RIGHT})
+    # return [date.string_to_date(date_.text.strip()) for date_ in dates]
+
+
+# Stock - Balance
+def get_current_value_of_attribute(soup, attribute):
+    for elem in soup.find_all(CST.HTML_TD, text=re.compile(attribute)):
+        if elem.text.strip() == attribute:
+            return convert_ger_to_en_numeric(elem.parent.find_all(CST.HTML_TD)[-1].text.strip())
 
 
 def get_result_per_share_last_three_years(soup):
@@ -178,6 +225,7 @@ def get_result_per_share_current_and_next_year(soup):
            convert_ger_to_en_numeric(result_plus1)
 
 
+# Stock - Targets
 def get_analyst_ratings(soup):
     result_td = soup.find(CST.HTML_TD, {CST.HTML_CLASS: CST.TEXT_HISTORIC_RATING})
     values = result_td.find_all(CST.HTML_SPAN)
@@ -198,28 +246,3 @@ def get_closing_price_from_date_before(soup, date_str):
     parent_tr = result_td.parent
     results = parent_tr.next_sibling.next_sibling.find_all(CST.HTML_TD)
     return convert_ger_to_en_numeric(results[2].text.strip())
-
-
-def get_stock_list_of_single_index(soup):
-    stock_table = soup.find_all(CST.HTML_DIV, {CST.HTML_ID: CST.TEXT_INDEX_LIST_CONTAINER})
-    stock_list = extract_index_stocks_to_list(stock_table)
-    return stock_list
-
-
-def extract_index_stocks_to_list(input_table):
-    index_stock_list = []
-    table_rows = []
-    for rows in input_table:
-        table_rows = rows.find_all(CST.HTML_TR)
-        row_items = []
-        for items in table_rows[1:]:
-            row_items = items.find_all(CST.HTML_TD)
-            links = items.find_all(CST.HTML_A)
-            tds = []
-            for td in row_items[:1]:
-                tds.append(td.text.strip().split('\n')[0])
-                # tds.append(td.text.strip().split('\n')[3].strip())
-            for a in links[:1]:
-                tds.append(a[CST.HTML_HREF].split('/')[-1])
-            index_stock_list.append(tds)
-    return index_stock_list

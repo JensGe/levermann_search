@@ -111,4 +111,20 @@ def scrap_stock_infos():
     scrap_stock_info(CST.URL_STOCK_TARGETS, CST.PATH_STOCK_TARGETS)
 
 
+def scrap_single_page(driver, scrap_url, save_path):
+    stock_uri = scrap_url.split('/')[-1]
+    file_name = save_path + stock_uri + CST.HTML_EXTENSION
+    if os.path.isfile(file_name):
+        logger.info("Scrap Stock Histories: Skip existing File for stock: %s" % stock_uri)
+        return
+    else:
+        time.sleep(CST.SHORT_WAIT + random.uniform(0, CST.RANDOM_WAIT_RANGE))
+
+    try:
+        soup = scrap.get_soup_code_from_url(driver, scrap_url)
+        scrap.save_soup_to_file(soup, file_name)
+    except exceptions.WebDriverException:
+        logger.exception('WebDriverException for URL %s' % scrap_url)
+        return
+
 

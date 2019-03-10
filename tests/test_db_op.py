@@ -19,12 +19,6 @@ class TestDatabase(unittest.TestCase):
         ...
         """
 
-
-
-
-
-    pass
-
     def test_db_select(self):
         index_list = db.get_list(table=CST.TABLE_INDIZES, columns=CST.COLUMN_URI, test=True)
         asserted_list = ['dax', 'CAC_40', 'dow_jones']

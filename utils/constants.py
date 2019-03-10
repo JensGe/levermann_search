@@ -36,7 +36,9 @@ ALT_EXCHANGE_APPENDIX = 'XETRA'
 NO_DATA_AVAILABLE = 'Keine Daten verfügbar'
 NO_DATA_AVAILABLE_LONG = 'Zu diesem Datensatz liegen uns leider keine Daten vor.'
 
-TEXT_LAST_DATES = 'vergangene Termine'
+TEXT_BYGONE_DATES = 'vergangene Termine'
+TEXT_FUTURE_DATES = 'Termine'
+
 TEXT_EPS_UNDILUTED = 'Ergebnis je Aktie unverwässert'
 TEXT_EPS = 'Ergebnis/Aktie'
 TEXT_MARKET_CAP = 'Marktkapitalisierung in Euro'
@@ -59,6 +61,7 @@ TEXT_PAGINATION = 'finando_paging'
 
 
 # HTML Elements
+HTML_H1 = 'h1'
 HTML_H2 = 'h2'
 HTML_TABLE = 'table'
 HTML_TBODY = 'tbody'

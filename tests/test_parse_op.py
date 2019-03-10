@@ -138,6 +138,26 @@ class TestScrapping(unittest.TestCase):
         asserted_result = date.string_to_date('09.08.18')
         self.assertEqual(asserted_result, result)
 
+    def test_get_future_dates(self):
+        soup = scrap.get_soup_code_from_file('data/bo_termine.html')
+        result = parse.get_future_dates(soup)
+        asserted_result = [['adidas AG', 'Quartalszahlen', '07.11.18'],
+                           ['adidas AG', 'Quartalszahlen', '07.03.19'],
+                           ['adidas AG', 'Quartalszahlen', '02.05.19'],
+                           ['adidas AG', 'Hauptversammlung', '09.05.19'],
+                           ['adidas AG', 'Quartalszahlen', '08.08.19'],
+                           ['adidas AG', 'Quartalszahlen', '07.11.19']]
+        self.assertEqual(asserted_result, result)
+
+    def test_get_bygone_dates(self):
+        soup = scrap.get_soup_code_from_file('data/bo_termine.html')
+        result = parse.get_bygone_dates(soup)
+        asserted_result = [['Quartalszahlen', 'Q2 2018 Earnings Release', '09.08.18'],
+                           ['Hauptversammlung', '', '09.05.18'],
+                           ['Quartalszahlen', 'Q3 2017', '09.11.17']]
+        self.assertEqual(asserted_result, result)
+
+
     def test_get_result_per_share_last_three_years(self):
         soup = scrap.get_soup_code_from_file('data/bo_bilanz_guv.html')
         result_2015, result_2016, result_2017 = parse.get_result_per_share_last_three_years(soup)
