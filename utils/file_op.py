@@ -7,4 +7,3 @@ def rm(filename):
 
 def rmd(directory):
     os.rmdir(directory)
-

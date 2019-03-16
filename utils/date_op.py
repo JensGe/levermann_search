@@ -10,27 +10,36 @@ import dateutil.relativedelta
 # Date and Strings
 def date_to_string(date):
     try:
-        return datetime.strftime(date, '%d.%m.%Y')
+        return datetime.strftime(date, "%d.%m.%Y")
     except ValueError:
-        return datetime.strftime(date, '%d.%m.%y')
+        return datetime.strftime(date, "%d.%m.%y")
 
 
 def string_to_date(string):
     try:
-        return datetime.strptime(string, '%d.%m.%Y').date()
+        return datetime.strptime(string, "%d.%m.%Y").date()
     except ValueError:
-        return datetime.strptime(string, '%d.%m.%y').date()
+        return datetime.strptime(string, "%d.%m.%y").date()
+
+
+def convert_parse_to_date_db_string(string):
+    split_list = string.split('.')
+    conv_string = '20%s-%s-%s' % (split_list[2], split_list[1], split_list[0])
+    return conv_string
 
 
 def string_to_datetime(string):
     try:
-        return datetime.strptime(string, '%d.%m.%Y')
+        return datetime.strptime(string, "%d.%m.%Y")
     except ValueError:
-        return datetime.strptime(string, '%d.%m.%y')
+        return datetime.strptime(string, "%d.%m.%y")
 
 
 def get_year_and_week_string(date_time):
-    year_and_week = '%d-%d' % (datetime.date(date_time).isocalendar()[0], datetime.date(date_time).isocalendar()[1])
+    year_and_week = "%d-%d" % (
+        datetime.date(date_time).isocalendar()[0],
+        datetime.date(date_time).isocalendar()[1],
+    )
     return year_and_week
 
 
@@ -66,18 +75,37 @@ def get_last_days_of_last_four_months():
     first_day = 1
 
     first_day_of_current_month = date(current_year, current_month, first_day)
-    last_day_last_month = edit_date(first_day_of_current_month, CST.DT_MINUS, 1, CST.DT_DAY)
+    last_day_last_month = edit_date(
+        first_day_of_current_month, CST.DT_MINUS, 1, CST.DT_DAY
+    )
 
-    first_day_last_month = edit_date(first_day_of_current_month, CST.DT_MINUS, 1, CST.DT_MONTH)
-    last_day_second_last_month = edit_date(first_day_last_month, CST.DT_MINUS, 1, CST.DT_DAY)
+    first_day_last_month = edit_date(
+        first_day_of_current_month, CST.DT_MINUS, 1, CST.DT_MONTH
+    )
+    last_day_second_last_month = edit_date(
+        first_day_last_month, CST.DT_MINUS, 1, CST.DT_DAY
+    )
 
-    first_day_second_last_month = edit_date(first_day_of_current_month, CST.DT_MINUS, 2, CST.DT_MONTH)
-    last_day_third_last_month = edit_date(first_day_second_last_month, CST.DT_MINUS, 1, CST.DT_DAY)
+    first_day_second_last_month = edit_date(
+        first_day_of_current_month, CST.DT_MINUS, 2, CST.DT_MONTH
+    )
+    last_day_third_last_month = edit_date(
+        first_day_second_last_month, CST.DT_MINUS, 1, CST.DT_DAY
+    )
 
-    first_day_third_last_month = edit_date(first_day_of_current_month, CST.DT_MINUS, 3, CST.DT_MONTH)
-    last_day_forth_last_month = edit_date(first_day_third_last_month, CST.DT_MINUS, 1, CST.DT_DAY)
+    first_day_third_last_month = edit_date(
+        first_day_of_current_month, CST.DT_MINUS, 3, CST.DT_MONTH
+    )
+    last_day_forth_last_month = edit_date(
+        first_day_third_last_month, CST.DT_MINUS, 1, CST.DT_DAY
+    )
 
-    return [last_day_forth_last_month, last_day_third_last_month, last_day_second_last_month, last_day_last_month]
+    return [
+        last_day_forth_last_month,
+        last_day_third_last_month,
+        last_day_second_last_month,
+        last_day_last_month,
+    ]
 
 
 # Times
