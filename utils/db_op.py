@@ -8,8 +8,6 @@ import dataset
 
 
 # CRUD
-
-
 def get_list(table, columns, condition=None, database=cst.DATABASE):
 
     if not condition:
@@ -37,10 +35,7 @@ def get_list(table, columns, condition=None, database=cst.DATABASE):
                 ]
 
 
-def get_item(
-    table, column, condition=None, order_column=None, order="asc", database=cst.DATABASE
-):
-
+def get_item(table, column, condition=None, database=cst.DATABASE):
     with dataset.connect(database) as db:
         results = db.query(
             "SELECT %s as result "
@@ -82,7 +77,7 @@ def delete_item():
 
 
 # enhanced CRUD
-def write_stocks_to_stock_table(stocks, test=None):
+def write_index_content_to_stock_table(stocks, test=None):
     database = cst.DATABASE if not test else cst.DATABASE
 
     with dataset.connect(database) as db:
@@ -146,14 +141,14 @@ def create_stock_info_url_list(base_url):
     return url_list
 
 
-def write_stock_list_to_db(stock_list, index_name):
+def write_index_content_list_to_db(index_content, index_name):
     current_date = date.get_current_date()
-    stocks = [dict(Name=stock[0], URI=stock[1]) for stock in stock_list]
-    write_stocks_to_stock_table(stocks)
+    stocks = [dict(Name=stock[0], URI=stock[1]) for stock in index_content]
+    write_index_content_to_stock_table(stocks)
 
     index_contents = [
         dict(IndexURI=index_name, AktienURI=stock[1], Abrufdatum=current_date)
-        for stock in stock_list
+        for stock in index_content
     ]
     write_stock_to_index_contents_table(index_contents)
     return True
@@ -258,7 +253,25 @@ def write_stock_history_to_db(stock_history, stock_uri, database=cst.DATABASE):
                 pass
 
 
-# ToDo Copy write_stock_history_to_db or refactor for overview and history data
+def write_stock_overview_history_to_db(stock_history, stock_uri, database=cst.DATABASE):
+    with dataset.connect(database) as db:
+        for item in stock_history:
+            date_ = date.string_to_date(item[0])
+            try:
+                end = float(item[1].replace(".", "").replace(",", "."))
+            except ValueError:
+                logger.warning(
+                    "ValueError: Missing end value for %s at %s"
+                    % (stock_uri, str(date_))
+                )
+                end = None
+            try:
+                db[cst.TABLE_STOCKS_HISTORIES].insert(
+                    dict(AktienURI=stock_uri, Datum=date_, Schlusswert=end)
+                )
+            except sqlalchemy.exc.IntegrityError:
+                pass
+    return True
 
 
 def write_single_overview_data_to_db(
@@ -305,7 +318,7 @@ def write_single_overview_data_to_db(
                 'WHERE URI = "%s"' % (cst.TABLE_STOCKS, market_place, stock_uri)
             )
         except:
-            logger.exception("Exception at Marketplace Insertation")
+            logger.exception("Exception at Marketplace Insertion")
             pass
 
 

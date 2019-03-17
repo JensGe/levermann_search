@@ -76,15 +76,55 @@ class TestDatabase(unittest.TestCase):
         self.assertEqual(asserted_latest_date, actual_latest_date)
 
     # Todo write
-    # def test_write_stock_history_to_db_from_overview_data(self):
-    #     overview_stock_history = [
-    #         ["08.02.2019", "197,90"],
-    #         ["07.02.2019", "197,90"],
-    #         ["06.02.2019", "201,60"],
-    #         ["05.02.2019", "202,70"],
-    #         ["04.02.2019", "196,45"],
-    #     ]
-    #     stock_uri = 'adidas-Aktie'
+    def test_write_stock_overview_history_to_db(self):
+        overview_stock_history = [
+            ["08.02.2019", "197,90"],
+            ["07.02.2019", "197,90"],
+            ["06.02.2019", "201,60"],
+            ["05.02.2019", "202,70"],
+            ["04.02.2019", "196,45"],
+        ]
+        stock_uri = "adidas-Aktie"
+        self.assertTrue(
+            db.write_stock_overview_history_to_db(
+                overview_stock_history, stock_uri, cst.TEST_DATABASE
+            )
+        )
+
+        asserted_database_content = [
+            ["adidas-Aktie", date.string_to_date("28.01.2019"), 203.10, 202.80],
+            ["adidas-Aktie", date.string_to_date("29.01.2019"), 203.20, 204.90],
+            ["adidas-Aktie", date.string_to_date("30.01.2019"), 204.10, 205.90],
+            ["adidas-Aktie", date.string_to_date("31.01.2019"), 206.90, 207.40],
+            ["adidas-Aktie", date.string_to_date("01.02.2019"), 202.30, 199.40],
+            ["adidas-Aktie", date.string_to_date("04.02.2019"), None, 196.45],
+            ["adidas-Aktie", date.string_to_date("05.02.2019"), None, 202.70],
+            ["adidas-Aktie", date.string_to_date("06.02.2019"), None, 201.60],
+            ["adidas-Aktie", date.string_to_date("07.02.2019"), None, 197.90],
+            ["adidas-Aktie", date.string_to_date("08.02.2019"), None, 197.90],
+        ]
+        validating_list = db.get_list(
+            table=cst.TABLE_STOCKS_HISTORIES,
+            columns=[
+                cst.COLUMN_STOCK_URI,
+                cst.COLUMN_DATE,
+                cst.COLUMN_START_VALUE,
+                cst.COLUMN_CLOSING_VALUE,
+            ],
+            condition=[cst.COLUMN_STOCK_URI, "adidas-Aktie"],
+            database=cst.TEST_DATABASE,
+        )
+        converted_validating_list = [
+            [
+                item[0],
+                item[1],
+                float(item[2]) if item[2] is not None else None,
+                float(item[3]) if item[3] is not None else None,
+            ]
+            for item in validating_list
+        ]
+        self.assertEqual(asserted_database_content, converted_validating_list)
+
     #
     # def test_write_stock_history_to_db_from_history_data(self):
     #     history_stock_data = [
@@ -99,7 +139,6 @@ class TestDatabase(unittest.TestCase):
     #         adidas - Aktie    2019 - 02 - 06    202.80    201.60
     #         adidas - Aktie    2019 - 02 - 05    197.40    202.70
     #         adidas - Aktie    2019 - 02 - 04    199.45    196.45
-
 
     # uncategorized tests
     def test_convert_list_to_db_value_string(self):
