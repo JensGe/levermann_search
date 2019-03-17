@@ -2,7 +2,7 @@ import time
 import os
 
 from utils import date_op as date
-from utils import constants as CST
+from utils import constants as cst
 
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
@@ -15,7 +15,7 @@ from loguru import logger
 
 def init_driver(third_party_cookies=True):
     options = Options()
-    with open(CST.SELENIUM_SETTINGS) as f:
+    with open(cst.SELENIUM_SETTINGS) as f:
         start_options = f.readlines()
     for option in start_options:
         options.add_argument(option)
@@ -50,7 +50,7 @@ def get_soup_code_from_url(driver, url):
         return ""
 
     try:
-        soup = BeautifulSoup(driver.page_source, CST.PARSER)
+        soup = BeautifulSoup(driver.page_source, cst.PARSER)
     except exceptions.UnexpectedAlertPresentException:
         logger.warning("Make Soup UnexpectedAlertPresentException for %s" % url)
         return ""
@@ -64,7 +64,7 @@ def get_soup_code_from_url(driver, url):
     else:
         for page in range(1, max_page):
             driver.get(url + "?p=" + str(page + 1))
-            new_soup = BeautifulSoup(driver.page_source, CST.PARSER)
+            new_soup = BeautifulSoup(driver.page_source, cst.PARSER)
             soup.append(new_soup)
     return soup.prettify()
 
@@ -78,7 +78,7 @@ def get_soup_from_history_url(driver, url):
         logger.warning("Get Soup Code from History URL: TimeoutException for %s" % url)
         return ""
 
-    soup = BeautifulSoup(driver.page_source, CST.PARSER)
+    soup = BeautifulSoup(driver.page_source, cst.PARSER)
 
     if not is_data_available(soup):
         logger.warning("Get Soup Code from History URL: No Data Available for %s" % url)
@@ -88,8 +88,8 @@ def get_soup_from_history_url(driver, url):
 
 def is_data_available(soup):
     try:
-        info = soup.find(CST.HTML_DIV, {CST.HTML_ID: CST.HISTORIC_PRICE_LIST})
-        return info.text.strip() != CST.NO_DATA_AVAILABLE
+        info = soup.find(cst.HTML_DIV, {cst.HTML_ID: cst.HISTORIC_PRICE_LIST})
+        return info.text.strip() != cst.NO_DATA_AVAILABLE
     except AttributeError:
         logger.warning("Data Available Check: AttributeError")
         return True
@@ -97,7 +97,7 @@ def is_data_available(soup):
 
 def get_max_page(soup):
     try:
-        pagination = soup.find(CST.HTML_DIV, {CST.HTML_CLASS: CST.TEXT_PAGINATION})
+        pagination = soup.find(cst.HTML_DIV, {cst.HTML_CLASS: cst.TEXT_PAGINATION})
         link_list = pagination.find_all("a")
         return int(link_list[-1].text)
     except AttributeError:
@@ -111,7 +111,7 @@ def get_soup_code_from_file(file):
     try:
         with open(file, "r", encoding="UTF-8") as file:
             file_content = file.read()
-        return BeautifulSoup(file_content, CST.PARSER)
+        return BeautifulSoup(file_content, cst.PARSER)
     except FileNotFoundError:
         logger.warning("get_soup_code_from_file : FileNotFoundError for %s" % str(file))
         pass

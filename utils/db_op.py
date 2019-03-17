@@ -1,7 +1,7 @@
 from loguru import logger
 
 from utils import date_op as date
-from utils import constants as CST
+from utils import constants as cst
 import sqlalchemy
 
 import dataset
@@ -10,8 +10,7 @@ import dataset
 # CRUD
 
 
-def get_list(table, columns, condition=None, test=None):
-    database = CST.DATABASE if not test else CST.TEST_DATABASE
+def get_list(table, columns, condition=None, database=cst.DATABASE):
 
     if not condition:
         if isinstance(columns, str):
@@ -38,8 +37,9 @@ def get_list(table, columns, condition=None, test=None):
                 ]
 
 
-def get_item(table, column, condition=None, order_column=None, order="asc", test=None):
-    database = CST.DATABASE if not test else CST.TEST_DATABASE
+def get_item(
+    table, column, condition=None, order_column=None, order="asc", database=cst.DATABASE
+):
 
     with dataset.connect(database) as db:
         results = db.query(
@@ -51,16 +51,12 @@ def get_item(table, column, condition=None, order_column=None, order="asc", test
     return result["result"]
 
 
-def insert_list(table, data, test=None):
-    database = CST.TEST_DATABASE if test else CST.DATABASE
+def insert_list(table, data, database=cst.DATABASE):
 
     db_data = convert_list_to_db_value_string(data)
 
     with dataset.connect(database) as db:
-        result = db.query(
-            "INSERT IGNORE INTO %s "
-            "VALUES %s " % (table, db_data)
-        )
+        result = db.query("INSERT IGNORE INTO %s " "VALUES %s " % (table, db_data))
 
     return result
 
@@ -87,37 +83,39 @@ def delete_item():
 
 # enhanced CRUD
 def write_stocks_to_stock_table(stocks, test=None):
-    database = CST.DATABASE if not test else CST.TEST_DATABASE
+    database = cst.DATABASE if not test else cst.DATABASE
 
     with dataset.connect(database) as db:
         try:
             for stock in stocks:
-                db[CST.TABLE_STOCKS].insert_ignore(stock, ["URI"])
+                db[cst.TABLE_STOCKS].insert_ignore(stock, ["URI"])
         except sqlalchemy.exc.IntegrityError:
             pass
 
 
 def write_stock_to_index_contents_table(index_contents, test=None):
-    database = CST.DATABASE if not test else CST.TEST_DATABASE
+    database = cst.DATABASE if not test else cst.DATABASE
     with dataset.connect(database) as db:
         try:
-            db[CST.TABLE_INDEX_CONTENTS].insert_many(index_contents)
+            db[cst.TABLE_INDEX_CONTENTS].insert_many(index_contents)
         except sqlalchemy.exc.IntegrityError:
             pass
 
 
 # List Calculations
-def create_all_index_url_list(base_url):
-    index_list = get_list(table=CST.TABLE_INDIZES, columns=CST.COLUMN_URI)
+def create_all_index_url_list(base_url, database=cst.DATABASE):
+    index_list = get_list(
+        table=cst.TABLE_INDIZES, columns=cst.COLUMN_URI, database=database
+    )
     url_list = [base_url + index for index in index_list]
     return url_list
 
 
 def create_active_index_url_list(base_url):
     index_list = get_list(
-        table=CST.TABLE_INDIZES,
-        columns=CST.COLUMN_URI,
-        condition=[CST.COLUMN_ACTIVE, b"1"],
+        table=cst.TABLE_INDIZES,
+        columns=cst.COLUMN_URI,
+        condition=[cst.COLUMN_ACTIVE, b"1"],
     )
     url_list = [base_url + index for index in index_list]
     return url_list
@@ -125,25 +123,25 @@ def create_active_index_url_list(base_url):
 
 def create_stock_history_url_list(base_url):
     stock_history_list = get_list(
-        table=CST.TABLE_STOCKS, columns=[CST.COLUMN_URI, CST.COLUMN_MARKET_PLACE]
+        table=cst.TABLE_STOCKS, columns=[cst.COLUMN_URI, cst.COLUMN_MARKET_PLACE]
     )
     url_list = []
     for stock in stock_history_list:
         stock_uri, market_place = stock[0][:-6], stock[1]
         if market_place is None or market_place == "None":
-            market_place = CST.EXCHANGE_APPENDIX
+            market_place = cst.EXCHANGE_APPENDIX
         url_list.append(base_url + stock_uri + "/" + market_place)
     return url_list
 
 
 def create_stock_overview_url_list(base_url):
-    stock_list = get_list(table=CST.TABLE_STOCKS, columns=CST.COLUMN_URI)
+    stock_list = get_list(table=cst.TABLE_STOCKS, columns=cst.COLUMN_URI)
     url_list = [base_url + stock for stock in stock_list]
     return url_list
 
 
 def create_stock_info_url_list(base_url):
-    stock_list = get_list(table=CST.TABLE_STOCKS, columns=CST.COLUMN_URI)
+    stock_list = get_list(table=cst.TABLE_STOCKS, columns=cst.COLUMN_URI)
     url_list = [base_url + stock[:-6] for stock in stock_list]
     return url_list
 
@@ -164,17 +162,17 @@ def write_stock_list_to_db(stock_list, index_name):
 # Information Gathering
 def get_latest_date_from_index_history(index_uri):
     return get_item(
-        table=CST.TABLE_INDEX_HISTORIES,
+        table=cst.TABLE_INDEX_HISTORIES,
         column="max(Datum)",
-        condition=[CST.COLUMN_INDEX_URI, index_uri],
+        condition=[cst.COLUMN_INDEX_URI, index_uri],
     )
 
 
 def get_latest_date_from_stock_history(stock_uri):
     return get_item(
-        table=CST.TABLE_STOCKS_HISTORIES,
+        table=cst.TABLE_STOCKS_HISTORIES,
         column="max(Datum)",
-        condition=[CST.COLUMN_STOCK_URI, stock_uri],
+        condition=[cst.COLUMN_STOCK_URI, stock_uri],
     )
 
 
@@ -190,8 +188,8 @@ def convert_list_to_db_value_string(data):
 # ToDo Refactor below
 
 
-def write_index_history_to_db(index_history, index_uri):
-    with dataset.connect(CST.DATABASE) as database:
+def write_index_history_to_db(index_history, index_uri, database=cst.DATABASE):
+    with dataset.connect(database) as db:
         for item in index_history:
             date_ = date.string_to_date(item[0])
             try:
@@ -211,7 +209,7 @@ def write_index_history_to_db(index_history, index_uri):
                 )
                 end = None
             try:
-                database[CST.TABLE_INDEX_HISTORIES].insert(
+                db[cst.TABLE_INDEX_HISTORIES].insert(
                     dict(
                         IndexURI=index_uri,
                         Datum=date_,
@@ -227,8 +225,8 @@ def write_index_history_to_db(index_history, index_uri):
                 pass
 
 
-def write_stock_history_to_db(stock_history, stock_uri):
-    with dataset.connect(CST.DATABASE) as database:
+def write_stock_history_to_db(stock_history, stock_uri, database=cst.DATABASE):
+    with dataset.connect(database) as db:
         for item in stock_history:
             date_ = date.string_to_date(item[0])
             try:
@@ -248,7 +246,7 @@ def write_stock_history_to_db(stock_history, stock_uri):
                 )
                 end = None
             try:
-                database[CST.TABLE_STOCKS_HISTORIES].insert(
+                db[cst.TABLE_STOCKS_HISTORIES].insert(
                     dict(
                         AktienURI=stock_uri,
                         Datum=date_,
@@ -260,13 +258,21 @@ def write_stock_history_to_db(stock_history, stock_uri):
                 pass
 
 
+# ToDo Copy write_stock_history_to_db or refactor for overview and history data
+
+
 def write_single_overview_data_to_db(
-    stock_uri, market_cap, stock_indizes, stock_sectors, market_place
+    stock_uri,
+    market_cap,
+    stock_indizes,
+    stock_sectors,
+    market_place,
+    database=cst.DATABASE,
 ):
     current_date = date.get_current_date()
-    with dataset.connect(CST.DATABASE) as database:
+    with dataset.connect(database) as db:
         try:
-            database[CST.TABLE_COMPANY_DATA].insert(
+            db[cst.TABLE_COMPANY_DATA].insert(
                 dict(
                     AktienURI=stock_uri,
                     Datum=current_date,
@@ -276,14 +282,14 @@ def write_single_overview_data_to_db(
                 )
             )
         except sqlalchemy.exc.IntegrityError:
-            database.query(
+            db.query(
                 "UPDATE %s SET "
                 'Marktkapitalisierung = "%s", '
                 'Indizes = "%s", '
                 'Branchen = "%s" '
                 'WHERE AktienURI = "%s" AND Datum = "%s"'
                 % (
-                    CST.TABLE_COMPANY_DATA,
+                    cst.TABLE_COMPANY_DATA,
                     market_cap,
                     str(stock_indizes),
                     str(stock_sectors),
@@ -293,10 +299,10 @@ def write_single_overview_data_to_db(
             )
             pass
         try:
-            database.query(
+            db.query(
                 "UPDATE %s SET "
                 'Handelsplatz = "%s" '
-                'WHERE URI = "%s"' % (CST.TABLE_STOCKS, market_place, stock_uri)
+                'WHERE URI = "%s"' % (cst.TABLE_STOCKS, market_place, stock_uri)
             )
         except:
             logger.exception("Exception at Marketplace Insertation")
@@ -313,11 +319,12 @@ def write_single_balance_data_to_db(
     eps_minus_3,
     eps_minus_2,
     eps_minus_1,
+    database=cst.DATABASE,
 ):
     current_date = date.get_current_date()
-    with dataset.connect(CST.DATABASE) as database:
+    with dataset.connect(database) as db:
         try:
-            database[CST.TABLE_COMPANY_DATA].insert(
+            db[cst.TABLE_COMPANY_DATA].insert(
                 dict(
                     AktienURI=stock_uri,
                     Datum=current_date,
@@ -332,7 +339,7 @@ def write_single_balance_data_to_db(
                 )
             )
         except sqlalchemy.exc.IntegrityError:
-            database.query(
+            db.query(
                 "UPDATE %s SET "
                 "Ergebnis_nach_Steuern = %s, "
                 "Operatives_Ergebnis = %s, "
@@ -344,7 +351,7 @@ def write_single_balance_data_to_db(
                 "EPS_minus_1 = %s "
                 'WHERE AktienURI = "%s" AND Datum = "%s"'
                 % (
-                    CST.TABLE_COMPANY_DATA,
+                    cst.TABLE_COMPANY_DATA,
                     result_after_tax,
                     operative_result,
                     sales_revenue,
@@ -360,11 +367,13 @@ def write_single_balance_data_to_db(
             pass
 
 
-def write_single_estimate_data_to_db(stock_uri, eps_0, eps_plus_1):
+def write_single_estimate_data_to_db(
+    stock_uri, eps_0, eps_plus_1, database=cst.DATABASE
+):
     current_date = date.get_current_date()
-    with dataset.connect(CST.DATABASE) as database:
+    with dataset.connect(database) as db:
         try:
-            database[CST.TABLE_COMPANY_DATA].insert(
+            db[cst.TABLE_COMPANY_DATA].insert(
                 dict(
                     AktienURI=stock_uri,
                     Datum=current_date,
@@ -373,21 +382,23 @@ def write_single_estimate_data_to_db(stock_uri, eps_0, eps_plus_1):
                 )
             )
         except sqlalchemy.exc.IntegrityError:
-            database.query(
+            db.query(
                 "UPDATE %s SET "
                 "EPS_0 = %s, "
                 "EPS_plus_1 = %s "
                 'WHERE AktienURI = "%s" AND Datum = "%s"'
-                % (CST.TABLE_COMPANY_DATA, eps_0, eps_plus_1, stock_uri, current_date)
+                % (cst.TABLE_COMPANY_DATA, eps_0, eps_plus_1, stock_uri, current_date)
             )
             pass
 
 
-def write_single_targets_data_to_db(stock_uri, analyst_buy, analyst_hold, analyst_sell):
+def write_single_targets_data_to_db(
+    stock_uri, analyst_buy, analyst_hold, analyst_sell, database=cst.DATABASE
+):
     current_date = date.get_current_date()
-    with dataset.connect(CST.DATABASE) as database:
+    with dataset.connect(database) as db:
         try:
-            database[CST.TABLE_COMPANY_DATA].insert(
+            db[cst.TABLE_COMPANY_DATA].insert(
                 dict(
                     AktienURI=stock_uri,
                     Datum=current_date,
@@ -397,14 +408,14 @@ def write_single_targets_data_to_db(stock_uri, analyst_buy, analyst_hold, analys
                 )
             )
         except sqlalchemy.exc.IntegrityError:
-            database.query(
+            db.query(
                 "UPDATE %s SET "
                 "Analysten_Buy = %s, "
                 "Analysten_Hold = %s, "
                 "Analysten_Sell = %s "
                 'WHERE AktienURI = "%s" AND Datum = "%s"'
                 % (
-                    CST.TABLE_COMPANY_DATA,
+                    cst.TABLE_COMPANY_DATA,
                     analyst_buy,
                     analyst_hold,
                     analyst_sell,
@@ -415,10 +426,10 @@ def write_single_targets_data_to_db(stock_uri, analyst_buy, analyst_hold, analys
             pass
 
 
-def write_single_stock_dates_data_to_db(stock_uri, figures_date):
-    with dataset.connect(CST.DATABASE) as database:
+def write_single_stock_dates_data_to_db(stock_uri, figures_date, database=cst.DATABASE):
+    with dataset.connect(database) as db:
         try:
-            database[CST.TABLE_STOCK_DATES].insert(
+            db[cst.TABLE_STOCK_DATES].insert(
                 dict(
                     AktienURI=stock_uri,
                     Datum=figures_date,
@@ -426,11 +437,11 @@ def write_single_stock_dates_data_to_db(stock_uri, figures_date):
                 )
             )
         except sqlalchemy.exc.IntegrityError:
-            database.query(
+            db.query(
                 "UPDATE %s SET "
                 "Datum = %s "
                 'WHERE AktienURI = "%s"'
-                % (CST.TABLE_COMPANY_DATA, figures_date, stock_uri)
+                % (cst.TABLE_COMPANY_DATA, figures_date, stock_uri)
             )
             pass
 
@@ -453,44 +464,40 @@ def write_date_list_to_db(date_list):
     """
 
 
-
-
-
-
 # Levermann 01
 
 
-def get_earnings_after_tax(stock_uri):
-    with dataset.connect(CST.DATABASE) as database:
+def get_earnings_after_tax(stock_uri, database=cst.DATABASE):
+    with dataset.connect(database) as db:
         try:
-            results = database.query(
+            results = db.query(
                 "SELECT %s FROM %s WHERE AktienURI = '%s' ORDER BY Datum DESC"
-                % (CST.COLUMN_EARNINGS_AT, CST.TABLE_COMPANY_DATA, stock_uri)
+                % (cst.COLUMN_EARNINGS_AT, cst.TABLE_COMPANY_DATA, stock_uri)
             )
-            return float([item for item in results][0][CST.COLUMN_EARNINGS_AT])
+            return float([item for item in results][0][cst.COLUMN_EARNINGS_AT])
         except:
             logger.exception("Exception at get_earnings_after_tax for %s" % stock_uri)
             pass
 
 
-def get_equity_capital(stock_uri):
-    with dataset.connect(CST.DATABASE) as database:
+def get_equity_capital(stock_uri, database=cst.DATABASE):
+    with dataset.connect(database) as db:
         try:
-            results = database.query(
+            results = db.query(
                 "SELECT %s FROM %s WHERE AktienURI = '%s' ORDER BY Datum DESC"
-                % (CST.COLUMN_EQUITY_CAPITAL, CST.TABLE_COMPANY_DATA, stock_uri)
+                % (cst.COLUMN_EQUITY_CAPITAL, cst.TABLE_COMPANY_DATA, stock_uri)
             )
-            return float([item for item in results][0][CST.COLUMN_EQUITY_CAPITAL])
+            return float([item for item in results][0][cst.COLUMN_EQUITY_CAPITAL])
         except:
             logger.exception("Exception at get_equity_capital for %s" % stock_uri)
             pass
 
 
-def save_roe_to_db(stock_uri, roe, lev_score):
+def save_roe_to_db(stock_uri, roe, lev_score, database=cst.DATABASE):
     current_date = date.get_current_date()
-    with dataset.connect(CST.DATABASE) as database:
+    with dataset.connect(database) as db:
         try:
-            database[CST.TABLE_LEVERMANN].insert(
+            db[cst.TABLE_LEVERMANN].insert(
                 dict(
                     AktienURI=stock_uri,
                     Datum=current_date,
@@ -499,12 +506,12 @@ def save_roe_to_db(stock_uri, roe, lev_score):
                 )
             )
         except sqlalchemy.exc.IntegrityError:
-            database.query(
+            db.query(
                 "UPDATE %s SET "
                 "Lev01_Wert = %s, "
                 "Lev01_Score = %s "
                 'WHERE AktienURI = "%s" AND Datum = "%s"'
-                % (CST.TABLE_LEVERMANN, roe, lev_score, stock_uri, current_date)
+                % (cst.TABLE_LEVERMANN, roe, lev_score, stock_uri, current_date)
             )
             pass
 
@@ -512,41 +519,41 @@ def save_roe_to_db(stock_uri, roe, lev_score):
 # Levermann 02
 
 
-def get_operative_result(stock_uri):
-    with dataset.connect(CST.DATABASE) as database:
+def get_operative_result(stock_uri, database=cst.DATABASE):
+    with dataset.connect(database) as db:
         try:
-            results = database.query(
+            results = db.query(
                 "SELECT %s FROM %s WHERE AktienURI = '%s' ORDER BY Datum DESC"
-                % (CST.COLUMN_OPERATIVE_RESULT, CST.TABLE_COMPANY_DATA, stock_uri)
+                % (cst.COLUMN_OPERATIVE_RESULT, cst.TABLE_COMPANY_DATA, stock_uri)
             )
-            return float([item for item in results][0][CST.COLUMN_OPERATIVE_RESULT])
+            return float([item for item in results][0][cst.COLUMN_OPERATIVE_RESULT])
         except:
             logger.exception("Exception at get_operative_result for %s" % stock_uri)
             pass
 
 
-def get_sales_revenue(stock_uri):
-    with dataset.connect(CST.DATABASE) as database:
+def get_sales_revenue(stock_uri, database=cst.DATABASE):
+    with dataset.connect(database) as db:
         try:
-            results = database.query(
+            results = db.query(
                 "SELECT %s FROM %s WHERE AktienURI = '%s' ORDER BY Datum DESC"
-                % (CST.COLUMN_SALES_REVENUE, CST.TABLE_COMPANY_DATA, stock_uri)
+                % (cst.COLUMN_SALES_REVENUE, cst.TABLE_COMPANY_DATA, stock_uri)
             )
-            return float([item for item in results][0][CST.COLUMN_SALES_REVENUE])
+            return float([item for item in results][0][cst.COLUMN_SALES_REVENUE])
         except:
             logger.exception("Exception at get_sales_revenue for %s" % stock_uri)
             pass
 
 
-def check_is_financial_company(stock_uri):
-    fin_list = CST.FINANCE_SECTORS
-    with dataset.connect(CST.DATABASE) as database:
+def check_is_financial_company(stock_uri, database=cst.DATABASE):
+    fin_list = cst.FINANCE_SECTORS
+    with dataset.connect(database) as db:
         try:
-            results = database.query(
+            results = db.query(
                 "SELECT %s FROM %s WHERE AktienURI = '%s' ORDER BY Datum DESC"
-                % (CST.COLUMN_SECTORS, CST.TABLE_COMPANY_DATA, stock_uri)
+                % (cst.COLUMN_SECTORS, cst.TABLE_COMPANY_DATA, stock_uri)
             )
-            result_list = [item for item in results][0][CST.COLUMN_SECTORS]
+            result_list = [item for item in results][0][cst.COLUMN_SECTORS]
             return any(i in result_list for i in fin_list)
         except:
             logger.exception(
@@ -555,11 +562,11 @@ def check_is_financial_company(stock_uri):
             pass
 
 
-def save_ebit_to_db(stock_uri, ebit, lev_score):
+def save_ebit_to_db(stock_uri, ebit, lev_score, database=cst.DATABASE):
     current_date = date.get_current_date()
-    with dataset.connect(CST.DATABASE) as database:
+    with dataset.connect(database) as db:
         try:
-            database[CST.TABLE_LEVERMANN].insert(
+            db[cst.TABLE_LEVERMANN].insert(
                 dict(
                     AktienURI=stock_uri,
                     Datum=current_date,
@@ -568,12 +575,12 @@ def save_ebit_to_db(stock_uri, ebit, lev_score):
                 )
             )
         except sqlalchemy.exc.IntegrityError:
-            database.query(
+            db.query(
                 "UPDATE %s SET "
                 "Lev02_Wert = %s, "
                 "Lev02_Score = %s "
                 'WHERE AktienURI = "%s" AND Datum = "%s"'
-                % (CST.TABLE_LEVERMANN, ebit, lev_score, stock_uri, current_date)
+                % (cst.TABLE_LEVERMANN, ebit, lev_score, stock_uri, current_date)
             )
             pass
 
@@ -581,24 +588,24 @@ def save_ebit_to_db(stock_uri, ebit, lev_score):
 # Levermann 03
 
 
-def get_balance(stock_uri):
-    with dataset.connect(CST.DATABASE) as database:
+def get_balance(stock_uri, database=cst.DATABASE):
+    with dataset.connect(database) as db:
         try:
-            results = database.query(
+            results = db.query(
                 "SELECT %s FROM %s WHERE AktienURI = '%s' ORDER BY Datum DESC"
-                % (CST.COLUMN_BALANCE, CST.TABLE_COMPANY_DATA, stock_uri)
+                % (cst.COLUMN_BALANCE, cst.TABLE_COMPANY_DATA, stock_uri)
             )
-            return float([item for item in results][0][CST.COLUMN_BALANCE])
+            return float([item for item in results][0][cst.COLUMN_BALANCE])
         except:
             logger.exception("Exception at get_balance for %s" % stock_uri)
             pass
 
 
-def save_equity_ratio_to_db(stock_uri, equity_ratio, lev_score):
+def save_equity_ratio_to_db(stock_uri, equity_ratio, lev_score, database=cst.DATABASE):
     current_date = date.get_current_date()
-    with dataset.connect(CST.DATABASE) as database:
+    with dataset.connect(database) as db:
         try:
-            database[CST.TABLE_LEVERMANN].insert(
+            db[cst.TABLE_LEVERMANN].insert(
                 dict(
                     AktienURI=stock_uri,
                     Datum=current_date,
@@ -607,13 +614,13 @@ def save_equity_ratio_to_db(stock_uri, equity_ratio, lev_score):
                 )
             )
         except sqlalchemy.exc.IntegrityError:
-            database.query(
+            db.query(
                 "UPDATE %s SET "
                 "Lev03_Wert = %s, "
                 "Lev03_Score = %s "
                 'WHERE AktienURI = "%s" AND Datum = "%s"'
                 % (
-                    CST.TABLE_LEVERMANN,
+                    cst.TABLE_LEVERMANN,
                     equity_ratio,
                     lev_score,
                     stock_uri,
@@ -626,54 +633,56 @@ def save_equity_ratio_to_db(stock_uri, equity_ratio, lev_score):
 # Levermann 04 & 05
 
 
-def get_latest_stock_price(stock_uri):
-    with dataset.connect(CST.DATABASE) as database:
+def get_latest_stock_price(stock_uri, database=cst.DATABASE):
+    with dataset.connect(database) as db:
         try:
-            results = database.query(
+            results = db.query(
                 "SELECT %s FROM %s WHERE AktienURI = '%s' ORDER BY Datum DESC"
-                % (CST.COLUMN_CLOSING_VALUE, CST.TABLE_STOCKS_HISTORIES, stock_uri)
+                % (cst.COLUMN_CLOSING_VALUE, cst.TABLE_STOCKS_HISTORIES, stock_uri)
             )
-            return float([item for item in results][0][CST.COLUMN_CLOSING_VALUE])
+            return float([item for item in results][0][cst.COLUMN_CLOSING_VALUE])
         except:
-            logger.exception("Exception at get_latest_stock_price for %s" % stock_uri)
+            logger.exception(
+                "Unhandled Exception at get_latest_stock_price for %s" % stock_uri
+            )
             pass
 
 
-def get_eps(stock_uri):
-    with dataset.connect(CST.DATABASE) as database:
+def get_eps(stock_uri, database=cst.DATABASE):
+    with dataset.connect(database) as db:
         try:
-            results = database.query(
+            results = db.query(
                 "SELECT * FROM %s WHERE AktienURI = '%s' ORDER BY Datum DESC"
-                % (CST.TABLE_COMPANY_DATA, stock_uri)
+                % (cst.TABLE_COMPANY_DATA, stock_uri)
             )
             eps_s = [item for item in results][0]
             eps_list = [
-                float(eps_s[CST.COLUMN_EPS_M3]),
-                float(eps_s[CST.COLUMN_EPS_M2]),
-                float(eps_s[CST.COLUMN_EPS_M1]),
-                float(eps_s[CST.COLUMN_EPS_0]),
-                float(eps_s[CST.COLUMN_EPS_P1]),
+                float(eps_s[cst.COLUMN_EPS_M3]),
+                float(eps_s[cst.COLUMN_EPS_M2]),
+                float(eps_s[cst.COLUMN_EPS_M1]),
+                float(eps_s[cst.COLUMN_EPS_0]),
+                float(eps_s[cst.COLUMN_EPS_P1]),
             ]
             return eps_list
         except:
-            logger.exception("Exception at get_eps for %s" % stock_uri)
+            logger.exception("Unhandled Exception at get_eps for %s" % stock_uri)
             pass
 
 
-def get_older_eps(stock_uri):
-    with dataset.connect(CST.DATABASE) as database:
+def get_older_eps(stock_uri, database=cst.DATABASE):
+    with dataset.connect(database) as db:
         try:
-            results = database.query(
+            results = db.query(
                 "SELECT * FROM %s WHERE AktienURI = '%s' ORDER BY Datum DESC"
-                % (CST.TABLE_COMPANY_DATA, stock_uri)
+                % (cst.TABLE_COMPANY_DATA, stock_uri)
             )
             eps_s = [item for item in results][1]
             eps_list = [
-                float(eps_s[CST.COLUMN_EPS_M3]),
-                float(eps_s[CST.COLUMN_EPS_M2]),
-                float(eps_s[CST.COLUMN_EPS_M1]),
-                float(eps_s[CST.COLUMN_EPS_0]),
-                float(eps_s[CST.COLUMN_EPS_P1]),
+                float(eps_s[cst.COLUMN_EPS_M3]),
+                float(eps_s[cst.COLUMN_EPS_M2]),
+                float(eps_s[cst.COLUMN_EPS_M1]),
+                float(eps_s[cst.COLUMN_EPS_0]),
+                float(eps_s[cst.COLUMN_EPS_P1]),
             ]
             return eps_list
         except:
@@ -681,11 +690,11 @@ def get_older_eps(stock_uri):
             pass
 
 
-def save_kgv5_to_db(stock_uri, kgv5, kgv5_score):
+def save_kgv5_to_db(stock_uri, kgv5, kgv5_score, database=cst.DATABASE):
     current_date = date.get_current_date()
-    with dataset.connect(CST.DATABASE) as database:
+    with dataset.connect(database) as db:
         try:
-            database[CST.TABLE_LEVERMANN].insert(
+            db[cst.TABLE_LEVERMANN].insert(
                 dict(
                     AktienURI=stock_uri,
                     Datum=current_date,
@@ -694,21 +703,21 @@ def save_kgv5_to_db(stock_uri, kgv5, kgv5_score):
                 )
             )
         except sqlalchemy.exc.IntegrityError:
-            database.query(
+            db.query(
                 "UPDATE %s SET "
                 "Lev04_Wert = %s, "
                 "Lev04_Score = %s "
                 'WHERE AktienURI = "%s" AND Datum = "%s"'
-                % (CST.TABLE_LEVERMANN, kgv5, kgv5_score, stock_uri, current_date)
+                % (cst.TABLE_LEVERMANN, kgv5, kgv5_score, stock_uri, current_date)
             )
             pass
 
 
-def save_kgv0_to_db(stock_uri, kgv0, kgv0_score):
+def save_kgv0_to_db(stock_uri, kgv0, kgv0_score, database=cst.DATABASE):
     current_date = date.get_current_date()
-    with dataset.connect(CST.DATABASE) as database:
+    with dataset.connect(database) as db:
         try:
-            database[CST.TABLE_LEVERMANN].insert(
+            db[cst.TABLE_LEVERMANN].insert(
                 dict(
                     AktienURI=stock_uri,
                     Datum=current_date,
@@ -717,12 +726,12 @@ def save_kgv0_to_db(stock_uri, kgv0, kgv0_score):
                 )
             )
         except sqlalchemy.exc.IntegrityError:
-            database.query(
+            db.query(
                 "UPDATE %s SET "
                 "Lev05_Wert = %s, "
                 "Lev05_Score = %s "
                 'WHERE AktienURI = "%s" AND Datum = "%s"'
-                % (CST.TABLE_LEVERMANN, kgv0, kgv0_score, stock_uri, current_date)
+                % (cst.TABLE_LEVERMANN, kgv0, kgv0_score, stock_uri, current_date)
             )
             pass
 
@@ -730,30 +739,32 @@ def save_kgv0_to_db(stock_uri, kgv0, kgv0_score):
 # Levermann 06
 
 
-def get_analyst_ratings(stock_uri):
-    with dataset.connect(CST.DATABASE) as database:
+def get_analyst_ratings(stock_uri, database=cst.DATABASE):
+    with dataset.connect(database) as db:
         try:
-            results = database.query(
+            results = db.query(
                 "SELECT * FROM %s WHERE AktienURI = '%s' ORDER BY Datum DESC"
-                % (CST.TABLE_COMPANY_DATA, stock_uri)
+                % (cst.TABLE_COMPANY_DATA, stock_uri)
             )
             ratings = [item for item in results][0]
             rating_list = [
-                int(ratings[CST.COLUMN_ANALYST_BUY]),
-                int(ratings[CST.COLUMN_ANALYST_HOLD]),
-                int(ratings[CST.COLUMN_ANALYST_SELL]),
+                int(ratings[cst.COLUMN_ANALYST_BUY]),
+                int(ratings[cst.COLUMN_ANALYST_HOLD]),
+                int(ratings[cst.COLUMN_ANALYST_SELL]),
             ]
             return rating_list
         except:
-            logger.exception("Exception at get_analyst_ratings for %s" % stock_uri)
+            logger.exception(
+                "Unhandled Exception at get_analyst_ratings for %s" % stock_uri
+            )
             pass
 
 
-def save_rating_to_db(stock_uri, rating, rating_score):
+def save_rating_to_db(stock_uri, rating, rating_score, database=cst.DATABASE):
     current_date = date.get_current_date()
-    with dataset.connect(CST.DATABASE) as database:
+    with dataset.connect(database) as db:
         try:
-            database[CST.TABLE_LEVERMANN].insert(
+            db[cst.TABLE_LEVERMANN].insert(
                 dict(
                     AktienURI=stock_uri,
                     Datum=current_date,
@@ -762,48 +773,50 @@ def save_rating_to_db(stock_uri, rating, rating_score):
                 )
             )
         except sqlalchemy.exc.IntegrityError:
-            database.query(
+            db.query(
                 "UPDATE %s SET "
                 "Lev06_Wert = %s, "
                 "Lev06_Score = %s "
                 'WHERE AktienURI = "%s" AND Datum = "%s"'
-                % (CST.TABLE_LEVERMANN, rating, rating_score, stock_uri, current_date)
+                % (cst.TABLE_LEVERMANN, rating, rating_score, stock_uri, current_date)
             )
             pass
 
 
-def is_small_cap(stock_uri):
-    with dataset.connect(CST.DATABASE) as database:
+def is_small_cap(stock_uri, database=cst.DATABASE):
+    with dataset.connect(database) as db:
         try:
-            market_cap_results = database.query(
+            market_cap_results = db.query(
                 "SELECT * FROM %s WHERE AktienURI = '%s' ORDER BY Datum DESC"
-                % (CST.TABLE_COMPANY_DATA, stock_uri)
+                % (cst.TABLE_COMPANY_DATA, stock_uri)
             )
             market_cap = float(
-                [item for item in market_cap_results][0][CST.COLUMN_MARKET_CAP]
+                [item for item in market_cap_results][0][cst.COLUMN_MARKET_CAP]
             )
-            if market_cap > CST.MARKET_CAP_THRESHOLD:
+            if market_cap > cst.MARKET_CAP_THRESHOLD:
                 return False
             else:
-                indizes_list = get_indizes_of_stock(stock_uri)
-                return not any(i in indizes_list for i in CST.LARGE_CAPS_INDIZES)
+                indizes_list = get_indices_of_stock(stock_uri)
+                return not any(
+                    i in indizes_list for i in cst.LARGE_CAPS_INDIZES
+                )  # ToDO abhängig von Spalte LargeCapIndex machen, dann auch in Constants löschen
 
         except:
-            logger.exception("Exception at is_small_cap for %s" % stock_uri)
+            logger.exception("Unhandled Exception at is_small_cap for %s" % stock_uri)
             pass
 
 
 # Levermann 07
 
 
-def get_quarterly_date(stock_uri):
-    with dataset.connect(CST.DATABASE) as database:
+def get_quarterly_date(stock_uri, database=cst.DATABASE):
+    with dataset.connect(database) as db:
         try:
-            results = database.query(
+            results = db.query(
                 "SELECT * FROM %s WHERE AktienURI = '%s'"
-                % (CST.TABLE_STOCK_DATES, stock_uri)
+                % (cst.TABLE_STOCK_DATES, stock_uri)
             )
-            quarterly_date = [item for item in results][0][CST.COLUMN_DATE]
+            quarterly_date = [item for item in results][0][cst.COLUMN_DATE]
             return quarterly_date
         except TypeError:
             logger.error("TypeError in get_quaterly_date at %s" % stock_uri)
@@ -812,71 +825,93 @@ def get_quarterly_date(stock_uri):
             pass
 
 
-def get_closing_stock_price(request_date, stock_uri):
-    with dataset.connect(CST.DATABASE) as database:
+def get_closing_stock_price(request_date, stock_uri, database=cst.DATABASE):
+    with dataset.connect(database) as db:
         try:
-            results = database.query(
-                "SELECT * FROM %s WHERE AktienURI = '%s' and Datum <= '%s' ORDER BY Datum DESC"
-                % (CST.TABLE_STOCKS_HISTORIES, stock_uri, request_date)
+            results = db.query(
+                "SELECT * FROM %s "
+                "WHERE AktienURI = '%s' and Datum <= '%s' "
+                "ORDER BY Datum DESC"
+                % (cst.TABLE_STOCKS_HISTORIES, stock_uri, request_date)
             )
             result = [item for item in results][0]
-            closing_price = result[CST.COLUMN_CLOSING_VALUE]
-            actual_date = result[CST.COLUMN_DATE]
+            closing_price = result[cst.COLUMN_CLOSING_VALUE]
+            actual_date = result[cst.COLUMN_DATE]
             return closing_price, actual_date
+        except IndexError:
+            logger.error(
+                "IndexError while getting closing_stock_price for %s. "
+                "The sql_query returns an empty result."
+                "Probably is there no date in database before request_date"
+            )
+            pass
         except:
-            logger.exception("Exception at get_closing_stock_price for %s" % stock_uri)
+            logger.exception(
+                "Unhandled Exception at get_closing_stock_price for %s" % stock_uri
+            )
             pass
 
 
-def get_closing_index_price(request_date, index_uri):
-    with dataset.connect(CST.DATABASE) as database:
+def get_closing_index_price(request_date, index_uri, database=cst.DATABASE):
+    with dataset.connect(database) as db:
         try:
-            results = database.query(
-                "SELECT * FROM %s WHERE IndexURI = '%s' and Datum <= '%s' ORDER BY Datum DESC"
-                % (CST.TABLE_INDEX_HISTORIES, index_uri, request_date)
+            results = db.query(
+                "SELECT * FROM %s "
+                "WHERE IndexURI = '%s' and Datum <= '%s' "
+                "ORDER BY Datum DESC"
+                % (cst.TABLE_INDEX_HISTORIES, index_uri, request_date)
             )
             result = [item for item in results][0]
-            closing_price = result[CST.COLUMN_CLOSING_VALUE]
-            actual_date = result[CST.COLUMN_DATE]
+            closing_price = result[cst.COLUMN_CLOSING_VALUE]
+            actual_date = result[cst.COLUMN_DATE]
             return closing_price, actual_date
         except:
-            logger.exception("Exception at get_closing_index_price for %s" % index_uri)
+            logger.exception(
+                "Unhandled Exception at get_closing_index_price for %s" % index_uri
+            )
             pass
 
 
-def get_index_of_stock(stock_uri):
-    with dataset.connect(CST.DATABASE) as database:
+# ToDo Recreate next two Methods, check index of Stock through Companydata-Table
+def get_main_index_of_stock(stock_uri, database=cst.DATABASE):
+    with dataset.connect(database) as db:
         try:
-            results = database.query(
+            results = db.query(
                 "SELECT * FROM %s WHERE AktienURI = '%s'"
-                % (CST.TABLE_INDEX_CONTENTS, stock_uri)
+                % (cst.TABLE_INDEX_CONTENTS, stock_uri)
             )
-            index_uri = [item for item in results][0][CST.COLUMN_INDEX_URI]
+            index_uri = [item for item in results][0][cst.COLUMN_INDEX_URI]
             return index_uri
         except:
-            logger.exception("Exception at get_index_of_stock for %s" % stock_uri)
+            logger.exception(
+                "Unhandled Exception at get_index_of_stock for %s" % stock_uri
+            )
             pass
 
 
-def get_indizes_of_stock(stock_uri):
-    with dataset.connect(CST.DATABASE) as database:
+def get_indices_of_stock(stock_uri, database=cst.DATABASE):
+    with dataset.connect(database) as db:
         try:
-            results = database.query(
+            results = db.query(
                 "SELECT * FROM %s WHERE AktienURI = '%s'"
-                % (CST.TABLE_INDEX_CONTENTS, stock_uri)
+                % (cst.TABLE_INDEX_CONTENTS, stock_uri)
             )
-            index_uri = {item[CST.COLUMN_INDEX_URI] for item in results}
+            index_uri = {item[cst.COLUMN_INDEX_URI] for item in results}
             return sorted(index_uri)
         except:
-            logger.exception("Exception at get_indizes_of_stock for %s" % stock_uri)
+            logger.exception(
+                "Unhandled Exception at get_indizes_of_stock for %s" % stock_uri
+            )
             pass
 
 
-def save_quarterly_reaction_to_db(stock_uri, quarterly_diff, lev_score):
+def save_quarterly_reaction_to_db(
+    stock_uri, quarterly_diff, lev_score, database=cst.DATABASE
+):
     current_date = date.get_current_date()
-    with dataset.connect(CST.DATABASE) as database:
+    with dataset.connect(database) as db:
         try:
-            database[CST.TABLE_LEVERMANN].insert(
+            db[cst.TABLE_LEVERMANN].insert(
                 dict(
                     AktienURI=stock_uri,
                     Datum=current_date,
@@ -885,13 +920,13 @@ def save_quarterly_reaction_to_db(stock_uri, quarterly_diff, lev_score):
                 )
             )
         except sqlalchemy.exc.IntegrityError:
-            database.query(
+            db.query(
                 "UPDATE %s SET "
                 "Lev07_Wert = %s, "
                 "Lev07_Score = %s "
                 'WHERE AktienURI = "%s" AND Datum = "%s"'
                 % (
-                    CST.TABLE_LEVERMANN,
+                    cst.TABLE_LEVERMANN,
                     quarterly_diff,
                     lev_score,
                     stock_uri,
@@ -904,11 +939,11 @@ def save_quarterly_reaction_to_db(stock_uri, quarterly_diff, lev_score):
 # Levermann 08
 
 
-def save_eps_revision_to_db(stock_uri, eps_diff, lev_score):
+def save_eps_revision_to_db(stock_uri, eps_diff, lev_score, database=cst.DATABASE):
     current_date = date.get_current_date()
-    with dataset.connect(CST.DATABASE) as database:
+    with dataset.connect(database) as db:
         try:
-            database[CST.TABLE_LEVERMANN].insert(
+            db[cst.TABLE_LEVERMANN].insert(
                 dict(
                     AktienURI=stock_uri,
                     Datum=current_date,
@@ -917,12 +952,12 @@ def save_eps_revision_to_db(stock_uri, eps_diff, lev_score):
                 )
             )
         except sqlalchemy.exc.IntegrityError:
-            database.query(
+            db.query(
                 "UPDATE %s SET "
                 "Lev08_Wert = %s, "
                 "Lev08_Score = %s "
                 'WHERE AktienURI = "%s" AND Datum = "%s"'
-                % (CST.TABLE_LEVERMANN, eps_diff, lev_score, stock_uri, current_date)
+                % (cst.TABLE_LEVERMANN, eps_diff, lev_score, stock_uri, current_date)
             )
             pass
 
@@ -930,11 +965,11 @@ def save_eps_revision_to_db(stock_uri, eps_diff, lev_score):
 # Levermann 09-11
 
 
-def save_6_months_ratio_to_db(stock_uri, ratio, lev_score):
+def save_6_months_ratio_to_db(stock_uri, ratio, lev_score, database=cst.DATABASE):
     current_date = date.get_current_date()
-    with dataset.connect(CST.DATABASE) as database:
+    with dataset.connect(database) as db:
         try:
-            database[CST.TABLE_LEVERMANN].insert(
+            db[cst.TABLE_LEVERMANN].insert(
                 dict(
                     AktienURI=stock_uri,
                     Datum=current_date,
@@ -943,21 +978,21 @@ def save_6_months_ratio_to_db(stock_uri, ratio, lev_score):
                 )
             )
         except sqlalchemy.exc.IntegrityError:
-            database.query(
+            db.query(
                 "UPDATE %s SET "
                 "Lev09_Wert = %s, "
                 "Lev09_Score = %s "
                 'WHERE AktienURI = "%s" AND Datum = "%s"'
-                % (CST.TABLE_LEVERMANN, ratio, lev_score, stock_uri, current_date)
+                % (cst.TABLE_LEVERMANN, ratio, lev_score, stock_uri, current_date)
             )
             pass
 
 
-def save_12_months_ratio_to_db(stock_uri, ratio, lev_score):
+def save_12_months_ratio_to_db(stock_uri, ratio, lev_score, database=cst.DATABASE):
     current_date = date.get_current_date()
-    with dataset.connect(CST.DATABASE) as database:
+    with dataset.connect(database) as db:
         try:
-            database[CST.TABLE_LEVERMANN].insert(
+            db[cst.TABLE_LEVERMANN].insert(
                 dict(
                     AktienURI=stock_uri,
                     Datum=current_date,
@@ -966,29 +1001,29 @@ def save_12_months_ratio_to_db(stock_uri, ratio, lev_score):
                 )
             )
         except sqlalchemy.exc.IntegrityError:
-            database.query(
+            db.query(
                 "UPDATE %s SET "
                 "Lev10_Wert = %s, "
                 "Lev10_Score = %s "
                 'WHERE AktienURI = "%s" AND Datum = "%s"'
-                % (CST.TABLE_LEVERMANN, ratio, lev_score, stock_uri, current_date)
+                % (cst.TABLE_LEVERMANN, ratio, lev_score, stock_uri, current_date)
             )
             pass
 
 
-def save_momentum_to_db(stock_uri, lev_score):
+def save_momentum_to_db(stock_uri, lev_score, database=cst.DATABASE):
     current_date = date.get_current_date()
-    with dataset.connect(CST.DATABASE) as database:
+    with dataset.connect(database) as db:
         try:
-            database[CST.TABLE_LEVERMANN].insert(
+            db[cst.TABLE_LEVERMANN].insert(
                 dict(AktienURI=stock_uri, Datum=current_date, Lev11_Score=lev_score)
             )
         except sqlalchemy.exc.IntegrityError:
-            database.query(
+            db.query(
                 "UPDATE %s SET "
                 "Lev11_Score = %s "
                 'WHERE AktienURI = "%s" AND Datum = "%s"'
-                % (CST.TABLE_LEVERMANN, lev_score, stock_uri, current_date)
+                % (cst.TABLE_LEVERMANN, lev_score, stock_uri, current_date)
             )
             pass
 
@@ -1004,11 +1039,11 @@ def calculate_list_changes(value_list):
     return stock_changes
 
 
-def save_reversal_to_db(stock_uri, diff, lev_score):
+def save_reversal_to_db(stock_uri, diff, lev_score, database=cst.DATABASE):
     current_date = date.get_current_date()
-    with dataset.connect(CST.DATABASE) as database:
+    with dataset.connect(database) as db:
         try:
-            database[CST.TABLE_LEVERMANN].insert(
+            db[cst.TABLE_LEVERMANN].insert(
                 dict(
                     AktienURI=stock_uri,
                     Datum=current_date,
@@ -1017,12 +1052,12 @@ def save_reversal_to_db(stock_uri, diff, lev_score):
                 )
             )
         except sqlalchemy.exc.IntegrityError:
-            database.query(
+            db.query(
                 "UPDATE %s SET "
                 "Lev12_Wert = %s, "
                 "Lev12_Score = %s "
                 'WHERE AktienURI = "%s" AND Datum = "%s"'
-                % (CST.TABLE_LEVERMANN, diff, lev_score, stock_uri, current_date)
+                % (cst.TABLE_LEVERMANN, diff, lev_score, stock_uri, current_date)
             )
             pass
 
@@ -1030,11 +1065,11 @@ def save_reversal_to_db(stock_uri, diff, lev_score):
 # Levermann 13
 
 
-def save_profit_growth_to_db(stock_uri, diff, lev_score):
+def save_profit_growth_to_db(stock_uri, diff, lev_score, database=cst.DATABASE):
     current_date = date.get_current_date()
-    with dataset.connect(CST.DATABASE) as database:
+    with dataset.connect(database) as db:
         try:
-            database[CST.TABLE_LEVERMANN].insert(
+            db[cst.TABLE_LEVERMANN].insert(
                 dict(
                     AktienURI=stock_uri,
                     Datum=current_date,
@@ -1043,31 +1078,31 @@ def save_profit_growth_to_db(stock_uri, diff, lev_score):
                 )
             )
         except sqlalchemy.exc.IntegrityError:
-            database.query(
+            db.query(
                 "UPDATE %s SET "
                 "Lev13_Wert = %s, "
                 "Lev13_Score = %s "
                 'WHERE AktienURI = "%s" AND Datum = "%s"'
-                % (CST.TABLE_LEVERMANN, diff, lev_score, stock_uri, current_date)
+                % (cst.TABLE_LEVERMANN, diff, lev_score, stock_uri, current_date)
             )
             pass
 
 
-def get_levermann_buy():
-    with dataset.connect(CST.DATABASE) as database:
+def get_levermann_buy(database=cst.DATABASE):
+    with dataset.connect(database) as db:
         try:
             logger.info("Query DB Levermann BUY View")
-            results = database.query("SELECT * " "FROM %s " % CST.VIEW_LEVERMANN_BUY)
+            results = db.query("SELECT * " "FROM %s " % cst.VIEW_LEVERMANN_BUY)
             return results
         except:
             logger.exception("Exception at get_levermann_buy")
             pass
 
 
-def get_levermann_hold():
-    with dataset.connect(CST.DATABASE) as database:
+def get_levermann_hold(database=cst.DATABASE):
+    with dataset.connect(database) as db:
         try:
-            results = database.query("SELECT * " "FROM %s " % CST.VIEW_LEVERMANN_HOLD)
+            results = db.query("SELECT * " "FROM %s " % cst.VIEW_LEVERMANN_HOLD)
             return results
         except:
             logger.exception("Exception at get_levermann_hold")

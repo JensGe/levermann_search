@@ -2,8 +2,7 @@ from Scraper import scraper
 from Parser import parser
 from Calculator import calculator
 from Displayer import displayer
-from Worker import worker
-from utils import constants as CST
+from utils import constants as cst
 from loguru import logger
 
 
@@ -37,7 +36,7 @@ def main():
 
     while root_menu:
         print("Main Menu")
-        print("(0) Full Walkthrough")
+        print("(0) Standard Procedure")
         print("(1) Index Processing")
         print("(2) Stocks Processing")
         print("(3) Calculate")
@@ -49,7 +48,17 @@ def main():
         menu_selection = str(input("> "))
 
         if menu_selection == "0":
-            worker.start_complete_workflow()
+            scraper.scrap_index_histories()
+            parser.write_index_histories_from_html_to_db()
+
+            scraper.scrap_stock_infos()
+            parser.write_stock_overview_data_to_db()
+            parser.write_stock_balance_data_to_db()
+            parser.write_stock_estimates_data_to_db()
+            parser.write_stock_targets_data_to_db()
+            parser.write_stock_last_quarterly_figures_date_to_db()
+
+            calculator.run_all()
 
         elif menu_selection == "1":
             menu_1 = True
@@ -103,7 +112,7 @@ def main():
                 menu_2_selection = str(input("> "))
                 if menu_2_selection == "1":
                     scraper.scrap_stock_info(
-                        CST.URL_STOCK_OVERVIEW, CST.PATH_STOCK_OVERVIEW
+                        cst.URL_STOCK_OVERVIEW, cst.PATH_STOCK_OVERVIEW
                     )
                     parser.write_stock_overview_data_to_db()
                 elif menu_2_selection == "2":
@@ -111,42 +120,42 @@ def main():
                     parser.write_stock_histories_from_html_to_db()
                 elif menu_2_selection == "3":
                     scraper.scrap_stock_info(
-                        CST.URL_STOCK_BALANCE, CST.PATH_STOCK_BALANCE
+                        cst.URL_STOCK_BALANCE, cst.PATH_STOCK_BALANCE
                     )
                     parser.write_stock_balance_data_to_db()
                 elif menu_2_selection == "4":
                     scraper.scrap_stock_info(
-                        CST.URL_STOCK_ESTIMATES, CST.PATH_STOCK_ESTIMATES
+                        cst.URL_STOCK_ESTIMATES, cst.PATH_STOCK_ESTIMATES
                     )
                     parser.write_stock_estimates_data_to_db()
                 elif menu_2_selection == "5":
                     scraper.scrap_stock_info(
-                        CST.URL_STOCK_TARGETS, CST.PATH_STOCK_TARGETS
+                        cst.URL_STOCK_TARGETS, cst.PATH_STOCK_TARGETS
                     )
                     parser.write_stock_targets_data_to_db()
                 elif menu_2_selection == "6":
-                    scraper.scrap_stock_info(CST.URL_STOCK_DATES, CST.PATH_STOCK_DATES)
+                    scraper.scrap_stock_info(cst.URL_STOCK_DATES, cst.PATH_STOCK_DATES)
                     parser.write_stock_last_quarterly_figures_date_to_db()
                 elif menu_2_selection == "a":
                     scraper.scrap_stock_info(
-                        CST.URL_STOCK_OVERVIEW, CST.PATH_STOCK_OVERVIEW
+                        cst.URL_STOCK_OVERVIEW, cst.PATH_STOCK_OVERVIEW
                     )
                     parser.write_stock_overview_data_to_db()
                     scraper.scrap_stock_histories()
                     parser.write_stock_histories_from_html_to_db()
                     scraper.scrap_stock_info(
-                        CST.URL_STOCK_BALANCE, CST.PATH_STOCK_BALANCE
+                        cst.URL_STOCK_BALANCE, cst.PATH_STOCK_BALANCE
                     )
                     parser.write_stock_balance_data_to_db()
                     scraper.scrap_stock_info(
-                        CST.URL_STOCK_ESTIMATES, CST.PATH_STOCK_ESTIMATES
+                        cst.URL_STOCK_ESTIMATES, cst.PATH_STOCK_ESTIMATES
                     )
                     parser.write_stock_estimates_data_to_db()
                     scraper.scrap_stock_info(
-                        CST.URL_STOCK_TARGETS, CST.PATH_STOCK_TARGETS
+                        cst.URL_STOCK_TARGETS, cst.PATH_STOCK_TARGETS
                     )
                     parser.write_stock_targets_data_to_db()
-                    scraper.scrap_stock_info(CST.URL_STOCK_DATES, CST.PATH_STOCK_DATES)
+                    scraper.scrap_stock_info(cst.URL_STOCK_DATES, cst.PATH_STOCK_DATES)
                     parser.write_stock_last_quarterly_figures_date_to_db()
                 elif menu_2_selection == "s":
                     scraper.scrap_stock_infos()

@@ -127,39 +127,51 @@ class TestScrapping(unittest.TestCase):
         soup = scrap.get_soup_code_from_file("data/bo_bhp_billiton_balance.html")
         self.assertFalse(parse.is_data_available(soup))
 
+    def test_get_latest_date_of_list(self):
+        date_list = [
+            date.string_to_date("09.08.2018"),
+            date.string_to_date("09.05.2018"),
+            date.string_to_date("09.11.2017"),
+        ]
+        current_date = date.string_to_date("11.10.2018")
+        latest_date = parse.get_latest_date_of_list(date_list, current_date)
+        self.assertEqual(date.string_to_date("09.08.2018"), latest_date)
+
     def test_get_result_after_tax(self):
         soup = scrap.get_soup_code_from_file("data/bo_bilanz_guv.html")
         result = parse.get_current_value_of_attribute(soup, "Ergebnis nach Steuer")
-        asserted_result = "1353"
+        asserted_result = 1353
         self.assertEqual(asserted_result, result)
 
     def test_get_operative_result(self):
         soup = scrap.get_soup_code_from_file("data/bo_bilanz_guv.html")
         result = parse.get_current_value_of_attribute(soup, "Operatives Ergebnis")
-        asserted_result = "1907,4"
+        asserted_result = 1907.4
         self.assertEqual(asserted_result, result)
 
     def test_get_sales_revenue(self):
         soup = scrap.get_soup_code_from_file("data/bo_bilanz_guv.html")
         result = parse.get_current_value_of_attribute(soup, "Umsatzerlöse")
-        asserted_result = "21218"
+        asserted_result = 21218
         self.assertEqual(asserted_result, result)
 
     def test_get_total_assets(self):
         soup = scrap.get_soup_code_from_file("data/bo_bilanz_guv.html")
         result = parse.get_current_value_of_attribute(soup, "Bilanzsumme")
-        asserted_result = "14522"
+        asserted_result = 14522
         self.assertEqual(asserted_result, result)
 
     def test_get_equity_capital_new(self):
         soup = scrap.get_soup_code_from_file("data/bo_bilanz_guv.html")
         result = parse.get_current_value_of_attribute(soup, "Eigenkapital")
-        asserted_result = "6435"
+        asserted_result = 6435
         self.assertEqual(asserted_result, result)
 
     def test_get_last_quarterly_figures_date(self):
         soup = scrap.get_soup_code_from_file("data/bo_termine.html")
-        result = parse.get_last_quarterly_figures_date(soup)
+        result = parse.get_last_quarterly_figures_date(
+            soup=soup, current_date=date.string_to_date("10.10.2018")
+        )
         asserted_result = date.string_to_date("09.08.18")
         self.assertEqual(asserted_result, result)
 
@@ -188,15 +200,15 @@ class TestScrapping(unittest.TestCase):
 
     def test_get_result_per_share_last_three_years(self):
         soup = scrap.get_soup_code_from_file("data/bo_bilanz_guv.html")
-        result_2015, result_2016, result_2017 = parse.get_result_per_share_last_three_years(
+        result_15, result_16, result_17 = parse.get_result_per_share_last_three_years(
             soup
         )
         asserted_result_2015 = 3.3
         asserted_result_2016 = 5.08
         asserted_result_2017 = 6.69
-        self.assertEqual(asserted_result_2015, result_2015)
-        self.assertEqual(asserted_result_2016, result_2016)
-        self.assertEqual(asserted_result_2017, result_2017)
+        self.assertEqual(asserted_result_2015, result_15)
+        self.assertEqual(asserted_result_2016, result_16)
+        self.assertEqual(asserted_result_2017, result_17)
 
     def test_get_result_per_share_current_and_next_year(self):
         soup = scrap.get_soup_code_from_file("data/bo_schaetzungen.html")
@@ -233,13 +245,13 @@ class TestScrapping(unittest.TestCase):
     def test_get_stock_table_of_index(self):
         soup = scrap.get_soup_code_from_file("data/bo_FTSE_100.html")
         asserted_stock_list_first = [
-            ["3i", "GB00B1YW4409", "3i-Aktie"],
-            ["Admiral Group", "GB00B02J6398", "admiral_group-Aktie"],
-            ["Anglo American", "GB00B1XZS820", "anglo_american-Aktie"],
+            ["3i", "3i-Aktie"],
+            ["Admiral Group", "admiral_group-Aktie"],
+            ["Anglo American", "anglo_american-Aktie"],
         ]
         asserted_stock_list_last = [
-            ["WPP 2012", "JE00B8KF9B49", "wpp_2012-Aktie"],
-            ["WPP 2012", "JE00B8KF9B49", "wpp_2012-Aktie"],
+            ["WPP 2012", "wpp_2012-Aktie"],
+            ["WPP 2012", "wpp_2012-Aktie"],
         ]
 
         stock_list = parse.get_stock_list_of_single_index(soup)
@@ -248,7 +260,7 @@ class TestScrapping(unittest.TestCase):
 
     def test_get_historic_prices(self):
         soup = scrap.get_soup_code_from_file("data/bo_index_history_big.html")
-        table_list = parse.get_historic_prices(soup)
+        table_list = parse.get_historic_prices_from_history(soup)
         asserted_list = [
             ["01.10.2018", "9.127,05", "9.094,28", "9.155,65", "9.084,22"],
             ["02.10.2018", "9.087,32", "9.076,57", "9.090,46", "9.050,50"],
@@ -258,7 +270,7 @@ class TestScrapping(unittest.TestCase):
 
     def test_get_historic_prices_from_overview(self):
         soup = scrap.get_soup_code_from_file("data/bo_3i-Aktie_overview.html")
-        table_list = parse.get_historic_prices_from_overview(soup)
+        table_list = parse.get_historic_stock_prices_from_overview(soup)
         asserted_list = [
             ["29.11.2018", "9,87"],
             ["28.11.2018", "9,69"],

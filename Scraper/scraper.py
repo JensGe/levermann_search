@@ -5,32 +5,32 @@ import random
 from utils import scrap_op as scrap
 from utils import db_op as db
 from utils import date_op as date
-from utils import constants as CST
+from utils import constants as cst
 
 from selenium.common import exceptions
 from loguru import logger
 
 
 def scrap_index_content_sites():
-    scrap_list = db.create_active_index_url_list(CST.URL_INDEX_CONTENT)
+    scrap_list = db.create_active_index_url_list(cst.URL_INDEX_CONTENT)
     driver = scrap.init_driver(third_party_cookies=False)
     for url in scrap_list:
         index_uri = url.split("/")[-1]
-        file_name = CST.PATH_INDEX_CONTENT + index_uri + CST.HTML_EXTENSION
+        file_name = cst.PATH_INDEX_CONTENT + index_uri + cst.HTML_EXTENSION
         soup = scrap.get_soup_code_from_url(driver, url)
         scrap.save_soup_to_file(soup, file_name)
     scrap.close_driver(driver)
 
 
 def scrap_index_histories():
-    scrap_list = db.create_active_index_url_list(CST.URL_INDEX_HISTORY)
+    scrap_list = db.create_active_index_url_list(cst.URL_INDEX_HISTORY)
     driver = scrap.init_driver(third_party_cookies=True)
     for url in scrap_list:
         index_uri = url.split("/")[-1]
         end_date = date.get_current_date()
         start_date = date.subtract_one_year(date.get_current_date())
         max_db_date = db.get_latest_date_from_index_history(index_uri)
-        file_name = CST.PATH_INDEX_HISTORY + index_uri + CST.HTML_EXTENSION
+        file_name = cst.PATH_INDEX_HISTORY + index_uri + cst.HTML_EXTENSION
         if max_db_date is None:
             logger.warning("Scrap Index Histories: MaxDate is None for %s" % url)
             pass
@@ -52,14 +52,14 @@ def scrap_index_histories():
 
 
 def scrap_stock_histories():
-    scrap_list = db.create_stock_history_url_list(CST.URL_STOCK_HISTORY)
+    scrap_list = db.create_stock_history_url_list(cst.URL_STOCK_HISTORY)
     driver = scrap.init_driver(third_party_cookies=True)
     for url in scrap_list:
         stock_uri = url.split("/")[-2]
         end_date = date.get_current_date()
         start_date = date.subtract_one_year(date.get_current_date())
         max_db_date = db.get_latest_date_from_stock_history(stock_uri + "-Aktie")
-        file_name = CST.PATH_STOCK_HISTORY + stock_uri + CST.HTML_EXTENSION
+        file_name = cst.PATH_STOCK_HISTORY + stock_uri + cst.HTML_EXTENSION
         if os.path.isfile(file_name):
             logger.info(
                 "Scrap Stock Histories: Skip existing File for stock: %s" % stock_uri
@@ -84,21 +84,21 @@ def scrap_stock_histories():
 
 
 def scrap_stock_info(scrap_url, save_path):
-    if scrap_url == CST.URL_STOCK_OVERVIEW:
+    if scrap_url == cst.URL_STOCK_OVERVIEW:
         scrap_list = db.create_stock_overview_url_list(scrap_url)
     else:
         scrap_list = db.create_stock_info_url_list(scrap_url)
     driver = scrap.init_driver(third_party_cookies=False)
     for url in scrap_list:
         stock_uri = url.split("/")[-1]
-        file_name = save_path + stock_uri + CST.HTML_EXTENSION
+        file_name = save_path + stock_uri + cst.HTML_EXTENSION
         if os.path.isfile(file_name):
             logger.info(
                 "Scrap Stock Histories: Skip existing File for stock: %s" % stock_uri
             )
             continue
         else:
-            time.sleep(CST.SHORT_WAIT + random.uniform(0, CST.RANDOM_WAIT_RANGE))
+            time.sleep(cst.SHORT_WAIT + random.uniform(0, cst.RANDOM_WAIT_RANGE))
         try:
             soup = scrap.get_soup_code_from_url(driver, url)
             scrap.save_soup_to_file(soup, file_name)
@@ -110,23 +110,23 @@ def scrap_stock_info(scrap_url, save_path):
 
 
 def scrap_stock_infos():
-    scrap_stock_info(CST.URL_STOCK_OVERVIEW, CST.PATH_STOCK_OVERVIEW)
-    scrap_stock_info(CST.URL_STOCK_BALANCE, CST.PATH_STOCK_BALANCE)
-    scrap_stock_info(CST.URL_STOCK_DATES, CST.PATH_STOCK_DATES)
-    scrap_stock_info(CST.URL_STOCK_ESTIMATES, CST.PATH_STOCK_ESTIMATES)
-    scrap_stock_info(CST.URL_STOCK_TARGETS, CST.PATH_STOCK_TARGETS)
+    scrap_stock_info(cst.URL_STOCK_OVERVIEW, cst.PATH_STOCK_OVERVIEW)
+    scrap_stock_info(cst.URL_STOCK_BALANCE, cst.PATH_STOCK_BALANCE)
+    scrap_stock_info(cst.URL_STOCK_DATES, cst.PATH_STOCK_DATES)
+    scrap_stock_info(cst.URL_STOCK_ESTIMATES, cst.PATH_STOCK_ESTIMATES)
+    scrap_stock_info(cst.URL_STOCK_TARGETS, cst.PATH_STOCK_TARGETS)
 
 
 def scrap_single_page(driver, scrap_url, save_path):
     stock_uri = scrap_url.split("/")[-1]
-    file_name = save_path + stock_uri + CST.HTML_EXTENSION
+    file_name = save_path + stock_uri + cst.HTML_EXTENSION
     if os.path.isfile(file_name):
         logger.info(
             "Scrap Stock Histories: Skip existing File for stock: %s" % stock_uri
         )
         return
     else:
-        time.sleep(CST.SHORT_WAIT + random.uniform(0, CST.RANDOM_WAIT_RANGE))
+        time.sleep(cst.SHORT_WAIT + random.uniform(0, cst.RANDOM_WAIT_RANGE))
 
     try:
         soup = scrap.get_soup_code_from_url(driver, scrap_url)

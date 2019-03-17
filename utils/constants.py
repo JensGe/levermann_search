@@ -7,7 +7,6 @@ RANDOM_WAIT_RANGE = 0.8  # Seconds
 PARSER = "html.parser"
 
 # Selenium Driver Settings
-# SELENIUM_SETTINGS = 'utils/driver_starting_settings.txt'
 SELENIUM_SETTINGS = "utils/driver_host_rules.txt"
 
 # Base Scraping URLs
@@ -27,10 +26,7 @@ URL_STOCK_TARGETS_EXT = ""
 URL_STOCK_DATES_EXT = ""
 URL_STOCK_ESTIMATES_EXT = ""
 
-# Todo Delete
 EXCHANGE_APPENDIX = "FSE"
-ALT_EXCHANGE_APPENDIX = "XETRA"
-
 
 # Scraping Parts
 NO_DATA_AVAILABLE = "Keine Daten verfügbar"
@@ -63,8 +59,6 @@ TEXT_PAGINATION = "finando_paging"
 # HTML Elements
 HTML_H1 = "h1"
 HTML_H2 = "h2"
-HTML_TABLE = "table"
-HTML_TBODY = "tbody"
 HTML_TD = "td"
 HTML_TR = "tr"
 HTML_DIV = "div"
@@ -112,6 +106,7 @@ VIEW_LEVERMANN_HOLD = "Levermann_Latest_Hold"
 # Database Columns
 COLUMN_URI = "URI"
 COLUMN_ACTIVE = "Aktiv"
+COLUMN_LARGECAP = "Large_Cap_Index"
 COLUMN_INDEX_URI = "IndexURI"
 COLUMN_PAGES = "Seiten"
 COLUMN_STOCK_URI = "AktienURI"

@@ -1,4 +1,4 @@
-from utils import constants as CST
+from utils import constants as cst
 from _datetime import datetime
 from _datetime import date
 
@@ -7,7 +7,7 @@ import calendar
 import dateutil.relativedelta
 
 
-# Date and Strings
+# Date vs Strings
 def date_to_string(date):
     try:
         return datetime.strftime(date, "%d.%m.%Y")
@@ -23,24 +23,9 @@ def string_to_date(string):
 
 
 def convert_parse_to_date_db_string(string):
-    split_list = string.split('.')
-    conv_string = '20%s-%s-%s' % (split_list[2], split_list[1], split_list[0])
+    split_list = string.split(".")
+    conv_string = "20%s-%s-%s" % (split_list[2], split_list[1], split_list[0])
     return conv_string
-
-
-def string_to_datetime(string):
-    try:
-        return datetime.strptime(string, "%d.%m.%Y")
-    except ValueError:
-        return datetime.strptime(string, "%d.%m.%y")
-
-
-def get_year_and_week_string(date_time):
-    year_and_week = "%d-%d" % (
-        datetime.date(date_time).isocalendar()[0],
-        datetime.date(date_time).isocalendar()[1],
-    )
-    return year_and_week
 
 
 # Date
@@ -49,55 +34,55 @@ def get_current_date():
 
 
 def edit_date(date, operator, amount, unit):
-    if unit == CST.DT_DAY:
-        if operator == CST.DT_PLUS:
+    if unit == cst.DT_DAY:
+        if operator == cst.DT_PLUS:
             return date + dateutil.relativedelta.relativedelta(days=amount)
-        elif operator == CST.DT_MINUS:
+        elif operator == cst.DT_MINUS:
             return date - dateutil.relativedelta.relativedelta(days=amount)
-    elif unit == CST.DT_MONTH:
-        if operator == CST.DT_PLUS:
+    elif unit == cst.DT_MONTH:
+        if operator == cst.DT_PLUS:
             return date + dateutil.relativedelta.relativedelta(months=amount)
-        elif operator == CST.DT_MINUS:
+        elif operator == cst.DT_MINUS:
             return date - dateutil.relativedelta.relativedelta(months=amount)
 
 
 def subtract_one_year(date):
-    return edit_date(date, CST.DT_MINUS, 12, CST.DT_MONTH)
+    return edit_date(date, cst.DT_MINUS, 12, cst.DT_MONTH)
 
 
 def add_one_day(date):
-    return edit_date(date, CST.DT_PLUS, 1, CST.DT_DAY)
+    return edit_date(date, cst.DT_PLUS, 1, cst.DT_DAY)
 
 
-def get_last_days_of_last_four_months():
-    current_year = get_current_date().year
-    current_month = get_current_date().month
+def get_last_days_of_last_four_months(input_date):
+    current_year = input_date.year
+    current_month = input_date.month
     first_day = 1
 
     first_day_of_current_month = date(current_year, current_month, first_day)
     last_day_last_month = edit_date(
-        first_day_of_current_month, CST.DT_MINUS, 1, CST.DT_DAY
+        first_day_of_current_month, cst.DT_MINUS, 1, cst.DT_DAY
     )
 
     first_day_last_month = edit_date(
-        first_day_of_current_month, CST.DT_MINUS, 1, CST.DT_MONTH
+        first_day_of_current_month, cst.DT_MINUS, 1, cst.DT_MONTH
     )
     last_day_second_last_month = edit_date(
-        first_day_last_month, CST.DT_MINUS, 1, CST.DT_DAY
+        first_day_last_month, cst.DT_MINUS, 1, cst.DT_DAY
     )
 
     first_day_second_last_month = edit_date(
-        first_day_of_current_month, CST.DT_MINUS, 2, CST.DT_MONTH
+        first_day_of_current_month, cst.DT_MINUS, 2, cst.DT_MONTH
     )
     last_day_third_last_month = edit_date(
-        first_day_second_last_month, CST.DT_MINUS, 1, CST.DT_DAY
+        first_day_second_last_month, cst.DT_MINUS, 1, cst.DT_DAY
     )
 
     first_day_third_last_month = edit_date(
-        first_day_of_current_month, CST.DT_MINUS, 3, CST.DT_MONTH
+        first_day_of_current_month, cst.DT_MINUS, 3, cst.DT_MONTH
     )
     last_day_forth_last_month = edit_date(
-        first_day_third_last_month, CST.DT_MINUS, 1, CST.DT_DAY
+        first_day_third_last_month, cst.DT_MINUS, 1, cst.DT_DAY
     )
 
     return [
@@ -108,25 +93,25 @@ def get_last_days_of_last_four_months():
     ]
 
 
-# Times
+# Wait / Sleep Timings
 def long_waiting_time():
-    return CST.LONG_WAIT
+    return cst.LONG_WAIT
 
 
 def short_waiting_time():
-    return CST.SHORT_WAIT
+    return cst.SHORT_WAIT
 
 
 def long_random_waiting_time():
-    return CST.LONG_WAIT + random.uniform(0, CST.RANDOM_WAIT_RANGE)
+    return cst.LONG_WAIT + random.uniform(0, cst.RANDOM_WAIT_RANGE)
 
 
 def short_random_waiting_time():
-    return CST.SHORT_WAIT + random.uniform(0, CST.RANDOM_WAIT_RANGE)
+    return cst.SHORT_WAIT + random.uniform(0, cst.RANDOM_WAIT_RANGE)
 
 
 # Queue Calculator
-def get_monthly_date_list(year):
+def get_first_friday_of_months(year):
     month_list = []
     for month_ in range(1, 13):
         month_calendar = calendar.monthcalendar(year, month_)
@@ -143,10 +128,10 @@ def get_monthly_date_list(year):
     return month_list
 
 
-def get_biweekly_date_list(year):
-    monthly_date_list = get_monthly_date_list(year=year)
+def get_first_and_third_friday_of_months(year):
+    monthly_date_list = get_first_friday_of_months(year=year)
     biweekly_list = []
     for date_ in monthly_date_list:
         biweekly_list.append(date_)
-        biweekly_list.append(edit_date(date_, CST.DT_PLUS, 14, CST.DT_DAY))
+        biweekly_list.append(edit_date(date_, cst.DT_PLUS, 14, cst.DT_DAY))
     return biweekly_list
