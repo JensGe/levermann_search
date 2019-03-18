@@ -151,8 +151,14 @@ def insert_test_data():
             values
             ('AB InBev SA-NV (Anheuser-Busch InBev)', 'ab_inbev-Aktie', 'FSE', 1),
             ('Bechtle', 'bechtle-Aktie', 'FSE', 1),
-            ('Cellcom Israel', 'cellcom_israel-Aktie', 'FSE', 1);
+            ('Cellcom Israel', 'cellcom_israel-Aktie', 'FSE', 1),
+            ('Africa-Israel Investments', 'africa-israel_investments-Aktie', 'NASO', 1);
             
+        insert into Aktien (Name, URI, Aktiv) 
+            values
+            ('Afyon Cimento Sanayii TAS', 'afyon_cimento_sanayii_tas-Aktie', 1);
+            
+        
         insert into Aktienindizes 
             values 
             ('CAC_40', 'Frankreich', 'CAC 40', 1, 1, '08:00:00', '20:00:00'),

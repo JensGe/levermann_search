@@ -76,7 +76,47 @@ def delete_item():
     pass
 
 
-# enhanced CRUD
+# Enhanced CRUD
+#
+# get_list Calculations
+def create_active_index_url_list(base_url, database=cst.DATABASE):
+    index_list = get_list(
+        table=cst.TABLE_INDIZES,
+        columns=cst.COLUMN_URI,
+        condition=[cst.COLUMN_ACTIVE, b"1"],
+        database=database,
+    )
+    url_list = [base_url + index for index in index_list]
+    return url_list
+
+
+def create_stock_url_list(base_url, database=cst.DATABASE):
+    stock_list = get_list(
+        table=cst.TABLE_STOCKS,
+        columns=[cst.COLUMN_URI, cst.COLUMN_MARKET_PLACE],
+        database=database,
+    )
+    if base_url == cst.URL_STOCK_HISTORY:
+        return [
+            base_url
+            + stock[0][:-6]
+            + "/"
+            + (
+                cst.EXCHANGE_APPENDIX
+                if stock[1] is None or stock[1] == "None"
+                else stock[1]
+            )
+            for stock in stock_list
+        ]
+
+    elif base_url == cst.URL_STOCK_OVERVIEW:
+        return [base_url + stock[0] for stock in stock_list]
+    else:
+        return [base_url + stock[0][:-6] for stock in stock_list]
+
+# ToDo Clean, refactor, delete from here
+
+# insert ignore / many
 def write_index_content_to_stock_table(stocks, test=None):
     database = cst.DATABASE if not test else cst.DATABASE
 
@@ -95,50 +135,6 @@ def write_stock_to_index_contents_table(index_contents, test=None):
             db[cst.TABLE_INDEX_CONTENTS].insert_many(index_contents)
         except sqlalchemy.exc.IntegrityError:
             pass
-
-
-# List Calculations
-def create_all_index_url_list(base_url, database=cst.DATABASE):
-    index_list = get_list(
-        table=cst.TABLE_INDIZES, columns=cst.COLUMN_URI, database=database
-    )
-    url_list = [base_url + index for index in index_list]
-    return url_list
-
-
-def create_active_index_url_list(base_url):
-    index_list = get_list(
-        table=cst.TABLE_INDIZES,
-        columns=cst.COLUMN_URI,
-        condition=[cst.COLUMN_ACTIVE, b"1"],
-    )
-    url_list = [base_url + index for index in index_list]
-    return url_list
-
-
-def create_stock_history_url_list(base_url):
-    stock_history_list = get_list(
-        table=cst.TABLE_STOCKS, columns=[cst.COLUMN_URI, cst.COLUMN_MARKET_PLACE]
-    )
-    url_list = []
-    for stock in stock_history_list:
-        stock_uri, market_place = stock[0][:-6], stock[1]
-        if market_place is None or market_place == "None":
-            market_place = cst.EXCHANGE_APPENDIX
-        url_list.append(base_url + stock_uri + "/" + market_place)
-    return url_list
-
-
-def create_stock_overview_url_list(base_url):
-    stock_list = get_list(table=cst.TABLE_STOCKS, columns=cst.COLUMN_URI)
-    url_list = [base_url + stock for stock in stock_list]
-    return url_list
-
-
-def create_stock_info_url_list(base_url):
-    stock_list = get_list(table=cst.TABLE_STOCKS, columns=cst.COLUMN_URI)
-    url_list = [base_url + stock[:-6] for stock in stock_list]
-    return url_list
 
 
 def write_index_content_list_to_db(index_content, index_name):

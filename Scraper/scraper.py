@@ -52,7 +52,7 @@ def scrap_index_histories():
 
 
 def scrap_stock_histories():
-    scrap_list = db.create_stock_history_url_list(cst.URL_STOCK_HISTORY)
+    scrap_list = db.create_stock_url_list(cst.URL_STOCK_HISTORY)
     driver = scrap.init_driver(third_party_cookies=True)
     for url in scrap_list:
         stock_uri = url.split("/")[-2]
@@ -84,10 +84,7 @@ def scrap_stock_histories():
 
 
 def scrap_stock_info(scrap_url, save_path):
-    if scrap_url == cst.URL_STOCK_OVERVIEW:
-        scrap_list = db.create_stock_overview_url_list(scrap_url)
-    else:
-        scrap_list = db.create_stock_info_url_list(scrap_url)
+    scrap_list = db.create_stock_url_list(scrap_url)
     driver = scrap.init_driver(third_party_cookies=False)
     for url in scrap_list:
         stock_uri = url.split("/")[-1]

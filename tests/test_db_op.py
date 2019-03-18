@@ -45,6 +45,89 @@ class TestDatabase(unittest.TestCase):
         ]
         self.assertEqual(asserted_list, stock_list)
 
+    # get_list Calculations
+    def test_create_active_index_url_list_from_index_content_url(self):
+        asserted_index_list = [
+            "https://www.boerse-online.de/index/liste/CAC_40",
+            "https://www.boerse-online.de/index/liste/dax",
+            "https://www.boerse-online.de/index/liste/dow_jones",
+            "https://www.boerse-online.de/index/liste/FTSE_100",
+            "https://www.boerse-online.de/index/liste/s&p_500",
+            "https://www.boerse-online.de/index/liste/tecdax",
+        ]
+        calculated_index_list = db.create_active_index_url_list(
+            cst.URL_INDEX_CONTENT, cst.TEST_DATABASE
+        )
+        self.assertEqual(asserted_index_list, calculated_index_list)
+
+    def test_create_active_index_url_list_from_index_history_url(self):
+        asserted_index_list = [
+            "https://www.boerse-online.de/index/historisch/CAC_40",
+            "https://www.boerse-online.de/index/historisch/dax",
+            "https://www.boerse-online.de/index/historisch/dow_jones",
+            "https://www.boerse-online.de/index/historisch/FTSE_100",
+            "https://www.boerse-online.de/index/historisch/s&p_500",
+            "https://www.boerse-online.de/index/historisch/tecdax",
+        ]
+        calculated_index_list = db.create_active_index_url_list(
+            cst.URL_INDEX_HISTORY, cst.TEST_DATABASE
+        )
+        self.assertEqual(asserted_index_list, calculated_index_list)
+
+    # create stock url list
+    def test_create_stock_history_url_list(self):
+        asserted_index_list = [
+            "https://www.boerse-online.de/kurse/historisch/3i/FSE",
+            "https://www.boerse-online.de/kurse/historisch/3m/FSE",
+            "https://www.boerse-online.de/kurse/historisch/ab_inbev/FSE",
+            "https://www.boerse-online.de/kurse/historisch/adidas/FSE",
+            "https://www.boerse-online.de/kurse/historisch/africa-israel_investments/NASO",
+            "https://www.boerse-online.de/kurse/historisch/afyon_cimento_sanayii_tas/FSE",
+            "https://www.boerse-online.de/kurse/historisch/bechtle/FSE",
+            "https://www.boerse-online.de/kurse/historisch/cellcom_israel/FSE",
+            "https://www.boerse-online.de/kurse/historisch/coca-cola/FSE",
+        ]
+        calculated_index_list = db.create_stock_url_list(
+            cst.URL_STOCK_HISTORY, cst.TEST_DATABASE
+        )
+        self.assertEqual(asserted_index_list, calculated_index_list)
+
+    def test_create_stock_overview_url_list(self):
+        asserted_index_list = [
+            "https://www.boerse-online.de/aktie/3i-Aktie",
+            "https://www.boerse-online.de/aktie/3m-Aktie",
+            "https://www.boerse-online.de/aktie/ab_inbev-Aktie",
+            "https://www.boerse-online.de/aktie/adidas-Aktie",
+            "https://www.boerse-online.de/aktie/africa-israel_investments-Aktie",
+            "https://www.boerse-online.de/aktie/afyon_cimento_sanayii_tas-Aktie",
+            "https://www.boerse-online.de/aktie/bechtle-Aktie",
+            "https://www.boerse-online.de/aktie/cellcom_israel-Aktie",
+            "https://www.boerse-online.de/aktie/coca-cola-Aktie",
+        ]
+        calculated_index_list = db.create_stock_url_list(
+            cst.URL_STOCK_OVERVIEW, cst.TEST_DATABASE
+        )
+        self.assertEqual(asserted_index_list, calculated_index_list)
+
+    def test_create_stock_info_url_list(self):
+        asserted_index_list = [
+            "https://www.boerse-online.de/bilanz_guv/3i",
+            "https://www.boerse-online.de/bilanz_guv/3m",
+            "https://www.boerse-online.de/bilanz_guv/ab_inbev",
+            "https://www.boerse-online.de/bilanz_guv/adidas",
+            "https://www.boerse-online.de/bilanz_guv/africa-israel_investments",
+            "https://www.boerse-online.de/bilanz_guv/afyon_cimento_sanayii_tas",
+            "https://www.boerse-online.de/bilanz_guv/bechtle",
+            "https://www.boerse-online.de/bilanz_guv/cellcom_israel",
+            "https://www.boerse-online.de/bilanz_guv/coca-cola",
+        ]
+        calculated_index_list = db.create_stock_url_list(
+            cst.URL_STOCK_BALANCE, cst.TEST_DATABASE
+        )
+        self.assertEqual(asserted_index_list, calculated_index_list)
+
+    # ToDo Clean, refactor, delete from here
+
     # get_item()
     def test_get_latest_date_from_index_history_with_condition(self):
         asserted_latest_date = date.string_to_date("08.03.2019")
@@ -75,7 +158,7 @@ class TestDatabase(unittest.TestCase):
         )
         self.assertEqual(asserted_latest_date, actual_latest_date)
 
-    # Todo write
+    # write
     def test_write_stock_overview_history_to_db(self):
         overview_stock_history = [
             ["08.02.2019", "197,90"],
@@ -125,21 +208,6 @@ class TestDatabase(unittest.TestCase):
         ]
         self.assertEqual(asserted_database_content, converted_validating_list)
 
-    #
-    # def test_write_stock_history_to_db_from_history_data(self):
-    #     history_stock_data = [
-    #         ['adidas-Aktie', '2019 - 02 - 07', '', ''],
-    #         ['adidas-Aktie', '', '', ''],
-    #         ['adidas-Aktie', '', '', ''],
-    #         ['adidas-Aktie', '', '', ''],
-    #         ['adidas-Aktie', '', '', ''],
-    #     ]
-    #
-    #                 201.50    199.50
-    #         adidas - Aktie    2019 - 02 - 06    202.80    201.60
-    #         adidas - Aktie    2019 - 02 - 05    197.40    202.70
-    #         adidas - Aktie    2019 - 02 - 04    199.45    196.45
-
     # uncategorized tests
     def test_convert_list_to_db_value_string(self):
         input_data_list = [
@@ -187,22 +255,6 @@ class TestDatabase(unittest.TestCase):
         )
         self.assertTrue(rv)
 
-    def test_create_index_content_url_list(self):
-        url_list = db.create_all_index_url_list(
-            cst.URL_INDEX_CONTENT, database=cst.TEST_DATABASE
-        )
-        asserted_url_list = [
-            "https://www.boerse-online.de/index/liste/CAC_40",
-            "https://www.boerse-online.de/index/liste/dax",
-            "https://www.boerse-online.de/index/liste/dow_jones",
-            "https://www.boerse-online.de/index/liste/FTSE_100",
-            "https://www.boerse-online.de/index/liste/s&p_500",
-            "https://www.boerse-online.de/index/liste/tecdax",
-        ]
-        self.assertEqual(asserted_url_list, url_list[:6])
-
-    #
-    #
     # ToDo renew with Testdatabase
 
     def test_get_earnings_after_tax(self):
