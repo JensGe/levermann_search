@@ -2,7 +2,7 @@ from loguru import logger
 
 from utils import date_op as date
 from utils import constants as cst
-import sqlalchemy
+from sqlalchemy.exc import IntegrityError
 
 import dataset
 
@@ -114,8 +114,8 @@ def create_stock_url_list(base_url, database=cst.DATABASE):
     else:
         return [base_url + stock[0][:-6] for stock in stock_list]
 
-# ToDo Clean, refactor, delete from here
 
+# ToDo Clean, refactor, delete from here
 # insert ignore / many
 def write_index_content_to_stock_table(stocks, test=None):
     database = cst.DATABASE if not test else cst.DATABASE
@@ -124,7 +124,7 @@ def write_index_content_to_stock_table(stocks, test=None):
         try:
             for stock in stocks:
                 db[cst.TABLE_STOCKS].insert_ignore(stock, ["URI"])
-        except sqlalchemy.exc.IntegrityError:
+        except IntegrityError:
             pass
 
 
@@ -133,7 +133,7 @@ def write_stock_to_index_contents_table(index_contents, test=None):
     with dataset.connect(database) as db:
         try:
             db[cst.TABLE_INDEX_CONTENTS].insert_many(index_contents)
-        except sqlalchemy.exc.IntegrityError:
+        except IntegrityError:
             pass
 
 
@@ -208,7 +208,7 @@ def write_index_history_to_db(index_history, index_uri, database=cst.DATABASE):
                         Schlusswert=end,
                     )
                 )
-            except sqlalchemy.exc.IntegrityError:
+            except IntegrityError:
                 logger.warning(
                     "Write Index History to DB: Integrity Error with Item: %s"
                     % index_uri
@@ -245,7 +245,7 @@ def write_stock_history_to_db(stock_history, stock_uri, database=cst.DATABASE):
                         Schlusswert=end,
                     )
                 )
-            except sqlalchemy.exc.IntegrityError:
+            except IntegrityError:
                 pass
 
 
@@ -265,7 +265,7 @@ def write_stock_overview_history_to_db(stock_history, stock_uri, database=cst.DA
                 db[cst.TABLE_STOCKS_HISTORIES].insert(
                     dict(AktienURI=stock_uri, Datum=date_, Schlusswert=end)
                 )
-            except sqlalchemy.exc.IntegrityError:
+            except IntegrityError:
                 pass
     return True
 
@@ -290,7 +290,7 @@ def write_single_overview_data_to_db(
                     Branchen=str(stock_sectors),
                 )
             )
-        except sqlalchemy.exc.IntegrityError:
+        except IntegrityError:
             db.query(
                 "UPDATE %s SET "
                 'Marktkapitalisierung = "%s", '
@@ -347,7 +347,7 @@ def write_single_balance_data_to_db(
                     EPS_minus_1=eps_minus_1,
                 )
             )
-        except sqlalchemy.exc.IntegrityError:
+        except IntegrityError:
             db.query(
                 "UPDATE %s SET "
                 "Ergebnis_nach_Steuern = %s, "
@@ -390,7 +390,7 @@ def write_single_estimate_data_to_db(
                     EPS_plus_1=eps_plus_1,
                 )
             )
-        except sqlalchemy.exc.IntegrityError:
+        except IntegrityError:
             db.query(
                 "UPDATE %s SET "
                 "EPS_0 = %s, "
@@ -416,7 +416,7 @@ def write_single_targets_data_to_db(
                     Analysten_Sell=analyst_sell,
                 )
             )
-        except sqlalchemy.exc.IntegrityError:
+        except IntegrityError:
             db.query(
                 "UPDATE %s SET "
                 "Analysten_Buy = %s, "
@@ -445,7 +445,7 @@ def write_single_stock_dates_data_to_db(stock_uri, figures_date, database=cst.DA
                     Terminart="Quarterly/Yearly",
                 )
             )
-        except sqlalchemy.exc.IntegrityError:
+        except IntegrityError:
             db.query(
                 "UPDATE %s SET "
                 "Datum = %s "
@@ -514,7 +514,7 @@ def save_roe_to_db(stock_uri, roe, lev_score, database=cst.DATABASE):
                     Lev01_Score=lev_score,
                 )
             )
-        except sqlalchemy.exc.IntegrityError:
+        except IntegrityError:
             db.query(
                 "UPDATE %s SET "
                 "Lev01_Wert = %s, "
@@ -583,7 +583,7 @@ def save_ebit_to_db(stock_uri, ebit, lev_score, database=cst.DATABASE):
                     Lev02_Score=lev_score,
                 )
             )
-        except sqlalchemy.exc.IntegrityError:
+        except IntegrityError:
             db.query(
                 "UPDATE %s SET "
                 "Lev02_Wert = %s, "
@@ -622,7 +622,7 @@ def save_equity_ratio_to_db(stock_uri, equity_ratio, lev_score, database=cst.DAT
                     Lev03_Score=lev_score,
                 )
             )
-        except sqlalchemy.exc.IntegrityError:
+        except IntegrityError:
             db.query(
                 "UPDATE %s SET "
                 "Lev03_Wert = %s, "
@@ -711,7 +711,7 @@ def save_kgv5_to_db(stock_uri, kgv5, kgv5_score, database=cst.DATABASE):
                     Lev04_Score=kgv5_score,
                 )
             )
-        except sqlalchemy.exc.IntegrityError:
+        except IntegrityError:
             db.query(
                 "UPDATE %s SET "
                 "Lev04_Wert = %s, "
@@ -734,7 +734,7 @@ def save_kgv0_to_db(stock_uri, kgv0, kgv0_score, database=cst.DATABASE):
                     Lev05_Score=kgv0_score,
                 )
             )
-        except sqlalchemy.exc.IntegrityError:
+        except IntegrityError:
             db.query(
                 "UPDATE %s SET "
                 "Lev05_Wert = %s, "
@@ -781,7 +781,7 @@ def save_rating_to_db(stock_uri, rating, rating_score, database=cst.DATABASE):
                     Lev06_Score=rating_score,
                 )
             )
-        except sqlalchemy.exc.IntegrityError:
+        except IntegrityError:
             db.query(
                 "UPDATE %s SET "
                 "Lev06_Wert = %s, "
@@ -805,7 +805,7 @@ def is_small_cap(stock_uri, database=cst.DATABASE):
             if market_cap > cst.MARKET_CAP_THRESHOLD:
                 return False
             else:
-                indizes_list = get_indices_of_stock(stock_uri)
+                indizes_list = get_indices_of_stock(stock_uri, database=database)
                 return not any(
                     i in indizes_list for i in cst.LARGE_CAPS_INDIZES
                 )  # ToDO abhängig von Spalte LargeCapIndex machen, dann auch in Constants löschen
@@ -928,7 +928,7 @@ def save_quarterly_reaction_to_db(
                     Lev07_Score=lev_score,
                 )
             )
-        except sqlalchemy.exc.IntegrityError:
+        except IntegrityError:
             db.query(
                 "UPDATE %s SET "
                 "Lev07_Wert = %s, "
@@ -960,7 +960,7 @@ def save_eps_revision_to_db(stock_uri, eps_diff, lev_score, database=cst.DATABAS
                     Lev08_Score=lev_score,
                 )
             )
-        except sqlalchemy.exc.IntegrityError:
+        except IntegrityError:
             db.query(
                 "UPDATE %s SET "
                 "Lev08_Wert = %s, "
@@ -986,7 +986,7 @@ def save_6_months_ratio_to_db(stock_uri, ratio, lev_score, database=cst.DATABASE
                     Lev09_Score=lev_score,
                 )
             )
-        except sqlalchemy.exc.IntegrityError:
+        except IntegrityError:
             db.query(
                 "UPDATE %s SET "
                 "Lev09_Wert = %s, "
@@ -1009,7 +1009,7 @@ def save_12_months_ratio_to_db(stock_uri, ratio, lev_score, database=cst.DATABAS
                     Lev10_Score=lev_score,
                 )
             )
-        except sqlalchemy.exc.IntegrityError:
+        except IntegrityError:
             db.query(
                 "UPDATE %s SET "
                 "Lev10_Wert = %s, "
@@ -1027,7 +1027,7 @@ def save_momentum_to_db(stock_uri, lev_score, database=cst.DATABASE):
             db[cst.TABLE_LEVERMANN].insert(
                 dict(AktienURI=stock_uri, Datum=current_date, Lev11_Score=lev_score)
             )
-        except sqlalchemy.exc.IntegrityError:
+        except IntegrityError:
             db.query(
                 "UPDATE %s SET "
                 "Lev11_Score = %s "
@@ -1060,7 +1060,7 @@ def save_reversal_to_db(stock_uri, diff, lev_score, database=cst.DATABASE):
                     Lev12_Score=lev_score,
                 )
             )
-        except sqlalchemy.exc.IntegrityError:
+        except IntegrityError:
             db.query(
                 "UPDATE %s SET "
                 "Lev12_Wert = %s, "
@@ -1086,7 +1086,7 @@ def save_profit_growth_to_db(stock_uri, diff, lev_score, database=cst.DATABASE):
                     Lev13_Score=lev_score,
                 )
             )
-        except sqlalchemy.exc.IntegrityError:
+        except IntegrityError:
             db.query(
                 "UPDATE %s SET "
                 "Lev13_Wert = %s, "
