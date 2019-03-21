@@ -206,7 +206,56 @@ class TestDatabase(unittest.TestCase):
             ]
             for item in validating_list
         ]
-        self.assertEqual(asserted_database_content.sort(), converted_validating_list.sort())
+        self.assertEqual(
+            asserted_database_content.sort(), converted_validating_list.sort()
+        )
+
+    # insert ignore/many
+    def test_write_index_content_to_stock_table(self):
+        stock_list = [
+            ["3i", "3i-Aktie"],
+            ["Admiral Group", "admiral_group-Aktie"],
+            ["Anglo American", "anglo_american-Aktie"],
+        ]
+        index_uri = "FTSE_100"
+        asserted_stock_list_before = [
+            "3i-Aktie",
+            "3m-Aktie",
+            "ab_inbev-Aktie",
+            "adidas-Aktie",
+            "africa-israel_investments-Aktie",
+            "afyon_cimento_sanayii_tas-Aktie",
+            "bechtle-Aktie",
+            "cellcom_israel-Aktie",
+            "coca-cola-Aktie",
+        ]
+        self.assertEqual(
+            asserted_stock_list_before,
+            db.get_list(
+                table=cst.TABLE_STOCKS,
+                columns=cst.COLUMN_URI,
+                database=cst.TEST_DATABASE,
+            ),
+        )
+
+        db.write_index_content_list_to_db(stock_list, index_uri, cst.TEST_DATABASE)
+
+        asserted_stock_list_after = [
+            "3i-Aktie",
+            "3i-Aktie",
+            "admiral_group-Aktie",
+            "anglo_american-Aktie",
+        ]
+
+        self.assertEqual(
+            asserted_stock_list_after,
+            db.get_list(
+                table=cst.TABLE_INDEX_CONTENTS,
+                columns=cst.COLUMN_STOCK_URI,
+                condition=[cst.COLUMN_INDEX_URI, "FTSE_100"],
+                database=cst.TEST_DATABASE,
+            ),
+        )
 
     # uncategorized tests
     def test_convert_list_to_db_value_string(self):
@@ -274,11 +323,15 @@ class TestDatabase(unittest.TestCase):
         self.assertEqual([6, 2, 0], ratings)
 
     def test_caps_large(self):
-        is_small_cap = db.is_small_cap(stock_uri="ab_inbev-Aktie", database=cst.TEST_DATABASE)
+        is_small_cap = db.is_small_cap(
+            stock_uri="ab_inbev-Aktie", database=cst.TEST_DATABASE
+        )
         self.assertFalse(is_small_cap)
 
     def test_caps_small(self):
-        is_small_cap = db.is_small_cap(stock_uri="bechtle-Aktie", database=cst.TEST_DATABASE)
+        is_small_cap = db.is_small_cap(
+            stock_uri="bechtle-Aktie", database=cst.TEST_DATABASE
+        )
         self.assertTrue(is_small_cap)
 
     def test_get_closing_stock_price_weekday(self):

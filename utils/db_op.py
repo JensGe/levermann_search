@@ -115,11 +115,9 @@ def create_stock_url_list(base_url, database=cst.DATABASE):
         return [base_url + stock[0][:-6] for stock in stock_list]
 
 
-# ToDo Clean, refactor, delete from here
+# ToDo Clean, combine, refactor, delete from here
 # insert ignore / many
-def write_index_content_to_stock_table(stocks, test=None):
-    database = cst.DATABASE if not test else cst.DATABASE
-
+def write_index_content_to_stock_table(stocks, database=cst.DATABASE):
     with dataset.connect(database) as db:
         try:
             for stock in stocks:
@@ -128,8 +126,7 @@ def write_index_content_to_stock_table(stocks, test=None):
             pass
 
 
-def write_stock_to_index_contents_table(index_contents, test=None):
-    database = cst.DATABASE if not test else cst.DATABASE
+def write_stock_to_index_contents_table(index_contents, database=cst.DATABASE):
     with dataset.connect(database) as db:
         try:
             db[cst.TABLE_INDEX_CONTENTS].insert_many(index_contents)
@@ -137,16 +134,16 @@ def write_stock_to_index_contents_table(index_contents, test=None):
             pass
 
 
-def write_index_content_list_to_db(index_content, index_name):
+def write_index_content_list_to_db(index_content, index_name, database=cst.DATABASE):
     current_date = date.get_current_date()
     stocks = [dict(Name=stock[0], URI=stock[1]) for stock in index_content]
-    write_index_content_to_stock_table(stocks)
+    write_index_content_to_stock_table(stocks, database=database)
 
     index_contents = [
         dict(IndexURI=index_name, AktienURI=stock[1], Abrufdatum=current_date)
         for stock in index_content
     ]
-    write_stock_to_index_contents_table(index_contents)
+    write_stock_to_index_contents_table(index_contents, database=database)
     return True
 
 
