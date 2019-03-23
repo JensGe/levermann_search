@@ -280,6 +280,11 @@ class TestScrapping(unittest.TestCase):
         ]
         self.assertEqual(asserted_list, table_list)
 
+    def test_get_historic_prices_from_overview_without_content(self):
+        soup = scrap.get_soup_code_from_file("data/bo_overview_abertis-Aktie.html")
+        table_list = parse.get_historic_stock_prices_from_overview(soup)
+        self.assertIsNone(table_list)
+
     def test_convert_index_history_list(self):
         insert_list = [
             ["01.10.2018", "9.127,05", "9.094,28", "9.155,65", "9.084,22"],

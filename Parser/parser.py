@@ -77,7 +77,8 @@ def write_stock_overview_data_to_db():
         stock_history_list = parse.get_historic_stock_prices_from_overview(
             stock_overview_soup
         )
-        db.write_stock_overview_history_to_db(stock_history_list, stock_uri)
+        if stock_history_list is not None:
+            db.write_stock_overview_history_to_db(stock_history_list, stock_uri)
 
 
 def write_stock_histories_from_html_to_db():

@@ -270,49 +270,64 @@ def write_stock_overview_history_to_db(stock_history, stock_uri, database=cst.DA
 def write_single_overview_data_to_db(
     stock_uri,
     market_cap,
-    stock_indizes,
+    stock_indices,
     stock_sectors,
     market_place,
     database=cst.DATABASE,
+    current_date=date.get_current_date(),
 ):
-    current_date = date.get_current_date()
+
     with dataset.connect(database) as db:
+
+        # Todo separate to function
+        # company_data = generate_dict(
+        #     [cst.COLUMN_STOCK_URI, stock_uri],
+        #     [cst.COLUMN_DATE, current_date],
+        #     [cst.COLUMN_MARKET_CAP, market_cap],
+        #     [cst.COLUMN_INDICES, str(stock_indices)],
+        #     [cst.COLUMN_SECTORS, str(stock_sectors)]
+        # )
+
+        # company_data = lambda dic:
+
+
+        company_data = dict.fromkeys(
+            [
+                cst.COLUMN_STOCK_URI,
+                cst.COLUMN_DATE,
+                cst.COLUMN_MARKET_CAP,
+                cst.COLUMN_INDICES,
+                cst.COLUMN_SECTORS,
+            ],
+            None,
+        )
+
+        company_data[cst.COLUMN_STOCK_URI] = stock_uri
+        company_data[cst.COLUMN_DATE] = current_date
+        company_data[cst.COLUMN_MARKET_CAP] = market_cap
+        company_data[cst.COLUMN_INDICES] = str(stock_indices)
+        company_data[cst.COLUMN_SECTORS] = str(stock_sectors)
+
         try:
-            db[cst.TABLE_COMPANY_DATA].insert(
-                dict(
-                    AktienURI=stock_uri,
-                    Datum=current_date,
-                    Marktkapitalisierung=market_cap,
-                    Indizes=str(stock_indizes),
-                    Branchen=str(stock_sectors),
-                )
-            )
-        except IntegrityError:
-            db.query(
-                "UPDATE %s SET "
-                'Marktkapitalisierung = "%s", '
-                'Indizes = "%s", '
-                'Branchen = "%s" '
-                'WHERE AktienURI = "%s" AND Datum = "%s"'
-                % (
-                    cst.TABLE_COMPANY_DATA,
-                    market_cap,
-                    str(stock_indizes),
-                    str(stock_sectors),
-                    stock_uri,
-                    current_date,
-                )
-            )
-            pass
-        try:
-            db.query(
-                "UPDATE %s SET "
-                'Handelsplatz = "%s" '
-                'WHERE URI = "%s"' % (cst.TABLE_STOCKS, market_place, stock_uri)
+            db[cst.TABLE_COMPANY_DATA].upsert(
+                company_data, [cst.COLUMN_STOCK_URI, cst.COLUMN_DATE]
             )
         except:
-            logger.exception("Exception at Marketplace Insertion")
+            "Unhandled Exception while upserting Company Data"
+
+
+        try:
+            stock_data = dict.fromkeys([cst.COLUMN_MARKET_PLACE, cst.COLUMN_URI])
+            stock_data[cst.COLUMN_MARKET_PLACE] = market_place
+            stock_data[cst.COLUMN_URI] = stock_uri
+
+            db[cst.TABLE_STOCKS].update(stock_data, cst.COLUMN_URI)
+
+        except:
+            logger.exception("Unhandled Exception at Marketplace Insertion")
             pass
+
+
 
 
 def write_single_balance_data_to_db(

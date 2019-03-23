@@ -210,6 +210,127 @@ class TestDatabase(unittest.TestCase):
             asserted_database_content.sort(), converted_validating_list.sort()
         )
 
+    def test_write_single_overview_data_to_db_with_complete_new_data(self):
+        stock_uri = "coca-cola-Aktie"
+        market_cap = "171390.00"
+        stock_indices = [
+            "Dow Jones",
+            "S&P 500",
+            "S&P 100",
+            "NYSE US 100",
+            "IGPA",
+            "BX Swiss - USA",
+        ]
+        stock_sectors = ["Getränke / Tabak"]
+        market_place = "FSE"
+        current_date = "2019-03-23"
+
+        db.write_single_overview_data_to_db(
+            stock_uri,
+            market_cap,
+            stock_indices,
+            stock_sectors,
+            market_place,
+            cst.TEST_DATABASE,
+            current_date,
+        )
+
+        asserted_company_data_content_after = [
+            "3i-Aktie",
+            "ab_inbev-Aktie",
+            "ab_inbev-Aktie",
+            "bechtle-Aktie",
+            "cellcom_israel-Aktie",
+            "coca-cola-Aktie",
+        ]
+
+        self.assertEqual(
+            asserted_company_data_content_after,
+            db.get_list(
+                table=cst.TABLE_COMPANY_DATA,
+                columns=cst.COLUMN_STOCK_URI,
+                database=cst.TEST_DATABASE,
+            ),
+        )
+
+    def test_write_single_overview_data_to_db_with_data_already_in_db(self):
+        stock_uri = "bechtle-Aktie"
+        market_cap = "3230.00"
+        stock_indices = [
+            "TecDAX",
+            "MDAX",
+            "Prime All Share",
+        ]
+
+        stock_sectors = [
+            "IT-Dienstleister",
+            "IT-Beratung Hardware",
+            "Dienstleistungen",
+            "Internethandel (B2B, B2C)",
+            "Informationstechnologie",
+        ]
+        market_place = "FSE"
+        current_date = "2019-03-16"
+
+        db.write_single_overview_data_to_db(
+            stock_uri,
+            market_cap,
+            stock_indices,
+            stock_sectors,
+            market_place,
+            cst.TEST_DATABASE,
+            current_date,
+        )
+
+        asserted_data = ["['TecDAX', 'MDAX', 'Prime All Share']"]
+
+        self.assertEqual(
+            asserted_data,
+            db.get_list(
+                table=cst.TABLE_COMPANY_DATA,
+                columns=cst.COLUMN_INDICES,
+                condition=[cst.COLUMN_STOCK_URI, "bechtle-Aktie"],
+                database=cst.TEST_DATABASE,
+            ),
+        )
+
+    def test_write_single_overview_data_to_db_with_new_market_place(self):
+        stock_uri = "coca-cola-Aktie"
+        market_cap = "171390.00"
+        stock_indices = [
+            "Dow Jones",
+            "S&P 500",
+            "S&P 100",
+            "NYSE US 100",
+            "IGPA",
+            "BX Swiss - USA",
+        ]
+        stock_sectors = ["Getränke / Tabak"]
+        market_place = "XETRA"
+        current_date = "2019-03-23"
+
+        db.write_single_overview_data_to_db(
+            stock_uri,
+            market_cap,
+            stock_indices,
+            stock_sectors,
+            market_place,
+            cst.TEST_DATABASE,
+            current_date,
+        )
+
+        asserted_data = ['XETRA']
+
+        self.assertEqual(
+            asserted_data,
+            db.get_list(
+                table=cst.TABLE_STOCKS,
+                columns=cst.COLUMN_MARKET_PLACE,
+                condition=[cst.COLUMN_URI, 'coca-cola-Aktie'],
+                database=cst.TEST_DATABASE,
+            ),
+        )
+
     # insert ignore/many
     def test_write_index_content_to_stock_table(self):
         stock_list = [
@@ -401,8 +522,8 @@ class TestDatabase(unittest.TestCase):
         pass
 
     def tearDown(self):
-        db_test.delete_test_data()
-        db_test.drop_test_tables()
+        # db_test.delete_test_data()
+        # db_test.drop_test_tables()
         pass
 
 

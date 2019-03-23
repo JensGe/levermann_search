@@ -130,6 +130,7 @@ COLUMN_MARKET_CAP = "Marktkapitalisierung"
 COLUMN_MARKET_PLACE = "Handelsplatz"
 COLUMN_DATE = "Datum"
 COLUMN_SECTORS = "Branchen"
+COLUMN_INDICES = "Indizes"
 
 # Date Enums
 DT_MINUS = "minus"

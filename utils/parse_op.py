@@ -18,9 +18,15 @@ def get_historic_prices_from_history(soup):
 
 
 def get_historic_stock_prices_from_overview(soup):
-    history_table = soup.find(
-        cst.HTML_H2, text=re.compile(cst.TEXT_HISTORIC_PRICES)
-    ).next_sibling.next_sibling
+    try:
+        history_table = soup.find(
+            cst.HTML_H2, text=re.compile(cst.TEXT_HISTORIC_PRICES)
+        ).next_sibling.next_sibling
+    except AttributeError:
+        logger.error(
+            "AttributeError when Parsing Overview for Stock History, must be empty"
+        )
+        return None
     return_history = []
     for row in history_table.find_all(cst.HTML_TR)[:-1]:
         tr_items = []
@@ -153,8 +159,10 @@ def get_latest_date_of_list(date_list, current_date=date.get_current_date()):
     try:
         return max(date_list_past)
     except ValueError:
-        logger.error("Get Latest Date of List: AttributeError. "
-                     "Last Date probably not in last quarter")
+        logger.error(
+            "Get Latest Date of List: AttributeError. "
+            "Last Date probably not in last quarter"
+        )
         return None
 
 
