@@ -56,7 +56,9 @@ def insert_list(table, data, database=cst.DATABASE):
     return result
 
 
-def insert_item():
+def upsert_item(table, primary_keys, database=cst.DATABASE, **data):
+    with dataset.connect(database) as db:
+        db[table].upsert(data, primary_keys)
     pass
 
 
@@ -173,9 +175,7 @@ def convert_list_to_db_value_string(data):
     return db_data_string[:-2]
 
 
-# ToDo Refactor below
-
-
+# Write
 def write_index_history_to_db(index_history, index_uri, database=cst.DATABASE):
     with dataset.connect(database) as db:
         for item in index_history:
@@ -267,6 +267,7 @@ def write_stock_overview_history_to_db(stock_history, stock_uri, database=cst.DA
     return True
 
 
+# Write single Items
 def write_single_overview_data_to_db(
     stock_uri,
     market_cap,
@@ -279,34 +280,24 @@ def write_single_overview_data_to_db(
 
     with dataset.connect(database) as db:
 
-        # Todo separate to function
-        # company_data = generate_dict(
-        #     [cst.COLUMN_STOCK_URI, stock_uri],
-        #     [cst.COLUMN_DATE, current_date],
-        #     [cst.COLUMN_MARKET_CAP, market_cap],
-        #     [cst.COLUMN_INDICES, str(stock_indices)],
-        #     [cst.COLUMN_SECTORS, str(stock_sectors)]
-        # )
-
-        # company_data = lambda dic:
-
-
-        company_data = dict.fromkeys(
-            [
-                cst.COLUMN_STOCK_URI,
-                cst.COLUMN_DATE,
-                cst.COLUMN_MARKET_CAP,
-                cst.COLUMN_INDICES,
-                cst.COLUMN_SECTORS,
-            ],
-            None,
+        company_data = dict(
+            zip(
+                [
+                    cst.COLUMN_STOCK_URI,
+                    cst.COLUMN_DATE,
+                    cst.COLUMN_MARKET_CAP,
+                    cst.COLUMN_INDICES,
+                    cst.COLUMN_SECTORS,
+                ],
+                [
+                    stock_uri,
+                    current_date,
+                    market_cap,
+                    str(stock_indices),
+                    str(stock_sectors),
+                ],
+            )
         )
-
-        company_data[cst.COLUMN_STOCK_URI] = stock_uri
-        company_data[cst.COLUMN_DATE] = current_date
-        company_data[cst.COLUMN_MARKET_CAP] = market_cap
-        company_data[cst.COLUMN_INDICES] = str(stock_indices)
-        company_data[cst.COLUMN_SECTORS] = str(stock_sectors)
 
         try:
             db[cst.TABLE_COMPANY_DATA].upsert(
@@ -315,19 +306,19 @@ def write_single_overview_data_to_db(
         except:
             "Unhandled Exception while upserting Company Data"
 
-
         try:
-            stock_data = dict.fromkeys([cst.COLUMN_MARKET_PLACE, cst.COLUMN_URI])
-            stock_data[cst.COLUMN_MARKET_PLACE] = market_place
-            stock_data[cst.COLUMN_URI] = stock_uri
+            stock_data = dict(
+                zip(
+                    [cst.COLUMN_MARKET_PLACE, cst.COLUMN_URI],
+                    [market_place, stock_uri]
+                )
+            )
 
             db[cst.TABLE_STOCKS].update(stock_data, cst.COLUMN_URI)
 
         except:
             logger.exception("Unhandled Exception at Marketplace Insertion")
             pass
-
-
 
 
 def write_single_balance_data_to_db(

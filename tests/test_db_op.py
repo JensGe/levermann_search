@@ -256,11 +256,7 @@ class TestDatabase(unittest.TestCase):
     def test_write_single_overview_data_to_db_with_data_already_in_db(self):
         stock_uri = "bechtle-Aktie"
         market_cap = "3230.00"
-        stock_indices = [
-            "TecDAX",
-            "MDAX",
-            "Prime All Share",
-        ]
+        stock_indices = ["TecDAX", "MDAX", "Prime All Share"]
 
         stock_sectors = [
             "IT-Dienstleister",
@@ -319,14 +315,14 @@ class TestDatabase(unittest.TestCase):
             current_date,
         )
 
-        asserted_data = ['XETRA']
+        asserted_data = ["XETRA"]
 
         self.assertEqual(
             asserted_data,
             db.get_list(
                 table=cst.TABLE_STOCKS,
                 columns=cst.COLUMN_MARKET_PLACE,
-                condition=[cst.COLUMN_URI, 'coca-cola-Aktie'],
+                condition=[cst.COLUMN_URI, "coca-cola-Aktie"],
                 database=cst.TEST_DATABASE,
             ),
         )
@@ -522,8 +518,8 @@ class TestDatabase(unittest.TestCase):
         pass
 
     def tearDown(self):
-        # db_test.delete_test_data()
-        # db_test.drop_test_tables()
+        db_test.delete_test_data()
+        db_test.drop_test_tables()
         pass
 
 
