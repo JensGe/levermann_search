@@ -71,8 +71,9 @@ def write_stock_overview_data_to_db():
         stock_sectors = parse.get_sectors(stock_overview_soup)
         market_place = parse.get_market_place(stock_overview_soup)
         db.write_single_overview_data_to_db(
-            stock_uri, market_cap, stock_indices, stock_sectors, market_place
+            stock_uri, market_cap, stock_indices, stock_sectors
         )
+        db.write_new_market_place_to_db(stock_uri, market_place)
 
         stock_history_list = parse.get_historic_stock_prices_from_overview(
             stock_overview_soup

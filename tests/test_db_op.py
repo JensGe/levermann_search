@@ -210,9 +210,11 @@ class TestDatabase(unittest.TestCase):
             asserted_database_content.sort(), converted_validating_list.sort()
         )
 
-    def test_write_single_overview_data_to_db_with_complete_new_data(self):
+    # write overview item to company table
+    def test_write_single_overview_data_to_db_new_data(self):
         stock_uri = "coca-cola-Aktie"
         market_cap = "171390.00"
+        current_date = "2019-03-23"
         stock_indices = [
             "Dow Jones",
             "S&P 500",
@@ -222,17 +224,72 @@ class TestDatabase(unittest.TestCase):
             "BX Swiss - USA",
         ]
         stock_sectors = ["Getränke / Tabak"]
-        market_place = "FSE"
-        current_date = "2019-03-23"
 
         db.write_single_overview_data_to_db(
             stock_uri,
             market_cap,
             stock_indices,
             stock_sectors,
-            market_place,
             cst.TEST_DATABASE,
             current_date,
+        )
+
+        asserted_company_data_content_after = [
+            "3i-Aktie",
+            "ab_inbev-Aktie",
+            "ab_inbev-Aktie",
+            "bechtle-Aktie",
+            "cellcom_israel-Aktie",
+            "coca-cola-Aktie",
+        ]
+
+        self.assertEqual(
+            asserted_company_data_content_after,
+            db.get_list(
+                table=cst.TABLE_COMPANY_DATA,
+                columns=cst.COLUMN_STOCK_URI,
+                database=cst.TEST_DATABASE,
+            ),
+        )
+
+    def test_upsert_overview_data_to_db_with_new_data(self):
+        stock_uri = "coca-cola-Aktie"
+        market_cap = "171390.00"
+        current_date = "2019-03-23"
+        stock_indices = [
+            "Dow Jones",
+            "S&P 500",
+            "S&P 100",
+            "NYSE US 100",
+            "IGPA",
+            "BX Swiss - USA",
+        ]
+        stock_sectors = ["Getränke / Tabak"]
+
+        company_data = dict(
+            zip(
+                [
+                    cst.COLUMN_STOCK_URI,
+                    cst.COLUMN_DATE,
+                    cst.COLUMN_MARKET_CAP,
+                    cst.COLUMN_INDICES,
+                    cst.COLUMN_SECTORS,
+                ],
+                [
+                    stock_uri,
+                    current_date,
+                    market_cap,
+                    str(stock_indices),
+                    str(stock_sectors),
+                ],
+            )
+        )
+
+        db.upsert_item(
+            table=cst.TABLE_COMPANY_DATA,
+            primary_keys=[cst.COLUMN_STOCK_URI, cst.COLUMN_DATE],
+            database=cst.TEST_DATABASE,
+            **company_data
         )
 
         asserted_company_data_content_after = [
@@ -256,6 +313,7 @@ class TestDatabase(unittest.TestCase):
     def test_write_single_overview_data_to_db_with_data_already_in_db(self):
         stock_uri = "bechtle-Aktie"
         market_cap = "3230.00"
+        current_date = "2019-03-16"
         stock_indices = ["TecDAX", "MDAX", "Prime All Share"]
 
         stock_sectors = [
@@ -265,15 +323,12 @@ class TestDatabase(unittest.TestCase):
             "Internethandel (B2B, B2C)",
             "Informationstechnologie",
         ]
-        market_place = "FSE"
-        current_date = "2019-03-16"
 
         db.write_single_overview_data_to_db(
             stock_uri,
             market_cap,
             stock_indices,
             stock_sectors,
-            market_place,
             cst.TEST_DATABASE,
             current_date,
         )
@@ -290,30 +345,11 @@ class TestDatabase(unittest.TestCase):
             ),
         )
 
-    def test_write_single_overview_data_to_db_with_new_market_place(self):
+    def test_write_new_market_place_to_db(self):
         stock_uri = "coca-cola-Aktie"
-        market_cap = "171390.00"
-        stock_indices = [
-            "Dow Jones",
-            "S&P 500",
-            "S&P 100",
-            "NYSE US 100",
-            "IGPA",
-            "BX Swiss - USA",
-        ]
-        stock_sectors = ["Getränke / Tabak"]
         market_place = "XETRA"
-        current_date = "2019-03-23"
 
-        db.write_single_overview_data_to_db(
-            stock_uri,
-            market_cap,
-            stock_indices,
-            stock_sectors,
-            market_place,
-            cst.TEST_DATABASE,
-            current_date,
-        )
+        db.write_new_market_place_to_db(stock_uri, market_place, cst.TEST_DATABASE)
 
         asserted_data = ["XETRA"]
 
@@ -326,6 +362,16 @@ class TestDatabase(unittest.TestCase):
                 database=cst.TEST_DATABASE,
             ),
         )
+
+    def test_write_new_market_place_to_db_while_stock_does_not_exist(self):
+        stock_uri = "new-Aktie"
+        market_place = "XETRA"
+
+        result = db.write_new_market_place_to_db(
+            stock_uri, market_place, cst.TEST_DATABASE
+        )
+
+        self.assertFalse(result)
 
     # insert ignore/many
     def test_write_index_content_to_stock_table(self):

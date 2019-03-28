@@ -2,6 +2,7 @@
   <dictionary name="jens">
     <words>
       <w>levermann</w>
+      <w>upsert</w>
     </words>
   </dictionary>
 </component>

@@ -56,9 +56,14 @@ def insert_list(table, data, database=cst.DATABASE):
     return result
 
 
-def upsert_item(table, primary_keys, database=cst.DATABASE, **data):
+def upsert_item(table, primary_keys, database=cst.DATABASE, **kwargs):
     with dataset.connect(database) as db:
-        db[table].upsert(data, primary_keys)
+        print(dict(**kwargs))
+        try:
+            db[table].upsert(dict(**kwargs), primary_keys)
+            print("done")
+        except:
+            print("WTF Error")
     pass
 
 
@@ -273,7 +278,6 @@ def write_single_overview_data_to_db(
     market_cap,
     stock_indices,
     stock_sectors,
-    market_place,
     database=cst.DATABASE,
     current_date=date.get_current_date(),
 ):
@@ -306,11 +310,13 @@ def write_single_overview_data_to_db(
         except:
             "Unhandled Exception while upserting Company Data"
 
+
+def write_new_market_place_to_db(stock_uri, market_place, database=cst.DATABASE):
+    with dataset.connect(database) as db:
         try:
             stock_data = dict(
                 zip(
-                    [cst.COLUMN_MARKET_PLACE, cst.COLUMN_URI],
-                    [market_place, stock_uri]
+                    [cst.COLUMN_MARKET_PLACE, cst.COLUMN_URI], [market_place, stock_uri]
                 )
             )
 
