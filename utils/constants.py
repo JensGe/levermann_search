@@ -86,8 +86,8 @@ HTML_EXTENSION = ".html"
 
 # Database
 DATABASE = "mysql://root:toor@localhost/levermann"
-TEST_DATABASE = "mysql://51290m41180_10:QVCGR55k3pwK@localhost/51290m41180_10"
-# TEST_DATABASE = "mysql://root:toor@localhost/levermann_test"
+# TEST_DATABASE = "mysql://51290m41180_10:QVCGR55k3pwK@localhost/51290m41180_10"
+TEST_DATABASE = "mysql://root:toor@localhost/levermann_test"
 
 
 # Database Tables
@@ -131,6 +131,35 @@ COLUMN_MARKET_PLACE = "Handelsplatz"
 COLUMN_DATE = "Datum"
 COLUMN_SECTORS = "Branchen"
 COLUMN_INDICES = "Indizes"
+
+ALL_COLUMNS = [
+    COLUMN_URI,
+    COLUMN_ACTIVE,
+    COLUMN_LARGECAP,
+    COLUMN_INDEX_URI,
+    COLUMN_PAGES,
+    COLUMN_STOCK_URI,
+    COLUMN_EARNINGS_AT,
+    COLUMN_EQUITY_CAPITAL,
+    COLUMN_OPERATIVE_RESULT,
+    COLUMN_SALES_REVENUE,
+    COLUMN_BALANCE,
+    COLUMN_START_VALUE,
+    COLUMN_CLOSING_VALUE,
+    COLUMN_EPS_M3,
+    COLUMN_EPS_M2,
+    COLUMN_EPS_M1,
+    COLUMN_EPS_0,
+    COLUMN_EPS_P1,
+    COLUMN_ANALYST_BUY,
+    COLUMN_ANALYST_HOLD,
+    COLUMN_ANALYST_SELL,
+    COLUMN_MARKET_CAP,
+    COLUMN_MARKET_PLACE,
+    COLUMN_DATE,
+    COLUMN_SECTORS,
+    COLUMN_INDICES,
+]
 
 # Date Enums
 DT_MINUS = "minus"

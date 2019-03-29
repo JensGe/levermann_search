@@ -56,22 +56,77 @@ def insert_list(table, data, database=cst.DATABASE):
     return result
 
 
-def upsert_item(table, primary_keys, database=cst.DATABASE, **kwargs):
+def upsert_item(
+    table,
+    primary_keys,
+    database=cst.DATABASE,
+    uri=None,
+    active=None,
+    large_cap=None,
+    index_uri=None,
+    pages=None,
+    stock_uri=None,
+    earnings_at=None,
+    equity_capital=None,
+    operative_result=None,
+    sales_revenue=None,
+    balance=None,
+    start_value=None,
+    closing_value=None,
+    eps_m3=None,
+    eps_m2=None,
+    eps_m1=None,
+    eps_0=None,
+    eps_p1=None,
+    analyst_buy=None,
+    analyst_hold=None,
+    analyst_sell=None,
+    market_cap=None,
+    market_place=None,
+    current_date=None,
+    stock_sectors=None,
+    stock_indices=None,
+):
+    default_dict = dict(
+        zip(
+            cst.ALL_COLUMNS,
+            [
+                uri,
+                active,
+                large_cap,
+                index_uri,
+                pages,
+                stock_uri,
+                earnings_at,
+                equity_capital,
+                operative_result,
+                sales_revenue,
+                balance,
+                start_value,
+                closing_value,
+                eps_m3,
+                eps_m2,
+                eps_m1,
+                eps_0,
+                eps_p1,
+                analyst_buy,
+                analyst_hold,
+                analyst_sell,
+                market_cap,
+                market_place,
+                current_date,
+                str(stock_sectors),
+                str(stock_indices),
+            ],
+        )
+    )
+    upsert_dict = {k: v for k, v in default_dict.items() if v is not None}
     with dataset.connect(database) as db:
-        print(dict(**kwargs))
         try:
-            db[table].upsert(dict(**kwargs), primary_keys)
-            print("done")
+            db[table].upsert(upsert_dict, primary_keys)
         except:
-            print("WTF Error")
+            logger.warning("Unhandled Upsert Error")
     pass
-
-
-def create_reduced_dict(stock_uri=None, market_cap=None, empty_key=None, current_date=None):
-    empty_dict = dict(zip(['stock_uri', 'market_cap', 'empty_key', 'current_date'],
-                          [stock_uri, market_cap, empty_key, current_date]))
-
-    return {k: v for k, v in empty_dict.items() if v is not None}
 
 
 def update_list():
