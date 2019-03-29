@@ -86,8 +86,8 @@ HTML_EXTENSION = ".html"
 
 # Database
 DATABASE = "mysql://root:toor@localhost/levermann"
-# TEST_DATABASE = "mysql://51290m41180_10:QVCGR55k3pwK@localhost/51290m41180_10"
-TEST_DATABASE = "mysql://root:toor@localhost/levermann_test"
+TEST_DATABASE = "mysql://51290m41180_10:QVCGR55k3pwK@localhost/51290m41180_10"
+# TEST_DATABASE = "mysql://root:toor@localhost/levermann_test"
 
 
 # Database Tables

@@ -67,6 +67,13 @@ def upsert_item(table, primary_keys, database=cst.DATABASE, **kwargs):
     pass
 
 
+def create_reduced_dict(stock_uri=None, market_cap=None, empty_key=None, current_date=None):
+    empty_dict = dict(zip(['stock_uri', 'market_cap', 'empty_key', 'current_date'],
+                          [stock_uri, market_cap, empty_key, current_date]))
+
+    return {k: v for k, v in empty_dict.items() if v is not None}
+
+
 def update_list():
     pass
 

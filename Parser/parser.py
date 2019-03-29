@@ -67,9 +67,11 @@ def write_stock_overview_data_to_db():
                 "Write Stock Overview Data to DB: Market Cap is None for %s" % str(file)
             )
             market_cap = -1.00
+
         stock_indices = parse.get_listed_indizes(stock_overview_soup)
         stock_sectors = parse.get_sectors(stock_overview_soup)
         market_place = parse.get_market_place(stock_overview_soup)
+
         db.write_single_overview_data_to_db(
             stock_uri, market_cap, stock_indices, stock_sectors
         )

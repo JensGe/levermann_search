@@ -7,8 +7,9 @@ from tests import db_test as db_test
 
 class TestDatabase(unittest.TestCase):
     def setUp(self):
-        db_test.create_test_tables()
-        db_test.insert_test_data()
+        # db_test.create_test_tables()
+        # db_test.insert_test_data()
+        pass
 
     # get_list()
     def test_get_list_from_db(self):
@@ -266,30 +267,28 @@ class TestDatabase(unittest.TestCase):
         ]
         stock_sectors = ["Getränke / Tabak"]
 
-        company_data = dict(
-            zip(
-                [
-                    cst.COLUMN_STOCK_URI,
-                    cst.COLUMN_DATE,
-                    cst.COLUMN_MARKET_CAP,
-                    cst.COLUMN_INDICES,
-                    cst.COLUMN_SECTORS,
-                ],
-                [
-                    stock_uri,
-                    current_date,
-                    market_cap,
-                    str(stock_indices),
-                    str(stock_sectors),
-                ],
-            )
-        )
-
         db.upsert_item(
             table=cst.TABLE_COMPANY_DATA,
             primary_keys=[cst.COLUMN_STOCK_URI, cst.COLUMN_DATE],
             database=cst.TEST_DATABASE,
-            **company_data
+            **dict(
+                zip(
+                    [
+                        cst.COLUMN_STOCK_URI,
+                        cst.COLUMN_DATE,
+                        cst.COLUMN_MARKET_CAP,
+                        cst.COLUMN_INDICES,
+                        cst.COLUMN_SECTORS,
+                    ],
+                    [
+                        stock_uri,
+                        current_date,
+                        market_cap,
+                        str(stock_indices),
+                        str(stock_sectors),
+                    ],
+                )
+            )
         )
 
         asserted_company_data_content_after = [
@@ -309,6 +308,24 @@ class TestDatabase(unittest.TestCase):
                 database=cst.TEST_DATABASE,
             ),
         )
+
+    def test_dict_creation(self):
+        stock_uri = "bechtle-Aktie"
+        market_cap = "3230.00"
+        current_date = "2019-03-16"
+
+        key1 = 'stock_uri'
+        key2 = 'market_cap'
+        key4 = 'current_date'
+
+        reduced_dict = db.create_reduced_dict(stock_uri=stock_uri,
+                                              market_cap=market_cap,
+                                              current_date=current_date)
+
+        asserted_reduced_dict = dict(zip([key1, key2, key4],
+                                         [stock_uri, market_cap, current_date]))
+
+        self.assertEqual(asserted_reduced_dict, reduced_dict)
 
     def test_write_single_overview_data_to_db_with_data_already_in_db(self):
         stock_uri = "bechtle-Aktie"
@@ -564,8 +581,8 @@ class TestDatabase(unittest.TestCase):
         pass
 
     def tearDown(self):
-        db_test.delete_test_data()
-        db_test.drop_test_tables()
+        # db_test.delete_test_data()
+        # db_test.drop_test_tables()
         pass
 
 
