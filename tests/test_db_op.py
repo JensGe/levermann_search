@@ -211,52 +211,11 @@ class TestDatabase(unittest.TestCase):
             asserted_database_content.sort(), converted_validating_list.sort()
         )
 
-    # write overview item to company table
-    def test_write_single_overview_data_to_db_new_data(self):
+    # Upsert Tests
+    def test_upsert_new_single_overview_data_to_db(self):
+        current_date = "2019-03-23"
         stock_uri = "coca-cola-Aktie"
         market_cap = "171390.00"
-        current_date = "2019-03-23"
-        stock_indices = [
-            "Dow Jones",
-            "S&P 500",
-            "S&P 100",
-            "NYSE US 100",
-            "IGPA",
-            "BX Swiss - USA",
-        ]
-        stock_sectors = ["Getränke / Tabak"]
-
-        db.write_single_overview_data_to_db(
-            stock_uri,
-            market_cap,
-            stock_indices,
-            stock_sectors,
-            cst.TEST_DATABASE,
-            current_date,
-        )
-
-        asserted_company_data_content_after = [
-            "3i-Aktie",
-            "ab_inbev-Aktie",
-            "ab_inbev-Aktie",
-            "bechtle-Aktie",
-            "cellcom_israel-Aktie",
-            "coca-cola-Aktie",
-        ]
-
-        self.assertEqual(
-            asserted_company_data_content_after,
-            db.get_list(
-                table=cst.TABLE_COMPANY_DATA,
-                columns=cst.COLUMN_STOCK_URI,
-                database=cst.TEST_DATABASE,
-            ),
-        )
-
-    def test_upsert_overview_data_to_db_with_new_data(self):
-        stock_uri = "coca-cola-Aktie"
-        market_cap = "171390.00"
-        current_date = "2019-03-23"
         stock_indices = [
             "Dow Jones",
             "S&P 500",
@@ -272,10 +231,10 @@ class TestDatabase(unittest.TestCase):
             primary_keys=[cst.COLUMN_STOCK_URI, cst.COLUMN_DATE],
             database=cst.TEST_DATABASE,
             stock_uri=stock_uri,
-            current_date=current_date,
             market_cap=market_cap,
-            stock_indices=str(stock_indices),
-            stock_sectors=str(stock_sectors),
+            current_date=current_date,
+            stock_indices=stock_indices,
+            stock_sectors=stock_sectors,
         )
 
         asserted_company_data_content_after = [
@@ -296,8 +255,7 @@ class TestDatabase(unittest.TestCase):
             ),
         )
 
-
-    def test_write_single_overview_data_to_db_with_data_already_in_db(self):
+    def test_upsert_existing_single_overview_data_to_db(self):
         stock_uri = "bechtle-Aktie"
         market_cap = "3230.00"
         current_date = "2019-03-16"
@@ -311,13 +269,15 @@ class TestDatabase(unittest.TestCase):
             "Informationstechnologie",
         ]
 
-        db.write_single_overview_data_to_db(
-            stock_uri,
-            market_cap,
-            stock_indices,
-            stock_sectors,
-            cst.TEST_DATABASE,
-            current_date,
+        db.upsert_item(
+            table=cst.TABLE_COMPANY_DATA,
+            primary_keys=[cst.COLUMN_STOCK_URI, cst.COLUMN_DATE],
+            database=cst.TEST_DATABASE,
+            stock_uri=stock_uri,
+            market_cap=market_cap,
+            current_date=current_date,
+            stock_indices=stock_indices,
+            stock_sectors=stock_sectors,
         )
 
         asserted_data = ["['TecDAX', 'MDAX', 'Prime All Share']"]
@@ -332,11 +292,39 @@ class TestDatabase(unittest.TestCase):
             ),
         )
 
-    def test_write_new_market_place_to_db(self):
+    def test_upsert_new_single_balance_data_to_db(self):
+        current_date = "2019-03-23"
+        stock_uri = "coca-cola-Aktie"
+        result_after_tax = 6434.00
+        operative_result = 9652.00
+        sales_revenue = 31697.00
+        total_assets = 83216.00
+        equity_capital = 19058.00
+        eps_minus_3 = 1.51
+        eps_minus_2 = 0.29
+        eps_minus_1 = 1.51
+
+        db.upsert_item(
+            table=cst.TABLE_COMPANY_DATA,
+            primary_keys=[cst.COLUMN_STOCK_URI, cst.COLUMN_DATE],
+            database=cst.TEST_DATABASE,
+        )
+
+    def test_upsert_existing_single_balance_data_to_db(self):
+        pass
+
+    # Update Tests
+    def test_update_existing_stocks_market_place(self):
         stock_uri = "coca-cola-Aktie"
         market_place = "XETRA"
 
-        db.write_new_market_place_to_db(stock_uri, market_place, cst.TEST_DATABASE)
+        db.update_item(
+            table=cst.TABLE_STOCKS,
+            primary_keys=cst.COLUMN_URI,
+            database=cst.TEST_DATABASE,
+            uri=stock_uri,
+            market_place=market_place,
+        )
 
         asserted_data = ["XETRA"]
 
@@ -350,12 +338,16 @@ class TestDatabase(unittest.TestCase):
             ),
         )
 
-    def test_write_new_market_place_to_db_while_stock_does_not_exist(self):
+    def test_update_not_existing_stocks_market_place(self):
         stock_uri = "new-Aktie"
         market_place = "XETRA"
 
-        result = db.write_new_market_place_to_db(
-            stock_uri, market_place, cst.TEST_DATABASE
+        result = db.update_item(
+            table=cst.TABLE_STOCKS,
+            primary_keys=cst.COLUMN_URI,
+            database=cst.TEST_DATABASE,
+            uri=stock_uri,
+            market_place=market_place,
         )
 
         self.assertFalse(result)

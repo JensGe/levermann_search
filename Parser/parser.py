@@ -1,6 +1,7 @@
 from utils import parse_op as parse
 from utils import db_op as db
 from utils import scrap_op as scrap
+from utils import date_op as date
 from utils import constants as cst
 from loguru import logger
 
@@ -72,10 +73,22 @@ def write_stock_overview_data_to_db():
         stock_sectors = parse.get_sectors(stock_overview_soup)
         market_place = parse.get_market_place(stock_overview_soup)
 
-        db.write_single_overview_data_to_db(
-            stock_uri, market_cap, stock_indices, stock_sectors
-        )
-        db.write_new_market_place_to_db(stock_uri, market_place)
+        # db.write_single_overview_data_to_db(
+        #     stock_uri, market_cap, stock_indices, stock_sectors
+        # )
+        db.upsert_item(table=cst.TABLE_COMPANY_DATA,
+                       primary_keys=[cst.COLUMN_STOCK_URI, cst.COLUMN_DATE],
+                       stock_uri=stock_uri,
+                       market_cap=market_cap,
+                       current_date=date.get_current_date(),
+                       stock_indices=stock_indices,
+                       stock_sectors=stock_sectors)
+
+        # db.write_new_market_place_to_db(stock_uri, market_place)
+        db.update_item(table=cst.TABLE_STOCKS,
+                       primary_keys=cst.COLUMN_URI,
+                       uri=stock_uri,
+                       market_place=market_place)
 
         stock_history_list = parse.get_historic_stock_prices_from_overview(
             stock_overview_soup

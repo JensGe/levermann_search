@@ -56,71 +56,28 @@ def insert_list(table, data, database=cst.DATABASE):
     return result
 
 
-def upsert_item(
-    table,
-    primary_keys,
-    database=cst.DATABASE,
-    uri=None,
-    active=None,
-    large_cap=None,
-    index_uri=None,
-    pages=None,
-    stock_uri=None,
-    earnings_at=None,
-    equity_capital=None,
-    operative_result=None,
-    sales_revenue=None,
-    balance=None,
-    start_value=None,
-    closing_value=None,
-    eps_m3=None,
-    eps_m2=None,
-    eps_m1=None,
-    eps_0=None,
-    eps_p1=None,
-    analyst_buy=None,
-    analyst_hold=None,
-    analyst_sell=None,
-    market_cap=None,
-    market_place=None,
-    current_date=None,
-    stock_sectors=None,
-    stock_indices=None,
-):
-    default_dict = dict(
-        zip(
-            cst.ALL_COLUMNS,
-            [
-                uri,
-                active,
-                large_cap,
-                index_uri,
-                pages,
-                stock_uri,
-                earnings_at,
-                equity_capital,
-                operative_result,
-                sales_revenue,
-                balance,
-                start_value,
-                closing_value,
-                eps_m3,
-                eps_m2,
-                eps_m1,
-                eps_0,
-                eps_p1,
-                analyst_buy,
-                analyst_hold,
-                analyst_sell,
-                market_cap,
-                market_place,
-                current_date,
-                str(stock_sectors),
-                str(stock_indices),
-            ],
-        )
-    )
+def upsert_item(table, primary_keys, database=cst.DATABASE,
+                uri=None, active=None, large_cap=None, index_uri=None,
+                pages=None, stock_uri=None, earnings_at=None, equity_capital=None,
+                operative_result=None, sales_revenue=None, balance=None,
+                start_value=None, closing_value=None, eps_m3=None, eps_m2=None,
+                eps_m1=None, eps_0=None, eps_p1=None, analyst_buy=None,
+                analyst_hold=None, analyst_sell=None, market_cap=None,
+                market_place=None, current_date=None, stock_sectors=None,
+                stock_indices=None):
+
+    default_dict = dict(zip(cst.ALL_COLUMNS,
+                            [uri, active, large_cap, index_uri, pages,
+                             stock_uri, earnings_at, equity_capital,
+                             operative_result, sales_revenue, balance,
+                             start_value, closing_value, eps_m3,
+                             eps_m2, eps_m1, eps_0, eps_p1,
+                             analyst_buy, analyst_hold, analyst_sell,
+                             market_cap, market_place, current_date,
+                             str(stock_sectors), str(stock_indices)]))
+
     upsert_dict = {k: v for k, v in default_dict.items() if v is not None}
+
     with dataset.connect(database) as db:
         try:
             db[table].upsert(upsert_dict, primary_keys)
@@ -129,11 +86,33 @@ def upsert_item(
     pass
 
 
-def update_list():
-    pass
+def update_item(table, primary_keys, database=cst.DATABASE,
+                uri=None, active=None, large_cap=None, index_uri=None,
+                pages=None, stock_uri=None, earnings_at=None, equity_capital=None,
+                operative_result=None, sales_revenue=None, balance=None,
+                start_value=None, closing_value=None, eps_m3=None, eps_m2=None,
+                eps_m1=None, eps_0=None, eps_p1=None, analyst_buy=None,
+                analyst_hold=None, analyst_sell=None, market_cap=None,
+                market_place=None, current_date=None, stock_sectors=None,
+                stock_indices=None):
 
+    default_dict = dict(zip(cst.ALL_COLUMNS,
+                            [uri, active, large_cap, index_uri, pages,
+                             stock_uri, earnings_at, equity_capital,
+                             operative_result, sales_revenue, balance,
+                             start_value, closing_value, eps_m3,
+                             eps_m2, eps_m1, eps_0, eps_p1,
+                             analyst_buy, analyst_hold, analyst_sell,
+                             market_cap, market_place, current_date,
+                             str(stock_sectors), str(stock_indices)]))
 
-def update_item():
+    upsert_dict = {k: v for k, v in default_dict.items() if v is not None}
+
+    with dataset.connect(database) as db:
+        try:
+            db[table].update(upsert_dict, primary_keys)
+        except:
+            logger.warning("Unhandled Update Error")
     pass
 
 
@@ -335,59 +314,6 @@ def write_stock_overview_history_to_db(stock_history, stock_uri, database=cst.DA
 
 
 # Write single Items
-def write_single_overview_data_to_db(
-    stock_uri,
-    market_cap,
-    stock_indices,
-    stock_sectors,
-    database=cst.DATABASE,
-    current_date=date.get_current_date(),
-):
-
-    with dataset.connect(database) as db:
-
-        company_data = dict(
-            zip(
-                [
-                    cst.COLUMN_STOCK_URI,
-                    cst.COLUMN_DATE,
-                    cst.COLUMN_MARKET_CAP,
-                    cst.COLUMN_INDICES,
-                    cst.COLUMN_SECTORS,
-                ],
-                [
-                    stock_uri,
-                    current_date,
-                    market_cap,
-                    str(stock_indices),
-                    str(stock_sectors),
-                ],
-            )
-        )
-
-        try:
-            db[cst.TABLE_COMPANY_DATA].upsert(
-                company_data, [cst.COLUMN_STOCK_URI, cst.COLUMN_DATE]
-            )
-        except:
-            "Unhandled Exception while upserting Company Data"
-
-
-def write_new_market_place_to_db(stock_uri, market_place, database=cst.DATABASE):
-    with dataset.connect(database) as db:
-        try:
-            stock_data = dict(
-                zip(
-                    [cst.COLUMN_MARKET_PLACE, cst.COLUMN_URI], [market_place, stock_uri]
-                )
-            )
-
-            db[cst.TABLE_STOCKS].update(stock_data, cst.COLUMN_URI)
-
-        except:
-            logger.exception("Unhandled Exception at Marketplace Insertion")
-            pass
-
 
 def write_single_balance_data_to_db(
     stock_uri,
