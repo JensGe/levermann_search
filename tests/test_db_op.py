@@ -295,22 +295,75 @@ class TestDatabase(unittest.TestCase):
     def test_upsert_new_single_balance_data_to_db(self):
         current_date = "2019-03-23"
         stock_uri = "coca-cola-Aktie"
-        result_after_tax = 6434.00
+        earnings_at = 6434.00
         operative_result = 9652.00
         sales_revenue = 31697.00
-        total_assets = 83216.00
+        balance = 83216.00
         equity_capital = 19058.00
-        eps_minus_3 = 1.51
-        eps_minus_2 = 0.29
-        eps_minus_1 = 1.51
+        eps_m3 = 1.51
+        eps_m2 = 0.29
+        eps_m1 = 1.51
 
         db.upsert_item(
             table=cst.TABLE_COMPANY_DATA,
             primary_keys=[cst.COLUMN_STOCK_URI, cst.COLUMN_DATE],
             database=cst.TEST_DATABASE,
+            current_date=current_date,
+            stock_uri=stock_uri,
+            earnings_after_tax=earnings_at,
+            operative_result=operative_result,
+            sales_revenue=sales_revenue,
+            balance=balance,
+            equity_capital=equity_capital,
+            eps_m3=eps_m3,
+            eps_m2=eps_m2,
+            eps_m1=eps_m1,
+        )
+
+        self.assertEqual(
+            "1.51",
+            str(
+                db.get_item(
+                    table=cst.TABLE_COMPANY_DATA,
+                    column=cst.COLUMN_EPS_M3,
+                    condition=[cst.COLUMN_STOCK_URI, "coca-cola-Aktie"],
+                    database=cst.TEST_DATABASE,
+                )
+            ),
         )
 
     def test_upsert_existing_single_balance_data_to_db(self):
+        current_date = "2019-03-09"
+        stock_uri = "ab_inbev-Aktie"
+        equity_capital = 121541.00
+        earnings_at = 3702.48
+        operative_result = 14520.88
+
+        db.upsert_item(
+            table=cst.TABLE_COMPANY_DATA,
+            primary_keys=[cst.COLUMN_STOCK_URI, cst.COLUMN_DATE],
+            database=cst.TEST_DATABASE,
+            current_date=current_date,
+            stock_uri=stock_uri,
+            equity_capital=equity_capital,
+            earnings_after_tax=earnings_at,
+            operative_result=operative_result,
+        )
+
+        self.assertEqual(
+            "3702.48",
+            str(
+                db.get_item(
+                    table=cst.TABLE_COMPANY_DATA,
+                    column=cst.COLUMN_EARNINGS_AT,
+                    condition=[cst.COLUMN_EQUITY_CAPITAL, 121541.00],
+                    database=cst.TEST_DATABASE,
+                )
+            )
+        )
+
+    def test_quarterly_date_upsert(self):
+        # ToDo
         pass
 
     # Update Tests

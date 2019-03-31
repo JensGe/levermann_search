@@ -56,25 +56,73 @@ def insert_list(table, data, database=cst.DATABASE):
     return result
 
 
-def upsert_item(table, primary_keys, database=cst.DATABASE,
-                uri=None, active=None, large_cap=None, index_uri=None,
-                pages=None, stock_uri=None, earnings_at=None, equity_capital=None,
-                operative_result=None, sales_revenue=None, balance=None,
-                start_value=None, closing_value=None, eps_m3=None, eps_m2=None,
-                eps_m1=None, eps_0=None, eps_p1=None, analyst_buy=None,
-                analyst_hold=None, analyst_sell=None, market_cap=None,
-                market_place=None, current_date=None, stock_sectors=None,
-                stock_indices=None):
+def upsert_item(
+    table,
+    primary_keys,
+    database=cst.DATABASE,
+    uri=None,
+    active=None,
+    large_cap=None,
+    index_uri=None,
+    pages=None,
+    stock_uri=None,
+    equity_capital=None,
+    earnings_after_tax=None,
+    operative_result=None,
+    sales_revenue=None,
+    balance=None,
+    start_value=None,
+    closing_value=None,
+    eps_m3=None,
+    eps_m2=None,
+    eps_m1=None,
+    eps_0=None,
+    eps_p1=None,
+    analyst_buy=None,
+    analyst_hold=None,
+    analyst_sell=None,
+    market_cap=None,
+    market_place=None,
+    current_date=None,
+    quarterly=None,
+    stock_sectors=None,
+    stock_indices=None,
+):
 
-    default_dict = dict(zip(cst.ALL_COLUMNS,
-                            [uri, active, large_cap, index_uri, pages,
-                             stock_uri, earnings_at, equity_capital,
-                             operative_result, sales_revenue, balance,
-                             start_value, closing_value, eps_m3,
-                             eps_m2, eps_m1, eps_0, eps_p1,
-                             analyst_buy, analyst_hold, analyst_sell,
-                             market_cap, market_place, current_date,
-                             str(stock_sectors), str(stock_indices)]))
+    default_dict = dict(
+        zip(
+            cst.ALL_COLUMNS,
+            [
+                uri,
+                active,
+                large_cap,
+                index_uri,
+                pages,
+                stock_uri,
+                earnings_after_tax,
+                equity_capital,
+                operative_result,
+                sales_revenue,
+                balance,
+                start_value,
+                closing_value,
+                eps_m3,
+                eps_m2,
+                eps_m1,
+                eps_0,
+                eps_p1,
+                analyst_buy,
+                analyst_hold,
+                analyst_sell,
+                market_cap,
+                market_place,
+                current_date,
+                quarterly,
+                str(stock_sectors),
+                str(stock_indices),
+            ],
+        )
+    )
 
     upsert_dict = {k: v for k, v in default_dict.items() if v is not None}
 
@@ -86,25 +134,73 @@ def upsert_item(table, primary_keys, database=cst.DATABASE,
     pass
 
 
-def update_item(table, primary_keys, database=cst.DATABASE,
-                uri=None, active=None, large_cap=None, index_uri=None,
-                pages=None, stock_uri=None, earnings_at=None, equity_capital=None,
-                operative_result=None, sales_revenue=None, balance=None,
-                start_value=None, closing_value=None, eps_m3=None, eps_m2=None,
-                eps_m1=None, eps_0=None, eps_p1=None, analyst_buy=None,
-                analyst_hold=None, analyst_sell=None, market_cap=None,
-                market_place=None, current_date=None, stock_sectors=None,
-                stock_indices=None):
+def update_item(
+    table,
+    primary_keys,
+    database=cst.DATABASE,
+    uri=None,
+    active=None,
+    large_cap=None,
+    index_uri=None,
+    pages=None,
+    stock_uri=None,
+    earnings_at=None,
+    equity_capital=None,
+    operative_result=None,
+    sales_revenue=None,
+    balance=None,
+    start_value=None,
+    closing_value=None,
+    eps_m3=None,
+    eps_m2=None,
+    eps_m1=None,
+    eps_0=None,
+    eps_p1=None,
+    analyst_buy=None,
+    analyst_hold=None,
+    analyst_sell=None,
+    market_cap=None,
+    market_place=None,
+    current_date=None,
+    quarterly=None,
+    stock_sectors=None,
+    stock_indices=None,
+):
 
-    default_dict = dict(zip(cst.ALL_COLUMNS,
-                            [uri, active, large_cap, index_uri, pages,
-                             stock_uri, earnings_at, equity_capital,
-                             operative_result, sales_revenue, balance,
-                             start_value, closing_value, eps_m3,
-                             eps_m2, eps_m1, eps_0, eps_p1,
-                             analyst_buy, analyst_hold, analyst_sell,
-                             market_cap, market_place, current_date,
-                             str(stock_sectors), str(stock_indices)]))
+    default_dict = dict(
+        zip(
+            cst.ALL_COLUMNS,
+            [
+                uri,
+                active,
+                large_cap,
+                index_uri,
+                pages,
+                stock_uri,
+                earnings_at,
+                equity_capital,
+                operative_result,
+                sales_revenue,
+                balance,
+                start_value,
+                closing_value,
+                eps_m3,
+                eps_m2,
+                eps_m1,
+                eps_0,
+                eps_p1,
+                analyst_buy,
+                analyst_hold,
+                analyst_sell,
+                market_cap,
+                market_place,
+                current_date,
+                quarterly,
+                str(stock_sectors),
+                str(stock_indices),
+            ],
+        )
+    )
 
     upsert_dict = {k: v for k, v in default_dict.items() if v is not None}
 
@@ -315,159 +411,25 @@ def write_stock_overview_history_to_db(stock_history, stock_uri, database=cst.DA
 
 # Write single Items
 
-def write_single_balance_data_to_db(
-    stock_uri,
-    result_after_tax,
-    operative_result,
-    sales_revenue,
-    total_assets,
-    equity_capital,
-    eps_minus_3,
-    eps_minus_2,
-    eps_minus_1,
-    database=cst.DATABASE,
-):
-    current_date = date.get_current_date()
-    with dataset.connect(database) as db:
-        try:
-            db[cst.TABLE_COMPANY_DATA].insert(
-                dict(
-                    AktienURI=stock_uri,
-                    Datum=current_date,
-                    Ergebnis_nach_Steuern=result_after_tax,
-                    Operatives_Ergebnis=operative_result,
-                    Umsatzerloese=sales_revenue,
-                    Bilanzsumme=total_assets,
-                    Eigenkapital=equity_capital,
-                    EPS_minus_3=eps_minus_3,
-                    EPS_minus_2=eps_minus_2,
-                    EPS_minus_1=eps_minus_1,
-                )
-            )
-        except IntegrityError:
-            db.query(
-                "UPDATE %s SET "
-                "Ergebnis_nach_Steuern = %s, "
-                "Operatives_Ergebnis = %s, "
-                "Umsatzerloese = %s, "
-                "Bilanzsumme = %s, "
-                "Eigenkapital = %s, "
-                "EPS_minus_3 = %s, "
-                "EPS_minus_2 = %s, "
-                "EPS_minus_1 = %s "
-                'WHERE AktienURI = "%s" AND Datum = "%s"'
-                % (
-                    cst.TABLE_COMPANY_DATA,
-                    result_after_tax,
-                    operative_result,
-                    sales_revenue,
-                    total_assets,
-                    equity_capital,
-                    eps_minus_3,
-                    eps_minus_2,
-                    eps_minus_1,
-                    stock_uri,
-                    current_date,
-                )
-            )
-            pass
 
-
-def write_single_estimate_data_to_db(
-    stock_uri, eps_0, eps_plus_1, database=cst.DATABASE
-):
-    current_date = date.get_current_date()
-    with dataset.connect(database) as db:
-        try:
-            db[cst.TABLE_COMPANY_DATA].insert(
-                dict(
-                    AktienURI=stock_uri,
-                    Datum=current_date,
-                    EPS_0=eps_0,
-                    EPS_plus_1=eps_plus_1,
-                )
-            )
-        except IntegrityError:
-            db.query(
-                "UPDATE %s SET "
-                "EPS_0 = %s, "
-                "EPS_plus_1 = %s "
-                'WHERE AktienURI = "%s" AND Datum = "%s"'
-                % (cst.TABLE_COMPANY_DATA, eps_0, eps_plus_1, stock_uri, current_date)
-            )
-            pass
-
-
-def write_single_targets_data_to_db(
-    stock_uri, analyst_buy, analyst_hold, analyst_sell, database=cst.DATABASE
-):
-    current_date = date.get_current_date()
-    with dataset.connect(database) as db:
-        try:
-            db[cst.TABLE_COMPANY_DATA].insert(
-                dict(
-                    AktienURI=stock_uri,
-                    Datum=current_date,
-                    Analysten_Buy=analyst_buy,
-                    Analysten_Hold=analyst_hold,
-                    Analysten_Sell=analyst_sell,
-                )
-            )
-        except IntegrityError:
-            db.query(
-                "UPDATE %s SET "
-                "Analysten_Buy = %s, "
-                "Analysten_Hold = %s, "
-                "Analysten_Sell = %s "
-                'WHERE AktienURI = "%s" AND Datum = "%s"'
-                % (
-                    cst.TABLE_COMPANY_DATA,
-                    analyst_buy,
-                    analyst_hold,
-                    analyst_sell,
-                    stock_uri,
-                    current_date,
-                )
-            )
-            pass
-
-
-def write_single_stock_dates_data_to_db(stock_uri, figures_date, database=cst.DATABASE):
-    with dataset.connect(database) as db:
-        try:
-            db[cst.TABLE_STOCK_DATES].insert(
-                dict(
-                    AktienURI=stock_uri,
-                    Datum=figures_date,
-                    Terminart="Quarterly/Yearly",
-                )
-            )
-        except IntegrityError:
-            db.query(
-                "UPDATE %s SET "
-                "Datum = %s "
-                'WHERE AktienURI = "%s"'
-                % (cst.TABLE_COMPANY_DATA, figures_date, stock_uri)
-            )
-            pass
-
-
-def write_date_list_to_db(date_list):
-    """
-    Datelist are e.g.:
-            [["adidas AG", "2018-11-07", "Quartalszahlen", "Future"],
-             ["adidas AG", "2018-03-07", "Quartalszahlen", "Future"],
-             ["adidas AG", "2019-05-02", "Quartalszahlen", "Future"],
-            ]
-    or:
-
-            [["adidas AG", "2018-08-09", "Q2 2018 Earnings Release", "Past"],
-             ["adidas AG", "2018-05-09", "Hauptversammlung", "Past"],
-             ["adidas AG", "2017-11-09", "Q3 2017", "Past"]]
-
-    :param date_list:
-    :return:
-    """
+# def write_single_stock_dates_data_to_db(stock_uri, figures_date, database=cst.DATABASE):
+#     with dataset.connect(database) as db:
+#         try:
+#             db[cst.TABLE_STOCK_DATES].insert(
+#                 dict(
+#                     AktienURI=stock_uri,
+#                     Datum=figures_date,
+#                     Terminart="Quarterly/Yearly",
+#                 )
+#             )
+#         except IntegrityError:
+#             db.query(
+#                 "UPDATE %s SET "
+#                 "Datum = %s "
+#                 'WHERE AktienURI = "%s"'
+#                 % (cst.TABLE_COMPANY_DATA, figures_date, stock_uri)
+#             )
+#             pass
 
 
 # Levermann 01

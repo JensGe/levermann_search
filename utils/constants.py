@@ -44,7 +44,7 @@ TEXT_COMPANY_INFO = "Zum Unternehmen"
 TEXT_RESULT_AFTER_TAX = "Ergebnis nach Steuer"
 TEXT_OPERATIVE_RESULT = "Operatives Ergebnis"
 TEXT_SALES_REVENUE = "Umsatzerlöse"
-TEXT_TOTAL_ASSETS = "Bilanzsumme"
+TEXT_BALANCE = "Bilanzsumme"
 TEXT_EQUITY_CAPITAL = "Eigenkapital"
 TEXT_HISTORIC_PRICES = "Historische Kurse"
 
@@ -129,6 +129,7 @@ COLUMN_ANALYST_SELL = "Analysten_Sell"
 COLUMN_MARKET_CAP = "Marktkapitalisierung"
 COLUMN_MARKET_PLACE = "Handelsplatz"
 COLUMN_DATE = "Datum"
+COLUMN_QUARTERLY = "Terminart"
 COLUMN_SECTORS = "Branchen"
 COLUMN_INDICES = "Indizes"
 
@@ -157,6 +158,7 @@ ALL_COLUMNS = [
     COLUMN_MARKET_CAP,
     COLUMN_MARKET_PLACE,
     COLUMN_DATE,
+    COLUMN_QUARTERLY,
     COLUMN_SECTORS,
     COLUMN_INDICES,
 ]

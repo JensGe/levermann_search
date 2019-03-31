@@ -138,7 +138,7 @@ def write_stock_balance_data_to_db():
             continue
 
         try:
-            result_after_tax = parse.get_current_value_of_attribute(
+            earnings_after_tax = parse.get_current_value_of_attribute(
                 stock_balance_soup, cst.TEXT_RESULT_AFTER_TAX
             )
             operative_result = parse.get_current_value_of_attribute(
@@ -147,27 +147,31 @@ def write_stock_balance_data_to_db():
             sales_revenue = parse.get_current_value_of_attribute(
                 stock_balance_soup, cst.TEXT_SALES_REVENUE
             )
-            total_assets = parse.get_current_value_of_attribute(
-                stock_balance_soup, cst.TEXT_TOTAL_ASSETS
+            balance = parse.get_current_value_of_attribute(
+                stock_balance_soup, cst.TEXT_BALANCE
             )
             equity_capital = parse.get_current_value_of_attribute(
                 stock_balance_soup, cst.TEXT_EQUITY_CAPITAL
             )
-            eps_minus_3, eps_minus_2, eps_minus_1 = parse.get_result_per_share_last_three_years(
+            eps_m3, eps_m2, eps_m1 = parse.get_result_per_share_last_three_years(
                 stock_balance_soup
             )
 
-            db.write_single_balance_data_to_db(
-                stock_uri,
-                result_after_tax,
-                operative_result,
-                sales_revenue,
-                total_assets,
-                equity_capital,
-                eps_minus_3,
-                eps_minus_2,
-                eps_minus_1,
-            )
+            db.upsert_item(table=cst.TABLE_COMPANY_DATA,
+                           primary_keys=[cst.COLUMN_STOCK_URI, cst.COLUMN_DATE],
+                           current_date=date.get_current_date(),
+                           stock_uri=stock_uri,
+                           equity_capital=equity_capital,
+                           earnings_after_tax=earnings_after_tax,
+                           operative_result=operative_result,
+                           sales_revenue=sales_revenue,
+                           balance=balance,
+                           eps_m3=eps_m3,
+                           eps_m2=eps_m2,
+                           eps_m1=eps_m1
+                           )
+
+
         except:
             logger.exception(
                 "Write Stock Balance Data to DB: Exception for stock: %s" % stock_uri
@@ -192,11 +196,16 @@ def write_stock_estimates_data_to_db():
             continue
 
         try:
-            eps_0, eps_plus_1 = parse.get_result_per_share_current_and_next_year(
+            eps_0, eps_p1 = parse.get_result_per_share_current_and_next_year(
                 stock_estimate_soup
             )
 
-            db.write_single_estimate_data_to_db(stock_uri, eps_0, eps_plus_1)
+            db.upsert_item(table=cst.TABLE_COMPANY_DATA,
+                           primary_keys=[cst.COLUMN_STOCK_URI, cst.COLUMN_DATE],
+                           current_date=date.get_current_date(),
+                           stock_uri=stock_uri,
+                           eps_0=eps_0,
+                           eps_p1=eps_p1)
         except:
             logger.exception(
                 "Write Stock Estimate Data to DB: Exception for stock: %s" % stock_uri
@@ -220,13 +229,21 @@ def write_stock_targets_data_to_db():
 
         try:
             buy, hold, sell = parse.get_analyst_ratings(stock_targets_soup)
-            db.write_single_targets_data_to_db(stock_uri, buy, hold, sell)
+            db.upsert_item(table=cst.TABLE_COMPANY_DATA,
+                           primary_keys=[cst.COLUMN_STOCK_URI, cst.COLUMN_DATE],
+                           current_date=date.get_current_date(),
+                           analyst_buy=buy,
+                           analyst_hold=hold,
+                           analyst_sell=sell,
+                           )
+
+
         except:
             logger.exception(
                 "Write Stock Targets Data to DB: Exception for stock: %s" % stock_uri
             )
 
-
+# ToDo write all Dates, not only latest
 def write_stock_last_quarterly_figures_date_to_db():
     stock_list = db.get_list(table=cst.TABLE_STOCKS, columns=cst.COLUMN_URI)
     file_list = [
@@ -250,6 +267,13 @@ def write_stock_last_quarterly_figures_date_to_db():
                 continue
             else:
                 db.write_single_stock_dates_data_to_db(stock_uri, last_figures_date)
+                db.upsert_item(table=cst.TABLE_STOCK_DATES,
+                               primary_keys=[cst.COLUMN_STOCK_URI, cst.COLUMN_DATE],
+                               current_date=last_figures_date,
+                               quarterly="Quarterly/Yearly",
+                               )
+
+
         except:
             logger.exception(
                 "Write Stock Quaterly Data to DB: Exception for stock: %s" % stock_uri
