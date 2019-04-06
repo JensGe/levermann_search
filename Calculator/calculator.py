@@ -423,7 +423,7 @@ def levermann_13():
 
         if eps_ratio > 0.05:
             lev_score_12 = 1
-        elif eps_ratio > -0.05:
+        elif eps_ratio < -0.05:
             lev_score_12 = -1
         else:
             lev_score_12 = 0
