@@ -7,8 +7,23 @@ from loguru import logger
 def levermann_01():
     stock_list = db.get_list(table=cst.TABLE_STOCKS, columns=cst.COLUMN_URI)
     for stock in stock_list:
-        earnings_before_tax = db.get_earnings_after_tax(stock)
-        equity_capital = db.get_equity_capital(stock)
+
+        # earnings_before_tax = db.get_earnings_after_tax(stock)
+        earnings_before_tax = db.get_item(
+            table=cst.TABLE_COMPANY_DATA,
+            column=cst.COLUMN_EARNINGS_AT,
+            condition=[cst.COLUMN_STOCK_URI, stock],
+            order=[cst.COLUMN_DATE, cst.DESC],
+        )
+
+        # equity_capital = db.get_equity_capital(stock)
+        equity_capital = db.get_item(
+            table=cst.TABLE_COMPANY_DATA,
+            column=cst.COLUMN_EQUITY_CAPITAL,
+            condition=[cst.COLUMN_STOCK_URI, stock],
+            order=[cst.COLUMN_DATE, cst.DESC],
+        )
+
         if earnings_before_tax is None or equity_capital is None or equity_capital == 0:
             logger.info(
                 "Calculate Lev01: Earnings before Tax or Equity Capital is None for stock: %s"
@@ -19,20 +34,42 @@ def levermann_01():
         return_on_equity = round(earnings_before_tax / equity_capital, 2)
 
         if return_on_equity > 0.2:
-            lev_value = 1
+            lev_01_score = 1
         elif return_on_equity < 0.1:
-            lev_value = -1
+            lev_01_score = -1
         else:
-            lev_value = 0
+            lev_01_score = 0
 
-        db.save_roe_to_db(stock, return_on_equity, lev_value)
+        # db.save_roe_to_db(stock, return_on_equity, lev_01_score)
+        db.upsert_item(
+            table=cst.TABLE_LEVERMANN,
+            primary_keys=[cst.COLUMN_STOCK_URI, cst.COLUMN_DATE],
+            current_date=date.get_current_date(),
+            stock_uri=stock,
+            lev_01_val=return_on_equity,
+            lev_01_sco=lev_01_score,
+        )
 
 
 def levermann_02():
     stock_list = db.get_list(table=cst.TABLE_STOCKS, columns=cst.COLUMN_URI)
     for stock in stock_list:
-        operative_result = db.get_operative_result(stock)
-        sales_revenue = db.get_sales_revenue(stock)
+
+        # operative_result = db.get_operative_result(stock)
+        operative_result = db.get_item(
+            table=cst.TABLE_COMPANY_DATA,
+            column=cst.COLUMN_OPERATIVE_RESULT,
+            condition=[cst.COLUMN_STOCK_URI, stock],
+            order=[cst.COLUMN_DATE, cst.DESC],
+        )
+
+        # sales_revenue = db.get_sales_revenue(stock)
+        sales_revenue = db.get_item(
+            table=cst.TABLE_COMPANY_DATA,
+            column=cst.COLUMN_SALES_REVENUE,
+            condition=[cst.COLUMN_STOCK_URI, stock],
+            order=[cst.COLUMN_DATE, cst.DESC],
+        )
 
         if operative_result is None or sales_revenue is None or sales_revenue == 0:
             logger.info(
@@ -45,23 +82,46 @@ def levermann_02():
 
         if db.check_is_financial_company(stock):
             logger.info("Calculate Lev02: %s is financial Stock" % stock)
-            db.save_ebit_to_db(stock, 0, 0)
-            continue
-
-        if ebit > 0.12:
-            lev_value = 1
-        elif ebit < 0.06:
-            lev_value = -1
+            ebit = 0
+            lev_02_score = 0
         else:
-            lev_value = 0
-        db.save_ebit_to_db(stock, ebit, lev_value)
+            if ebit > 0.12:
+                lev_02_score = 1
+            elif ebit < 0.06:
+                lev_02_score = -1
+            else:
+                lev_02_score = 0
+
+        # db.save_ebit_to_db(stock, ebit, lev_02_score)
+        db.upsert_item(
+            table=cst.TABLE_LEVERMANN,
+            primary_keys=[cst.COLUMN_STOCK_URI, cst.COLUMN_DATE],
+            current_date=date.get_current_date(),
+            stock_uri=stock,
+            lev_02_val=ebit,
+            lev_02_sco=lev_02_score,
+        )
 
 
 def levermann_03():
     stock_list = db.get_list(table=cst.TABLE_STOCKS, columns=cst.COLUMN_URI)
     for stock in stock_list:
-        equity_capital = db.get_equity_capital(stock)
-        balance = db.get_balance(stock)
+
+        # equity_capital = db.get_equity_capital(stock)
+        equity_capital = db.get_item(
+            table=cst.TABLE_COMPANY_DATA,
+            column=cst.COLUMN_EQUITY_CAPITAL,
+            condition=[cst.COLUMN_STOCK_URI, stock],
+            order=[cst.COLUMN_DATE, cst.DESC],
+        )
+
+        # balance = db.get_balance(stock)
+        balance = db.get_item(
+            table=cst.TABLE_COMPANY_DATA,
+            column=cst.COLUMN_BALANCE,
+            condition=[cst.COLUMN_STOCK_URI, stock],
+            order=[cst.COLUMN_DATE, cst.DESC],
+        )
 
         if equity_capital is None or balance is None or balance == 0:
             logger.info(
@@ -74,21 +134,28 @@ def levermann_03():
 
         if db.check_is_financial_company(stock):
             if equity_ratio > 0.10:
-                lev_value = 1
+                lev_03_score = 1
             elif equity_ratio < 0.05:
-                lev_value = -1
+                lev_03_score = -1
             else:
-                lev_value = 0
-            db.save_equity_ratio_to_db(stock, equity_ratio, lev_value)
-            continue
-
-        if equity_ratio > 0.25:
-            lev_value = 1
-        elif equity_ratio < 0.15:
-            lev_value = -1
+                lev_03_score = 0
         else:
-            lev_value = 0
-        db.save_equity_ratio_to_db(stock, equity_ratio, lev_value)
+            if equity_ratio > 0.25:
+                lev_03_score = 1
+            elif equity_ratio < 0.15:
+                lev_03_score = -1
+            else:
+                lev_03_score = 0
+
+        # db.save_equity_ratio_to_db(stock, equity_ratio, lev_03_score)
+        db.upsert_item(
+            table=cst.TABLE_LEVERMANN,
+            primary_keys=[cst.COLUMN_STOCK_URI, cst.COLUMN_DATE],
+            current_date=date.get_current_date(),
+            stock_uri=stock,
+            lev_03_val=equity_ratio,
+            lev_03_sco=lev_03_score,
+        )
 
 
 def levermann_04_05():

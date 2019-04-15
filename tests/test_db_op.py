@@ -224,7 +224,7 @@ class TestDatabase(unittest.TestCase):
             "IGPA",
             "BX Swiss - USA",
         ]
-        stock_sectors = ["Getränke / Tabak"]
+        stock_sectors = '["Getränke / Tabak"]'
 
         db.upsert_item(
             table=cst.TABLE_COMPANY_DATA,
@@ -233,24 +233,44 @@ class TestDatabase(unittest.TestCase):
             stock_uri=stock_uri,
             market_cap=market_cap,
             current_date=current_date,
-            stock_indices=stock_indices,
-            stock_sectors=stock_sectors,
+            stock_indices=str(stock_indices),
+            stock_sectors=str(stock_sectors),
         )
 
         asserted_company_data_content_after = [
-            "3i-Aktie",
-            "ab_inbev-Aktie",
-            "ab_inbev-Aktie",
-            "bechtle-Aktie",
-            "cellcom_israel-Aktie",
-            "coca-cola-Aktie",
+            ["3i-Aktie", '["FTSE 100", "FTSE Allshare"]', '["Finanzdienstleister"]'],
+            [
+                "ab_inbev-Aktie",
+                '["EURO STOXX 50", "STOXX 50", "BEL 20", "EURONEXT 100", "EURO STOXX", "Next CAC 70", "BX Swiss -  EMEA"]',
+                '["Getränke / Tabak"]',
+            ],
+            [
+                "ab_inbev-Aktie",
+                '["STOXX 50", "EURO STOXX 50", "BEL 20", "EURONEXT 100", "EURO STOXX", "Next CAC 70", "BX Swiss -  EMEA"]',
+                '["Getränke / Tabak"]',
+            ],
+            [
+                "bechtle-Aktie",
+                '["TecDAX", "MDAX", "Prime All Share", "LMDAX", "Technology All Share", "HDAX", "LTecDAX", "CDAX", "MDAX Kursindex", "TecDAX Kursindex", "BX Swiss - EMEA", "DAXglobal Sarasin Sustainability Germany Index EUR", "QIX Deutschland", "DAXglobal Sarasin Sustainability Germany", "Schatten-Index-SDAX", "Schatten-Index-TecDAX"]',
+                '["IT-Dienstleister", "IT-Beratung Hardware", "Dienstleistungen", "Internethandel (B2B, B2C)", "Informationstechnologie"]',
+            ],
+            [
+                "cellcom_israel-Aktie",
+                '["TA-100"]',
+                '["Telekommunikation", "Mobilkommunikation", "Netzbetreiber (Carrier)", "IT-Dienstleister"]',
+            ],
+            [
+                "coca-cola-Aktie",
+                "['Dow Jones', 'S&P 500', 'S&P 100', 'NYSE US 100', 'IGPA', 'BX Swiss - USA']",
+                '["Getränke / Tabak"]',
+            ],
         ]
 
         self.assertEqual(
             asserted_company_data_content_after,
             db.get_list(
                 table=cst.TABLE_COMPANY_DATA,
-                columns=cst.COLUMN_STOCK_URI,
+                columns=[cst.COLUMN_STOCK_URI, cst.COLUMN_INDICES, cst.COLUMN_SECTORS],
                 database=cst.TEST_DATABASE,
             ),
         )
@@ -276,8 +296,8 @@ class TestDatabase(unittest.TestCase):
             stock_uri=stock_uri,
             market_cap=market_cap,
             current_date=current_date,
-            stock_indices=stock_indices,
-            stock_sectors=stock_sectors,
+            stock_indices=str(stock_indices),
+            stock_sectors=str(stock_sectors),
         )
 
         asserted_data = ["['TecDAX', 'MDAX', 'Prime All Share']"]
@@ -359,8 +379,118 @@ class TestDatabase(unittest.TestCase):
                     condition=[cst.COLUMN_EQUITY_CAPITAL, 121541.00],
                     database=cst.TEST_DATABASE,
                 )
-            )
+            ),
         )
+
+    def test_upsert_new_roe(self):
+        current_date = "2019-03-30"
+        stock_uri = "ab_inbev-Aktie"
+        return_on_equity = "0.06"
+        lev_01_score = "-1"
+
+        db.upsert_item(
+            table=cst.TABLE_LEVERMANN,
+            primary_keys=[cst.COLUMN_STOCK_URI, cst.COLUMN_DATE],
+            database=cst.TEST_DATABASE,
+            current_date=current_date,
+            stock_uri=stock_uri,
+            lev_01_val=return_on_equity,
+            lev_01_sco=lev_01_score,
+        )
+
+        self.assertEqual(
+            return_on_equity,
+            str(
+                db.get_item(
+                    table=cst.TABLE_LEVERMANN,
+                    column=cst.COLUMN_LEV01_VALUE,
+                    condition=[cst.COLUMN_DATE, "2019-03-30"],
+                    database=cst.TEST_DATABASE,
+                )
+            ),
+        )
+
+    def test_upsert_existing_roe(self):
+        current_date = "2019-03-23"
+        stock_uri = "ab_inbev-Aktie"
+        return_on_equity = "0.08"
+        lev_01_score = "-1"
+
+        db.upsert_item(
+            table=cst.TABLE_LEVERMANN,
+            primary_keys=[cst.COLUMN_STOCK_URI, cst.COLUMN_DATE],
+            database=cst.TEST_DATABASE,
+            current_date=current_date,
+            stock_uri=stock_uri,
+            lev_01_val=return_on_equity,
+            lev_01_sco=lev_01_score,
+        )
+
+        self.assertEqual(
+            return_on_equity,
+            str(
+                db.get_item(
+                    table=cst.TABLE_LEVERMANN,
+                    column=cst.COLUMN_LEV01_VALUE,
+                    condition=[cst.COLUMN_DATE, "2019-03-23"],
+                    database=cst.TEST_DATABASE,
+                )
+            ),
+        )
+
+    def test_upsert_new_ebit(self):
+        current_date = "2019-03-30"
+        stock_uri = "ab_inbev-Aktie"
+        ebit = "0.32"
+        lev_02_score = "1"
+
+
+        db.upsert_item(
+            table=cst.TABLE_LEVERMANN,
+            primary_keys=[cst.COLUMN_STOCK_URI, cst.COLUMN_DATE],
+            database=cst.TEST_DATABASE,
+            current_date=current_date,
+            stock_uri=stock_uri,
+            lev_02_val=ebit,
+            lev_02_sco=lev_02_score,
+        )
+
+        self.assertEqual(
+            ebit,
+            str(
+                db.get_item(
+                    table=cst.TABLE_LEVERMANN,
+                    column=cst.COLUMN_LEV02_VALUE,
+                    condition=[cst.COLUMN_DATE, "2019-03-30"],
+                    database=cst.TEST_DATABASE,
+                )
+            ),
+        )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     def test_quarterly_date_upsert(self):
         # ToDo
@@ -455,21 +585,23 @@ class TestDatabase(unittest.TestCase):
     # uncategorized tests
     def test_convert_list_to_db_value_string(self):
         input_data_list = [
-            ["adidas AG", "07.11.18", "Quartalszahlen", "Future"],
-            ["adidas AG", "07.03.19", "Quartalszahlen", "Future"],
-            ["adidas AG", "02.05.19", "Quartalszahlen", "Future"],
+            ["adidas-Aktie", "07.11.18", "Quartalszahlen", "Future"],
+            ["adidas-Aktie", "07.03.19", "Quartalszahlen", "Future"],
+            ["adidas-Aktie", "02.05.19", "Quartalszahlen", "Future"],
         ]
         asserted_list_string = (
-            "('adidas AG', '07.11.18', 'Quartalszahlen', 'Future'), "
-            "('adidas AG', '07.03.19', 'Quartalszahlen', 'Future'), "
-            "('adidas AG', '02.05.19', 'Quartalszahlen', 'Future')"
+            "('adidas-Aktie', '07.11.18', 'Quartalszahlen', 'Future'), "
+            "('adidas-Aktie', '07.03.19', 'Quartalszahlen', 'Future'), "
+            "('adidas-Aktie', '02.05.19', 'Quartalszahlen', 'Future')"
         )
         self.assertEqual(
             asserted_list_string, db.convert_list_to_db_value_string(input_data_list)
         )
 
-        input_data_list_2 = [["adidas AG", "07.11.18", "Quartalszahlen", "Future"]]
-        asserted_list_string_2 = "('adidas AG', '07.11.18', 'Quartalszahlen', 'Future')"
+        input_data_list_2 = [["adidas-Aktie", "07.11.18", "Quartalszahlen", "Future"]]
+        asserted_list_string_2 = (
+            "('adidas-Aktie', '07.11.18', 'Quartalszahlen', 'Future')"
+        )
         self.assertEqual(
             asserted_list_string_2,
             db.convert_list_to_db_value_string(input_data_list_2),
@@ -479,9 +611,9 @@ class TestDatabase(unittest.TestCase):
         rv = db.insert_list(
             table="Aktientermine",
             data=[
-                ["adidas AG", "2018-11-07", "Quartalszahlen", "Future"],
-                ["adidas AG", "2018-03-07", "Quartalszahlen", "Future"],
-                ["adidas AG", "2019-05-02", "Quartalszahlen", "Future"],
+                ["adidas-Aktie", "2018-11-07", "Quartalszahlen", "Future"],
+                ["adidas-Aktie", "2018-03-07", "Quartalszahlen", "Future"],
+                ["adidas-Aktie", "2019-05-02", "Quartalszahlen", "Future"],
             ],
             database=cst.TEST_DATABASE,
         )
@@ -491,9 +623,9 @@ class TestDatabase(unittest.TestCase):
         rv = db.insert_list(
             table="Aktientermine",
             data=[
-                ["adidas AG", "2018-08-09", "Q2 2018 Earnings Release", "Past"],
-                ["adidas AG", "2018-05-09", "Hauptversammlung", "Past"],
-                ["adidas AG", "2017-11-09", "Q3 2017", "Past"],
+                ["adidas-Aktie", "2018-08-09", "Q2 2018 Earnings Release", "Past"],
+                ["adidas-Aktie", "2018-05-09", "Hauptversammlung", "Past"],
+                ["adidas-Aktie", "2017-11-09", "Q3 2017", "Past"],
             ],
             database=cst.TEST_DATABASE,
         )
@@ -501,13 +633,88 @@ class TestDatabase(unittest.TestCase):
 
     # ToDo renew with Testdatabase
 
+    # def test_get_earnings_after_tax(self):
+    #     result = db.get_earnings_after_tax("ab_inbev-Aktie", database=cst.TEST_DATABASE)
+    #     self.assertEqual(3702.48, result)
+
     def test_get_earnings_after_tax(self):
-        result = db.get_earnings_after_tax("ab_inbev-Aktie", database=cst.TEST_DATABASE)
-        self.assertEqual(3702.48, result)
+        self.assertEqual(
+            3702.48,
+            float(
+                db.get_item(
+                    table=cst.TABLE_COMPANY_DATA,
+                    column=cst.COLUMN_EARNINGS_AT,
+                    condition=[cst.COLUMN_STOCK_URI, "ab_inbev-Aktie"],
+                    order=[cst.COLUMN_DATE, cst.DESC],
+                    database=cst.TEST_DATABASE,
+                )
+            ),
+        )
+
+    # def test_get_equity_capital(self):
+    #     result = db.get_equity_capital("ab_inbev-Aktie", database=cst.TEST_DATABASE)
+    #     self.assertEqual(62899.88, result)
 
     def test_get_equity_capital(self):
-        result = db.get_equity_capital("ab_inbev-Aktie", database=cst.TEST_DATABASE)
-        self.assertEqual(62899.88, result)
+        self.assertEqual(
+            62899.88,
+            float(
+                db.get_item(
+                    table=cst.TABLE_COMPANY_DATA,
+                    column=cst.COLUMN_EQUITY_CAPITAL,
+                    condition=[cst.COLUMN_STOCK_URI, "ab_inbev-Aktie"],
+                    order=[cst.COLUMN_DATE, cst.DESC],
+                    database=cst.TEST_DATABASE,
+                )
+            ),
+        )
+
+    def test_get_operative_result(self):
+        self.assertEqual(
+            14520.88,
+            float(
+                db.get_item(
+                    table=cst.TABLE_COMPANY_DATA,
+                    column=cst.COLUMN_OPERATIVE_RESULT,
+                    condition=[cst.COLUMN_STOCK_URI, "ab_inbev-Aktie"],
+                    order=[cst.COLUMN_DATE, cst.DESC],
+                    database=cst.TEST_DATABASE,
+                )
+            ),
+        )
+
+    def test_get_sales_revenue(self):
+        self.assertEqual(
+            46297.11,
+            float(
+                db.get_item(
+                    table=cst.TABLE_COMPANY_DATA,
+                    column=cst.COLUMN_SALES_REVENUE,
+                    condition=[cst.COLUMN_STOCK_URI, "ab_inbev-Aktie"],
+                    order=[cst.COLUMN_DATE, cst.DESC],
+                    database=cst.TEST_DATABASE,
+                )
+            ),
+        )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     def test_eps_s(self):
         eps_s = db.get_eps("ab_inbev-Aktie", database=cst.TEST_DATABASE)

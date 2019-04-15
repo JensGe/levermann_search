@@ -69,13 +69,10 @@ def write_stock_overview_data_to_db():
             )
             market_cap = -1.00
 
-        stock_indices = parse.get_listed_indizes(stock_overview_soup)
-        stock_sectors = parse.get_sectors(stock_overview_soup)
+        stock_indices = str(parse.get_listed_indizes(stock_overview_soup))
+        stock_sectors = str(parse.get_sectors(stock_overview_soup))
         market_place = parse.get_market_place(stock_overview_soup)
 
-        # db.write_single_overview_data_to_db(
-        #     stock_uri, market_cap, stock_indices, stock_sectors
-        # )
         db.upsert_item(table=cst.TABLE_COMPANY_DATA,
                        primary_keys=[cst.COLUMN_STOCK_URI, cst.COLUMN_DATE],
                        stock_uri=stock_uri,
@@ -84,7 +81,6 @@ def write_stock_overview_data_to_db():
                        stock_indices=stock_indices,
                        stock_sectors=stock_sectors)
 
-        # db.write_new_market_place_to_db(stock_uri, market_place)
         db.update_item(table=cst.TABLE_STOCKS,
                        primary_keys=cst.COLUMN_URI,
                        uri=stock_uri,

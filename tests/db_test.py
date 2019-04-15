@@ -200,47 +200,40 @@ def insert_test_data():
              Analysten_Buy, Analysten_Hold, Analysten_Sell)
             values 
             ('ab_inbev-Aktie', '2019-03-16', '119980.00', 
-            '["STOXX 50", "EURO STOXX 50", "BEL 20", "EURONEXT 100", "EURO STOXX", 
-            "Next CAC 70", "BX Swiss -  EMEA"]', '["Getränke / Tabak"]', 
-            '3702.48', '14520.88', 
-            '46297.11', '204558.46', '62899.88', 
-            '0.65', '3.60', '1.87', '4.11', '4.49', 
-            '6', '2', '0'),
+             '["STOXX 50", "EURO STOXX 50", "BEL 20", "EURONEXT 100", "EURO STOXX", "Next CAC 70", "BX Swiss -  EMEA"]', 
+             '["Getränke / Tabak"]',
+             '3702.48', '14520.88', '46297.11', '204558.46', '62899.88', '0.65', '3.60', '1.87', '4.11', '4.49', '6', '2', '0'),
             ('bechtle-Aktie', '2019-03-16', '3230.00', 
-            '["TecDAX", "MDAX", "Prime All Share", "LMDAX", "Technology All Share", 
-            "HDAX", "LTecDAX", "CDAX", "MDAX Kursindex", "TecDAX Kursindex", 
-            "BX Swiss -  EMEA", "DAXglobal Sarasin Sustainability Germany Index EUR", 
-            "QIX Deutschland", "DAXglobal Sarasin Sustainability Germany", 
-            "Schatten-Index-SDAX", "Schatten-Index-TecDAX"]', 
-            '["IT-Dienstleister", "IT-Beratung Hardware", "Dienstleistungen", 
-            "Internethandel (B2B, B2C)", "Informationstechnologie"]', 
-            '114.56', '154.41', 
-            '3570.12', '1462.63', '777.28', 
-            '2.21', '2.46', '2.73', '3.84', '4.27',
-            '4', '4', '1'),
+             '["TecDAX", "MDAX", "Prime All Share", "LMDAX", "Technology All Share", "HDAX", "LTecDAX", "CDAX", "MDAX Kursindex", "TecDAX Kursindex", "BX Swiss - EMEA", "DAXglobal Sarasin Sustainability Germany Index EUR", "QIX Deutschland", "DAXglobal Sarasin Sustainability Germany", "Schatten-Index-SDAX", "Schatten-Index-TecDAX"]', 
+             '["IT-Dienstleister", "IT-Beratung Hardware", "Dienstleistungen", "Internethandel (B2B, B2C)", "Informationstechnologie"]',
+             '114.56', '154.41', '3570.12', '1462.63', '777.28', '2.21', '2.46', '2.73', '3.84', '4.27', '4', '4', '1'),
             ('3i-Aktie', '2019-03-16', '10970.00', 
-            '["FTSE 100", "FTSE Allshare"]', 
-            '["Finanzdienstleister"]', 
-            '1463.00', '1445.00', 
-            '398.00', '7899.00', '7024.00', 
-            '0.86', '1.64', '1.52', '0.01', '0.01',
-            '0', '0', '0'),
+             '["FTSE 100", "FTSE Allshare"]', 
+             '["Finanzdienstleister"]', 
+             '1463.00', '1445.00', '398.00', '7899.00', '7024.00', '0.86', '1.64', '1.52', '0.01', '0.01', '0', '0', '0'),
             ('cellcom_israel-Aktie', '2019-03-16', '440.21', 
-            '["TA-100"]', 
-            '["Telekommunikation", "Mobilkommunikation", "Netzbetreiber (Carrier)", 
-            "IT-Dienstleister"]', 
-            '112.00', '286.00', 
-            '3871.00', '6087.00', '1441.00', 
-            '0.94', '1.47', '1.11', '0.62', '0.91',
-            '0', '0', '0');
+             '["TA-100"]', 
+             '["Telekommunikation", "Mobilkommunikation", "Netzbetreiber (Carrier)", "IT-Dienstleister"]', 
+             '112.00', '286.00', '3871.00', '6087.00', '1441.00', '0.94', '1.47', '1.11', '0.62', '0.91', '0', '0', '0');
         
         insert into Unternehmensdaten 
             (AktienURI, Datum, Marktkapitalisierung, 
              Indizes, Branchen)
             values 
             ('ab_inbev-Aktie', '2019-03-09', '121540.00',
-             '["EURO STOXX 50", "STOXX 50", "BEL 20", "EURONEXT 100", "EURO STOXX", 
-             "Next CAC 70", "BX Swiss -  EMEA"]', '["Getränke / Tabak"]');
+             '["EURO STOXX 50", "STOXX 50", "BEL 20", "EURONEXT 100", "EURO STOXX", "Next CAC 70", "BX Swiss -  EMEA"]', 
+             '["Getränke / Tabak"]');
+             
+        insert into Levermannscores
+            (AktienURI, Datum, Lev01_Wert, Lev01_Score, Lev02_Wert, Lev02_Score, 
+             Lev03_Wert, Lev03_Score, Lev04_Wert, Lev04_Score, Lev05_Wert, Lev05_Score,
+             Lev06_Wert, Lev06_Score, Lev07_Wert, Lev07_Score, Lev08_Wert, Lev08_Score,
+             Lev09_Wert, Lev09_Score, Lev10_Wert, Lev10_Score, Lev11_Score,
+             Lev12_Wert, Lev12_Score, Lev13_Wert, Lev13_Score)
+            values
+            ('ab_inbev-Aktie', '2019-03-23', '0.06', '-1', '0.31', '1', 
+             '0.31', '1', '24.91', '-1', '17.77', '-1', '1.25', '-1', '0.05', '1', 
+             '0.00', '0', '-0.06', '-1', '-0.16', '-1', '0', '0.00', '0', '0.08', '1')
         """
         )
 
@@ -251,11 +244,13 @@ def delete_test_data():
     with dataset.connect(cst.TEST_DATABASE) as db:
         db.query(
             """
+        delete from Aktientermine;
+        delete from Levermannscores;
         delete from Indexhistorien;
         delete from Aktienhistorien;
         delete from Unternehmensdaten;
         delete from Indexinhalte;
-        delete from Aktientermine;
+
         delete from Aktien;
         delete from Aktienindizes;
         """

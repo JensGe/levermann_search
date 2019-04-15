@@ -102,6 +102,29 @@ class TestScrapping(unittest.TestCase):
         asserted_indizes_values2 = ["FTSE 100", "FTSE Allshare"]
         self.assertEqual(asserted_indizes_values2, link_items2)
 
+    def test_get_stock_indices(self):
+        soup = scrap.get_soup_code_from_file("data/bo_bechtle-Aktie.html")
+        indices_list = parse.get_listed_indizes(soup)
+        asserted_indices = [
+            "TecDAX",
+            "MDAX",
+            "LMDAX",
+            "LTecDAX",
+            "HDAX",
+            "Technology All Share",
+            "Prime All Share",
+            "CDAX",
+            "TecDAX Kursindex",
+            "MDAX Kursindex",
+            "BX Swiss -  EMEA",
+            "DAXglobal Sarasin Sustainability Germany Index EUR",
+            "QIX Deutschland",
+            "DAXglobal Sarasin Sustainability Germany",
+            "Schatten-Index-TecDAX",
+            "Schatten-Index-SDAX",
+        ]
+        self.assertEqual(asserted_indices, indices_list)
+
     def test_stock_sectors(self):
         soup = scrap.get_soup_code_from_file("data/bo_sap-aktie.html")
         link_items = parse.get_sectors(soup)
