@@ -798,14 +798,14 @@ class TestDatabase(unittest.TestCase):
 
     def test_get_main_index_of_stock(self):
         stock_uri = "3i-Aktie"
-        index_uri = db.get_main_index_of_stock(stock_uri, database=cst.TEST_DATABASE)
-        self.assertEqual("FTSE_100", index_uri)
+        index_name = db.get_main_index_of_stock(stock_uri, database=cst.TEST_DATABASE)
+        self.assertEqual("FTSE 100", index_name)
 
     def test_get_indices_of_stock(self):
         stock_uri = "3m-Aktie"
-        index_list = db.get_indices_of_stock(stock_uri, database=cst.TEST_DATABASE)
+        index_names = db.get_indices_of_stock(stock_uri, database=cst.TEST_DATABASE)
         asserted_index_list = sorted(["dow_jones", "s&p_500"])
-        self.assertEqual(asserted_index_list, index_list)
+        self.assertEqual(asserted_index_list, index_names)
 
     def test_get_stock_history_url_list(self):
         stock_history_list = [

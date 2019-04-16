@@ -4,6 +4,7 @@ from utils import date_op as date
 from utils import constants as cst
 from sqlalchemy.exc import IntegrityError
 
+import re
 import dataset
 
 
@@ -816,28 +817,96 @@ def get_analyst_ratings(stock_uri, database=cst.DATABASE):
 #             )
 #             pass
 
+# ToDo:
+#  get the real main Index of a stock, its the first of the indices
+#  scraped from overview -> the first Index in Table Company Data > Indizes
+
+def get_main_index_of_stock(stock_uri, database=cst.DATABASE):
+    # with dataset.connect(database) as db:
+    #     try:
+    #         results = db.query(
+    #             "SELECT * FROM %s WHERE AktienURI = '%s'"
+    #             % (cst.TABLE_INDEX_CONTENTS, stock_uri)
+    #         )
+    #         index_uri = [item for item in results][0][cst.COLUMN_INDEX_URI]
+    #         return index_uri
+    #     except:
+    #         logger.exception(
+    #             "Unhandled Exception at get_index_of_stock for %s" % stock_uri
+    #         )
+    #         pass
+    index = get_item(
+        table=cst.TABLE_COMPANY_DATA,
+        column=cst.COLUMN_INDICES,
+        condition=[cst.COLUMN_STOCK_URI, stock_uri],
+        order=[cst.COLUMN_DATE, cst.DESC],
+        database=database,
+    ).replace("'", "").replace('"', '').replace("[", "").replace("]","").split(", ")
+
+    return index[0]
+
+
+def get_indices_of_stock(stock_uri, database=cst.DATABASE):
+    # with dataset.connect(database) as db:
+    #     try:
+    #         results = db.query(
+    #             "SELECT * FROM %s WHERE AktienURI = '%s'"
+    #             % (cst.TABLE_INDEX_CONTENTS, stock_uri)
+    #         )
+    #         index_uri = {item[cst.COLUMN_INDEX_URI] for item in results}
+    #         return sorted(index_uri)
+    #     except:
+    #         logger.exception(
+    #             "Unhandled Exception at get_indizes_of_stock for %s" % stock_uri
+    #         )
+    #         pass
+    return get_list(
+        table=cst.TABLE_INDEX_CONTENTS,
+        columns=cst.COLUMN_INDEX_URI,
+        condition=[cst.COLUMN_STOCK_URI, stock_uri],
+        database=database,
+    )
+
+# def is_small_cap(stock_uri, database=cst.DATABASE):
+#     with dataset.connect(database) as db:
+#         try:
+#             market_cap_results = db.query(
+#                 "SELECT * FROM %s WHERE AktienURI = '%s' ORDER BY Datum DESC"
+#                 % (cst.TABLE_COMPANY_DATA, stock_uri)
+#             )
+#             market_cap = float(
+#                 [item for item in market_cap_results][0][cst.COLUMN_MARKET_CAP]
+#             )
+#             if market_cap > cst.MARKET_CAP_THRESHOLD:
+#                 return False
+#             else:
+#                 indizes_list = get_indices_of_stock(stock_uri, database=database)
+#                 return not any(
+#                     i in indizes_list for i in cst.LARGE_CAPS_INDIZES
+#                 )
+#
+#         except:
+#             logger.exception("Unhandled Exception at is_small_cap for %s" % stock_uri)
+#             pass
+
 
 def is_small_cap(stock_uri, database=cst.DATABASE):
-    with dataset.connect(database) as db:
-        try:
-            market_cap_results = db.query(
-                "SELECT * FROM %s WHERE AktienURI = '%s' ORDER BY Datum DESC"
-                % (cst.TABLE_COMPANY_DATA, stock_uri)
-            )
-            market_cap = float(
-                [item for item in market_cap_results][0][cst.COLUMN_MARKET_CAP]
-            )
-            if market_cap > cst.MARKET_CAP_THRESHOLD:
-                return False
-            else:
-                indizes_list = get_indices_of_stock(stock_uri, database=database)
-                return not any(
-                    i in indizes_list for i in cst.LARGE_CAPS_INDIZES
-                )  # ToDO abhängig von Spalte LargeCapIndex machen, dann auch in Constants löschen
+    market_cap = float(
+        get_item(
+            table=cst.TABLE_COMPANY_DATA,
+            column=cst.COLUMN_MARKET_CAP,
+            condition=[cst.COLUMN_STOCK_URI, stock_uri],
+            order=[cst.COLUMN_DATE, cst.DESC],
+            database=database,
+        )
+    )
 
-        except:
-            logger.exception("Unhandled Exception at is_small_cap for %s" % stock_uri)
-            pass
+    if market_cap > cst.MARKET_CAP_THRESHOLD:
+        return False
+    else:
+        indices_list = get_indices_of_stock(stock_uri, database=database)
+        # ToDO abhängig von Spalte LargeCapIndex machen, dann auch in Constants löschen
+        return not any(i in indices_list for i in cst.LARGE_CAPS_INDIZES)
 
 
 # Levermann 07
@@ -902,39 +971,6 @@ def get_closing_index_price(request_date, index_uri, database=cst.DATABASE):
         except:
             logger.exception(
                 "Unhandled Exception at get_closing_index_price for %s" % index_uri
-            )
-            pass
-
-
-# ToDo Recreate next two Methods, check index of Stock through Companydata-Table
-def get_main_index_of_stock(stock_uri, database=cst.DATABASE):
-    with dataset.connect(database) as db:
-        try:
-            results = db.query(
-                "SELECT * FROM %s WHERE AktienURI = '%s'"
-                % (cst.TABLE_INDEX_CONTENTS, stock_uri)
-            )
-            index_uri = [item for item in results][0][cst.COLUMN_INDEX_URI]
-            return index_uri
-        except:
-            logger.exception(
-                "Unhandled Exception at get_index_of_stock for %s" % stock_uri
-            )
-            pass
-
-
-def get_indices_of_stock(stock_uri, database=cst.DATABASE):
-    with dataset.connect(database) as db:
-        try:
-            results = db.query(
-                "SELECT * FROM %s WHERE AktienURI = '%s'"
-                % (cst.TABLE_INDEX_CONTENTS, stock_uri)
-            )
-            index_uri = {item[cst.COLUMN_INDEX_URI] for item in results}
-            return sorted(index_uri)
-        except:
-            logger.exception(
-                "Unhandled Exception at get_indizes_of_stock for %s" % stock_uri
             )
             pass
 
