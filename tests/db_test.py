@@ -199,6 +199,10 @@ def insert_test_data():
              EPS_minus_3, EPS_minus_2, EPS_minus_1, EPS_0, EPS_plus_1, 
              Analysten_Buy, Analysten_Hold, Analysten_Sell)
             values 
+            ('ab_inbev-Aktie', '2019-03-23', '119980.00', 
+             '["STOXX 50", "EURO STOXX 50", "BEL 20", "EURONEXT 100", "EURO STOXX", "Next CAC 70", "BX Swiss -  EMEA"]', 
+             '["Getränke / Tabak"]',
+             '3702.48', '14520.88', '46297.11', '204558.46', '62899.88', '0.65', '3.60', '1.87', '4.13', '4.48', '6', '2', '0'),
             ('ab_inbev-Aktie', '2019-03-16', '119980.00', 
              '["STOXX 50", "EURO STOXX 50", "BEL 20", "EURONEXT 100", "EURO STOXX", "Next CAC 70", "BX Swiss -  EMEA"]', 
              '["Getränke / Tabak"]',

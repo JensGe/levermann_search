@@ -8,41 +8,64 @@ import dataset
 
 
 # CRUD
-def get_list(table, columns, condition=None, database=cst.DATABASE):
+def get_list(table, columns, condition=None, order=None, database=cst.DATABASE):
+    order_by = "ORDER BY %s %s " % (order[0], order[1]) if order is not None else ""
+    where = (
+        "WHERE %s = '%s' " % (condition[0], condition[1])
+        if condition is not None
+        else ""
+    )
+    from_table = "FROM %s " % table
 
-    if not condition:
-        if isinstance(columns, str):
-            with dataset.connect(database) as db:
-                return [item[columns] for item in db[table]]
-        elif isinstance(columns, list):
-            with dataset.connect(database) as db:
-                return [[item[column] for column in columns] for item in db[table]]
+    with dataset.connect(database) as db:
+        if isinstance(columns, list):
+            select = "SELECT %s " % ",".join(columns)
+            results = db.query("%s %s %s %s" % (select, from_table, where, order_by))
+            result = [[item[column] for column in columns] for item in results]
+        else:
+            select = "SELECT %s " % columns
+            results = db.query("%s %s %s %s" % (select, from_table, where, order_by))
+            result = [item[columns] for item in results]
 
-    else:
-        if isinstance(columns, str):
-            with dataset.connect(database) as db:
-                return [
-                    item[columns]
-                    for item in db[table]
-                    if item[condition[0]] == condition[1]
-                ]
-        elif isinstance(columns, list):
-            with dataset.connect(database) as db:
-                return [
-                    [item[column] for column in columns]
-                    for item in db[table]
-                    if item[condition[0]] == condition[1]
-                ]
+    return result
+
+    #
+    # if not condition:
+    #     if isinstance(columns, str):
+    #         with dataset.connect(database) as db:
+    #             return [item[columns] for item in db[table]]
+    #     elif isinstance(columns, list):
+    #         with dataset.connect(database) as db:
+    #             return [[item[column] for column in columns] for item in db[table]]
+    #
+    # else:
+    #     if isinstance(columns, str):
+    #         with dataset.connect(database) as db:
+    #             return [
+    #                 item[columns]
+    #                 for item in db[table]
+    #                 if item[condition[0]] == condition[1]
+    #             ]
+    #     elif isinstance(columns, list):
+    #         with dataset.connect(database) as db:
+    #             return [
+    #                 [item[column] for column in columns]
+    #                 for item in db[table]
+    #                 if item[condition[0]] == condition[1]
+    #             ]
 
 
 def get_item(table, column, condition=None, order=None, database=cst.DATABASE):
     order_by = "ORDER BY %s %s" % (order[0], order[1]) if order is not None else ""
+    where = (
+        "WHERE %s = '%s' " % (condition[0], condition[1])
+        if condition is not None
+        else ""
+    )
 
     with dataset.connect(database) as db:
         results = db.query(
-            "SELECT %s as result "
-            "FROM %s "
-            "WHERE %s = '%s' %s" % (column, table, condition[0], condition[1], order_by)
+            "SELECT %s as result " "FROM %s %s %s" % (column, table, where, order_by)
         )
         result = [item for item in results][0]
     return result["result"]
@@ -282,7 +305,7 @@ def create_active_index_url_list(base_url, database=cst.DATABASE):
     index_list = get_list(
         table=cst.TABLE_INDIZES,
         columns=cst.COLUMN_URI,
-        condition=[cst.COLUMN_ACTIVE, b"1"],
+        condition=[cst.COLUMN_ACTIVE, 1],
         database=database,
     )
     url_list = [base_url + index for index in index_list]
@@ -657,154 +680,141 @@ def check_is_financial_company(stock_uri, database=cst.DATABASE):
 # Levermann 04 & 05
 
 
-def get_latest_stock_price(stock_uri, database=cst.DATABASE):
-    with dataset.connect(database) as db:
-        try:
-            results = db.query(
-                "SELECT %s FROM %s WHERE AktienURI = '%s' ORDER BY Datum DESC"
-                % (cst.COLUMN_CLOSING_VALUE, cst.TABLE_STOCKS_HISTORIES, stock_uri)
-            )
-            return float([item for item in results][0][cst.COLUMN_CLOSING_VALUE])
-        except:
-            logger.exception(
-                "Unhandled Exception at get_latest_stock_price for %s" % stock_uri
-            )
-            pass
+# def get_latest_stock_price(stock_uri, database=cst.DATABASE):
+#     with dataset.connect(database) as db:
+#         try:
+#             results = db.query(
+#                 "SELECT %s FROM %s WHERE AktienURI = '%s' ORDER BY Datum DESC"
+#                 % (cst.COLUMN_CLOSING_VALUE, cst.TABLE_STOCKS_HISTORIES, stock_uri)
+#             )
+#             return float([item for item in results][0][cst.COLUMN_CLOSING_VALUE])
+#         except:
+#             logger.exception(
+#                 "Unhandled Exception at get_latest_stock_price for %s" % stock_uri
+#             )
+#             pass
 
 
-def get_eps(stock_uri, database=cst.DATABASE):
-    with dataset.connect(database) as db:
-        try:
-            results = db.query(
-                "SELECT * FROM %s WHERE AktienURI = '%s' ORDER BY Datum DESC"
-                % (cst.TABLE_COMPANY_DATA, stock_uri)
-            )
-            eps_s = [item for item in results][0]
-            eps_list = [
-                float(eps_s[cst.COLUMN_EPS_M3]),
-                float(eps_s[cst.COLUMN_EPS_M2]),
-                float(eps_s[cst.COLUMN_EPS_M1]),
-                float(eps_s[cst.COLUMN_EPS_0]),
-                float(eps_s[cst.COLUMN_EPS_P1]),
-            ]
-            return eps_list
-        except:
-            logger.exception("Unhandled Exception at get_eps for %s" % stock_uri)
-            pass
+def get_current_eps(stock_uri, database=cst.DATABASE):
+
+    eps_s = get_list(
+        table=cst.TABLE_COMPANY_DATA,
+        columns=[
+            cst.COLUMN_EPS_M3,
+            cst.COLUMN_EPS_M2,
+            cst.COLUMN_EPS_M1,
+            cst.COLUMN_EPS_0,
+            cst.COLUMN_EPS_P1,
+        ],
+        condition=[cst.COLUMN_STOCK_URI, stock_uri],
+        order=[cst.COLUMN_DATE, cst.DESC],
+        database=database,
+    )
+    return [float(i) for i in eps_s[0]]
 
 
-def get_older_eps(stock_uri, database=cst.DATABASE):
-    with dataset.connect(database) as db:
-        try:
-            results = db.query(
-                "SELECT * FROM %s WHERE AktienURI = '%s' ORDER BY Datum DESC"
-                % (cst.TABLE_COMPANY_DATA, stock_uri)
-            )
-            eps_s = [item for item in results][1]
-            eps_list = [
-                float(eps_s[cst.COLUMN_EPS_M3]),
-                float(eps_s[cst.COLUMN_EPS_M2]),
-                float(eps_s[cst.COLUMN_EPS_M1]),
-                float(eps_s[cst.COLUMN_EPS_0]),
-                float(eps_s[cst.COLUMN_EPS_P1]),
-            ]
-            return eps_list
-        except:
-            logger.exception("Exception at get_older_eps for %s" % stock_uri)
-            pass
+def get_last_eps(stock_uri, database=cst.DATABASE):
+    eps_s = get_list(
+        table=cst.TABLE_COMPANY_DATA,
+        columns=[
+            cst.COLUMN_EPS_M3,
+            cst.COLUMN_EPS_M2,
+            cst.COLUMN_EPS_M1,
+            cst.COLUMN_EPS_0,
+            cst.COLUMN_EPS_P1,
+        ],
+        condition=[cst.COLUMN_STOCK_URI, stock_uri],
+        order=[cst.COLUMN_DATE, cst.DESC],
+        database=database,
+    )
+    return [float(i) for i in eps_s[1]]
 
 
-def save_kgv5_to_db(stock_uri, kgv5, kgv5_score, database=cst.DATABASE):
-    current_date = date.get_current_date()
-    with dataset.connect(database) as db:
-        try:
-            db[cst.TABLE_LEVERMANN].insert(
-                dict(
-                    AktienURI=stock_uri,
-                    Datum=current_date,
-                    Lev04_Wert=kgv5,
-                    Lev04_Score=kgv5_score,
-                )
-            )
-        except IntegrityError:
-            db.query(
-                "UPDATE %s SET "
-                "Lev04_Wert = %s, "
-                "Lev04_Score = %s "
-                'WHERE AktienURI = "%s" AND Datum = "%s"'
-                % (cst.TABLE_LEVERMANN, kgv5, kgv5_score, stock_uri, current_date)
-            )
-            pass
-
-
-def save_kgv0_to_db(stock_uri, kgv0, kgv0_score, database=cst.DATABASE):
-    current_date = date.get_current_date()
-    with dataset.connect(database) as db:
-        try:
-            db[cst.TABLE_LEVERMANN].insert(
-                dict(
-                    AktienURI=stock_uri,
-                    Datum=current_date,
-                    Lev05_Wert=kgv0,
-                    Lev05_Score=kgv0_score,
-                )
-            )
-        except IntegrityError:
-            db.query(
-                "UPDATE %s SET "
-                "Lev05_Wert = %s, "
-                "Lev05_Score = %s "
-                'WHERE AktienURI = "%s" AND Datum = "%s"'
-                % (cst.TABLE_LEVERMANN, kgv0, kgv0_score, stock_uri, current_date)
-            )
-            pass
+# def save_kgv5_to_db(stock_uri, kgv5, kgv5_score, database=cst.DATABASE):
+#     current_date = date.get_current_date()
+#     with dataset.connect(database) as db:
+#         try:
+#             db[cst.TABLE_LEVERMANN].insert(
+#                 dict(
+#                     AktienURI=stock_uri,
+#                     Datum=current_date,
+#                     Lev04_Wert=kgv5,
+#                     Lev04_Score=kgv5_score,
+#                 )
+#             )
+#         except IntegrityError:
+#             db.query(
+#                 "UPDATE %s SET "
+#                 "Lev04_Wert = %s, "
+#                 "Lev04_Score = %s "
+#                 'WHERE AktienURI = "%s" AND Datum = "%s"'
+#                 % (cst.TABLE_LEVERMANN, kgv5, kgv5_score, stock_uri, current_date)
+#             )
+#             pass
+#
+#
+# def save_kgv0_to_db(stock_uri, kgv0, kgv0_score, database=cst.DATABASE):
+#     current_date = date.get_current_date()
+#     with dataset.connect(database) as db:
+#         try:
+#             db[cst.TABLE_LEVERMANN].insert(
+#                 dict(
+#                     AktienURI=stock_uri,
+#                     Datum=current_date,
+#                     Lev05_Wert=kgv0,
+#                     Lev05_Score=kgv0_score,
+#                 )
+#             )
+#         except IntegrityError:
+#             db.query(
+#                 "UPDATE %s SET "
+#                 "Lev05_Wert = %s, "
+#                 "Lev05_Score = %s "
+#                 'WHERE AktienURI = "%s" AND Datum = "%s"'
+#                 % (cst.TABLE_LEVERMANN, kgv0, kgv0_score, stock_uri, current_date)
+#             )
+#             pass
 
 
 # Levermann 06
 
 
 def get_analyst_ratings(stock_uri, database=cst.DATABASE):
-    with dataset.connect(database) as db:
-        try:
-            results = db.query(
-                "SELECT * FROM %s WHERE AktienURI = '%s' ORDER BY Datum DESC"
-                % (cst.TABLE_COMPANY_DATA, stock_uri)
-            )
-            ratings = [item for item in results][0]
-            rating_list = [
-                int(ratings[cst.COLUMN_ANALYST_BUY]),
-                int(ratings[cst.COLUMN_ANALYST_HOLD]),
-                int(ratings[cst.COLUMN_ANALYST_SELL]),
-            ]
-            return rating_list
-        except:
-            logger.exception(
-                "Unhandled Exception at get_analyst_ratings for %s" % stock_uri
-            )
-            pass
+    ratings_list = get_list(
+        table=cst.TABLE_COMPANY_DATA,
+        columns=[
+            cst.COLUMN_ANALYST_BUY,
+            cst.COLUMN_ANALYST_HOLD,
+            cst.COLUMN_ANALYST_SELL,
+        ],
+        condition=[cst.COLUMN_STOCK_URI, stock_uri],
+        order=[cst.COLUMN_DATE, cst.DESC],
+        database=database,
+    )
+    return [int(i) for i in ratings_list[0]]
 
 
-def save_rating_to_db(stock_uri, rating, rating_score, database=cst.DATABASE):
-    current_date = date.get_current_date()
-    with dataset.connect(database) as db:
-        try:
-            db[cst.TABLE_LEVERMANN].insert(
-                dict(
-                    AktienURI=stock_uri,
-                    Datum=current_date,
-                    Lev06_Wert=rating,
-                    Lev06_Score=rating_score,
-                )
-            )
-        except IntegrityError:
-            db.query(
-                "UPDATE %s SET "
-                "Lev06_Wert = %s, "
-                "Lev06_Score = %s "
-                'WHERE AktienURI = "%s" AND Datum = "%s"'
-                % (cst.TABLE_LEVERMANN, rating, rating_score, stock_uri, current_date)
-            )
-            pass
+# def save_rating_to_db(stock_uri, rating, rating_score, database=cst.DATABASE):
+#     current_date = date.get_current_date()
+#     with dataset.connect(database) as db:
+#         try:
+#             db[cst.TABLE_LEVERMANN].insert(
+#                 dict(
+#                     AktienURI=stock_uri,
+#                     Datum=current_date,
+#                     Lev06_Wert=rating,
+#                     Lev06_Score=rating_score,
+#                 )
+#             )
+#         except IntegrityError:
+#             db.query(
+#                 "UPDATE %s SET "
+#                 "Lev06_Wert = %s, "
+#                 "Lev06_Score = %s "
+#                 'WHERE AktienURI = "%s" AND Datum = "%s"'
+#                 % (cst.TABLE_LEVERMANN, rating, rating_score, stock_uri, current_date)
+#             )
+#             pass
 
 
 def is_small_cap(stock_uri, database=cst.DATABASE):

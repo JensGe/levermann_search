@@ -10,7 +10,7 @@ def write_index_contents_from_html_to_db():
     index_list = db.get_list(
         table=cst.TABLE_INDIZES,
         columns=cst.COLUMN_URI,
-        condition=[cst.COLUMN_ACTIVE, b"1"],
+        condition=[cst.COLUMN_ACTIVE, 1],
     )
     file_list = [
         cst.PATH_INDEX_CONTENT + index + cst.HTML_EXTENSION for index in index_list
@@ -29,7 +29,7 @@ def write_index_histories_from_html_to_db():
     index_list = db.get_list(
         table=cst.TABLE_INDIZES,
         columns=cst.COLUMN_URI,
-        condition=[cst.COLUMN_ACTIVE, b"1"],
+        condition=[cst.COLUMN_ACTIVE, 1],
     )
     file_list = [
         cst.PATH_INDEX_HISTORY + index + cst.HTML_EXTENSION for index in index_list

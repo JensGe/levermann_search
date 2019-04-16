@@ -161,8 +161,15 @@ def levermann_03():
 def levermann_04_05():
     stock_list = db.get_list(table=cst.TABLE_STOCKS, columns=cst.COLUMN_URI)
     for stock in stock_list:
-        current_stock_price = db.get_latest_stock_price(stock)
-        eps = db.get_eps(stock)
+
+        # current_stock_price = db.get_latest_stock_price(stock)
+        current_stock_price = db.get_item(
+            table=cst.TABLE_STOCKS_HISTORIES,
+            column=cst.COLUMN_CLOSING_VALUE,
+            condition=[cst.COLUMN_STOCK_URI, stock],
+            order=[cst.COLUMN_DATE, cst.DESC],
+        )
+        eps = db.get_current_eps(stock)
 
         if current_stock_price is None or eps is None:
             logger.info(
@@ -173,43 +180,49 @@ def levermann_04_05():
 
         eps_0 = eps[3]
 
-        if sum(eps) != 0:
-            kgv5 = current_stock_price / (sum(eps) / 5)
-        else:
-            kgv5 = 9999.99
+        kgv5 = current_stock_price / (sum(eps) / 5) if sum(eps) != 0 else 9999.99
+        kgv5 = 9999.99 if kgv5 > 9999.99 else kgv5
 
-        if kgv5 > 9999.99:
-            kgv5 = 9999.99
-
-        if eps_0 != 0:
-            kgv0 = current_stock_price / eps_0
-        else:
-            kgv0 = 14
+        kgv0 = current_stock_price / eps_0 if eps_0 != 0 else 14
+        kgv0 = 9999.99 if kgv0 > 9999.99 else kgv0
 
         if 0 < kgv5 < 12:
-            kgv5_score = 1
+            lev_04_score = 1
         elif 12 < kgv5 < 16:
-            kgv5_score = 0
+            lev_04_score = 0
         elif kgv5 <= 0 or kgv5 >= 16:
-            kgv5_score = -1
+            lev_04_score = -1
         else:
-            kgv5_score = 0
+            lev_04_score = 0
 
-        db.save_kgv5_to_db(stock, round(kgv5, 2), kgv5_score)
-
-        if kgv0 > 9999.99:
-            kgv0 = 9999.99
+        # db.save_kgv5_to_db(stock, round(kgv5, 2), lev_04_score)
+        db.upsert_item(
+            table=cst.TABLE_LEVERMANN,
+            primary_keys=[cst.COLUMN_STOCK_URI, cst.COLUMN_DATE],
+            current_date=date.get_current_date(),
+            stock_uri=stock,
+            lev_04_val=round(kgv5, 2),
+            lev_04_sco=lev_04_score,
+        )
 
         if 0 < kgv0 < 12:
-            kgv0_score = 1
+            lev_05_score = 1
         elif 12 < kgv0 < 16:
-            kgv0_score = 0
+            lev_05_score = 0
         elif kgv0 <= 0 or kgv0 >= 16:
-            kgv0_score = -1
+            lev_05_score = -1
         else:
-            kgv0_score = 0
+            lev_05_score = 0
 
-        db.save_kgv0_to_db(stock, round(kgv0, 2), kgv0_score)
+        # db.save_kgv0_to_db(stock, round(kgv0, 2), lev_05_score)
+        db.upsert_item(
+            table=cst.TABLE_LEVERMANN,
+            primary_keys=[cst.COLUMN_STOCK_URI, cst.COLUMN_DATE],
+            current_date=date.get_current_date(),
+            stock_uri=stock,
+            lev_05_val=round(kgv0, 2),
+            lev_05_sco=lev_05_score,
+        )
 
 
 def levermann_06():
@@ -217,37 +230,44 @@ def levermann_06():
     for stock in stock_list:
         ratings = db.get_analyst_ratings(stock)
         if ratings is None:
+            logger.info("Calculate Lev06: Rating is None for stock: %s" % stock)
             continue
         rating_count = sum(ratings)
 
         if rating_count == 0:
             logger.info("Calculate Lev06: Zero Rating for stock: %s" % stock)
-            db.save_rating_to_db(stock, 0, 0)
-            continue
-
-        rating = round(
-            (1 * ratings[0] + 2 * ratings[1] + 3 * ratings[2]) / rating_count, 2
-        )
-        is_small_cap = db.is_small_cap(stock)
-
-        if is_small_cap and 0 < rating_count <= 5 and 1.0 <= rating <= 1.5:
-            rating_score = 1
-        elif is_small_cap and 0 < rating_count <= 5 and 1.5 < rating < 2.5:
-            rating_score = 0
-        elif is_small_cap and 0 < rating_count <= 5 and 2.5 <= rating <= 3.0:
-            rating_score = -1
-
-        elif 1.0 <= rating <= 1.5:
-            rating_score = -1
-        elif 1.5 < rating < 2.5:
-            rating_score = 0
-        elif 2.5 <= rating <= 3.0:
-            rating_score = 1
-
+            rating = 0
+            lev_06_score = 0
         else:
-            rating_score = 5
+            rating = (1 * ratings[0] + 2 * ratings[1] + 3 * ratings[2]) / rating_count
+            is_small_cap = db.is_small_cap(stock)
 
-        db.save_rating_to_db(stock, rating, rating_score)
+            if is_small_cap and 0 < rating_count <= 5 and 1.0 <= rating <= 1.5:
+                lev_06_score = 1
+            elif is_small_cap and 0 < rating_count <= 5 and 1.5 < rating < 2.5:
+                lev_06_score = 0
+            elif is_small_cap and 0 < rating_count <= 5 and 2.5 <= rating <= 3.0:
+                lev_06_score = -1
+
+            elif 1.0 <= rating <= 1.5:
+                lev_06_score = -1
+            elif 1.5 < rating < 2.5:
+                lev_06_score = 0
+            elif 2.5 <= rating <= 3.0:
+                lev_06_score = 1
+
+            else:
+                lev_06_score = 5
+
+        # db.save_rating_to_db(stock, round(rating, 2), lev_06_score)
+        db.upsert_item(
+            table=cst.TABLE_LEVERMANN,
+            primary_keys=[cst.COLUMN_STOCK_URI, cst.COLUMN_DATE],
+            current_date=date.get_current_date(),
+            stock_uri=stock,
+            lev_05_val=round(rating, 2),
+            lev_05_sco=lev_06_score,
+        )
 
 
 def levermann_07():
@@ -320,8 +340,8 @@ def levermann_07():
 def levermann_08():
     stock_list = db.get_list(table=cst.TABLE_STOCKS, columns=cst.COLUMN_URI)
     for stock in stock_list:
-        eps_current = db.get_eps(stock)
-        eps_last = db.get_older_eps(stock)
+        eps_current = db.get_current_eps(stock)
+        eps_last = db.get_last_eps(stock)
 
         if eps_current is None:
             logger.info("Calculate Lev08: Current EPS is None for stock: %s" % stock)
@@ -479,7 +499,7 @@ def levermann_12():
 def levermann_13():
     stock_list = db.get_list(table=cst.TABLE_STOCKS, columns=cst.COLUMN_URI)
     for stock in stock_list:
-        eps = db.get_eps(stock)
+        eps = db.get_current_eps(stock)
         if eps is None:
             logger.info("Calculate Lev13: EPS is None for stock: %s" % stock)
             continue

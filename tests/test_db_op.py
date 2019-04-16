@@ -7,6 +7,8 @@ from tests import db_test as db_test
 
 class TestDatabase(unittest.TestCase):
     def setUp(self):
+        db_test.delete_test_data()
+        db_test.drop_test_tables()
         db_test.create_test_tables()
         db_test.insert_test_data()
         pass
@@ -18,12 +20,13 @@ class TestDatabase(unittest.TestCase):
         )
         asserted_list = ["CAC_40", "dax", "dow_jones", "FTSE_100", "s&p_500", "tecdax"]
         self.assertEqual(asserted_list.sort(), index_list.sort())
+        # self.assertEqual(asserted_list, index_list)
 
     def test_get_list_from_db_with_condition(self):
         index_list = db.get_list(
             table=cst.TABLE_INDIZES,
             columns=cst.COLUMN_URI,
-            condition=[cst.COLUMN_LARGECAP, b"1"],
+            condition=[cst.COLUMN_LARGECAP, 1],
             database=cst.TEST_DATABASE,
         )
         asserted_list = ["CAC_40", "dax", "dow_jones", "FTSE_100"]
@@ -444,7 +447,6 @@ class TestDatabase(unittest.TestCase):
         ebit = "0.32"
         lev_02_score = "1"
 
-
         db.upsert_item(
             table=cst.TABLE_LEVERMANN,
             primary_keys=[cst.COLUMN_STOCK_URI, cst.COLUMN_DATE],
@@ -467,30 +469,52 @@ class TestDatabase(unittest.TestCase):
             ),
         )
 
+    def test_upsert_new_kgv5(self):
+        current_date = "2019-03-30"
+        stock_uri = "ab_inbev-Aktie"
+        kgv5 = "24.91"
+        lev_04_score = "-1"
+
+        db.upsert_item(
+            table=cst.TABLE_LEVERMANN,
+            primary_keys=[cst.COLUMN_STOCK_URI, cst.COLUMN_DATE],
+            database=cst.TEST_DATABASE,
+            current_date=current_date,
+            stock_uri=stock_uri,
+            lev_04_val=kgv5,
+            lev_04_sco=lev_04_score,
+        )
+
+        self.assertEqual(
+            kgv5,
+            str(
+                db.get_item(
+                    table=cst.TABLE_LEVERMANN,
+                    column=cst.COLUMN_LEV04_VALUE,
+                    condition=[cst.COLUMN_DATE, "2019-03-30"],
+                    database=cst.TEST_DATABASE,
+                )
+            ),
+        )
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    #
+    #
+    #
+    #
+    #
+    #
+    #
+    #
+    #
+    #
+    #
+    # Space for upsert_item Tests
+    #
+    #
+    #
+    #
+    #
 
     def test_quarterly_date_upsert(self):
         # ToDo
@@ -631,7 +655,7 @@ class TestDatabase(unittest.TestCase):
         )
         self.assertTrue(rv)
 
-    # ToDo renew with Testdatabase
+    # Get_Item Tests
 
     # def test_get_earnings_after_tax(self):
     #     result = db.get_earnings_after_tax("ab_inbev-Aktie", database=cst.TEST_DATABASE)
@@ -697,27 +721,46 @@ class TestDatabase(unittest.TestCase):
             ),
         )
 
+    def test_get_latest_stock_price(self):
+        self.assertEqual(
+            199.40,
+            float(
+                db.get_item(
+                    table=cst.TABLE_STOCKS_HISTORIES,
+                    column=cst.COLUMN_CLOSING_VALUE,
+                    condition=[cst.COLUMN_STOCK_URI, "adidas-Aktie"],
+                    order=[cst.COLUMN_DATE, cst.DESC],
+                    database=cst.TEST_DATABASE,
+                )
+            ),
+        )
 
+    #
+    #
+    #
+    #
+    #
+    #
+    #
+    #
+    #
+    #
+    #
+    # Space for get_item Tests
+    #
+    #
+    #
+    #
+    #
 
+    # Get_list Tests
 
+    def test_get_current_eps_s(self):
+        eps_s = db.get_current_eps("ab_inbev-Aktie", database=cst.TEST_DATABASE)
+        self.assertEqual([0.65, 3.60, 1.87, 4.13, 4.48], eps_s)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    def test_eps_s(self):
-        eps_s = db.get_eps("ab_inbev-Aktie", database=cst.TEST_DATABASE)
+    def test_get_last_eps_s(self):
+        eps_s = db.get_last_eps("ab_inbev-Aktie", database=cst.TEST_DATABASE)
         self.assertEqual([0.65, 3.60, 1.87, 4.11, 4.49], eps_s)
 
     def test_ratings(self):
@@ -803,8 +846,8 @@ class TestDatabase(unittest.TestCase):
         pass
 
     def tearDown(self):
-        db_test.delete_test_data()
-        db_test.drop_test_tables()
+        # db_test.delete_test_data()
+        # db_test.drop_test_tables()
         pass
 
 
