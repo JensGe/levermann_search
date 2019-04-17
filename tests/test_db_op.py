@@ -497,7 +497,6 @@ class TestDatabase(unittest.TestCase):
             ),
         )
 
-
     #
     #
     #
@@ -801,11 +800,15 @@ class TestDatabase(unittest.TestCase):
         index_uri = db.get_main_index_of_stock(stock_uri, database=cst.TEST_DATABASE)
         self.assertEqual("FTSE_100", index_uri)
 
-    def test_get_indices_of_stock(self):
-        stock_uri = "ab_inbev-Aktie"
-        index_uris = db.get_indices_of_stock(stock_uri, database=cst.TEST_DATABASE)
-        asserted_index_list = sorted(["EURO STOXX 50", "STOXX 50", "BEL 20", "EURONEXT 100", "EURO STOXX", "Next CAC 70", "BX Swiss -  EMEA"])
-        self.assertEqual(asserted_index_list, index_uris)
+    def test_get_main_index_of_stock_when_stock_not_exists(self):
+        stock_uri = "3m-Aktie"
+        index_uri = db.get_main_index_of_stock(stock_uri, database=cst.TEST_DATABASE)
+        self.assertIsNone(index_uri)
+
+    def test_get_main_index_of_stock_when_index_is_not_existent(self):
+        stock_uri = "cellcom_israel-Aktie"
+        index_uri = db.get_main_index_of_stock(stock_uri, database=cst.TEST_DATABASE)
+        self.assertIsNone(index_uri)
 
     def test_get_stock_history_url_list(self):
         stock_history_list = [

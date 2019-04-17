@@ -67,7 +67,14 @@ def get_item(table, column, condition=None, order=None, database=cst.DATABASE):
         results = db.query(
             "SELECT %s as result FROM %s %s %s" % (column, table, where, order_by)
         )
-        result = [item for item in results][0]
+        try:
+            result = [item for item in results][0]
+        except IndexError:
+            logger.info(
+                "Index Error while trying to get first Item of Result, "
+                "probably no data for search found"
+            )
+            return None
     return result["result"]
 
 
@@ -818,109 +825,33 @@ def get_analyst_ratings(stock_uri, database=cst.DATABASE):
 #             )
 #             pass
 
-# ToDo:
-#  get the real main Index of a stock, its the first of the indices
-#  scraped from overview -> the first Index in Table Company Data > Indizes
-
 
 def get_main_index_of_stock(stock_uri, database=cst.DATABASE):
-    # with dataset.connect(database) as db:
-    #     try:
-    #         results = db.query(
-    #             "SELECT * FROM %s WHERE AktienURI = '%s'"
-    #             % (cst.TABLE_INDEX_CONTENTS, stock_uri)
-    #         )
-    #         index_uri = [item for item in results][0][cst.COLUMN_INDEX_URI]
-    #         return index_uri
-    #     except:
-    #         logger.exception(
-    #             "Unhandled Exception at get_index_of_stock for %s" % stock_uri
-    #         )
-    #         pass
-    index_names = (
-        get_item(
-            table=cst.TABLE_COMPANY_DATA,
-            column=cst.COLUMN_INDICES,
-            condition=[cst.COLUMN_STOCK_URI, stock_uri],
-            order=[cst.COLUMN_DATE, cst.DESC],
-            database=database,
-        )
-        .replace("'", "")
-        .replace('"', "")
-        .replace("[", "")
-        .replace("]", "")
-        .split(", ")
+    index_names = get_item(
+        table=cst.TABLE_COMPANY_DATA,
+        column=cst.COLUMN_INDICES,
+        condition=[cst.COLUMN_STOCK_URI, stock_uri],
+        order=[cst.COLUMN_DATE, cst.DESC],
+        database=database,
     )
+
+    if index_names is None:
+        return None
+    else:
+        main_index = (
+            index_names.replace("'", "")
+            .replace('"', "")
+            .replace("[", "")
+            .replace("]", "")
+            .split(", ")[0]
+        )
 
     return get_item(
         table=cst.TABLE_INDIZES,
         column=cst.COLUMN_URI,
-        condition=[cst.COLUMN_INDEX_NAME, index_names[0]],
+        condition=[cst.COLUMN_INDEX_NAME, main_index],
         database=database,
     )
-
-
-def get_indices_of_stock(stock_uri, database=cst.DATABASE):
-    # with dataset.connect(database) as db:
-    #     try:
-    #         results = db.query(
-    #             "SELECT * FROM %s WHERE AktienURI = '%s'"
-    #             % (cst.TABLE_INDEX_CONTENTS, stock_uri)
-    #         )
-    #         index_uri = {item[cst.COLUMN_INDEX_URI] for item in results}
-    #         return sorted(index_uri)
-    #     except:
-    #         logger.exception(
-    #             "Unhandled Exception at get_indizes_of_stock for %s" % stock_uri
-    #         )
-    #         pass
-    index_names = (
-        get_item(
-            table=cst.TABLE_COMPANY_DATA,
-            column=cst.COLUMN_INDICES,
-            condition=[cst.COLUMN_STOCK_URI, stock_uri],
-            order=[cst.COLUMN_DATE, cst.DESC],
-            database=database,
-        )
-        .replace("'", "")
-        .replace('"', "")
-        .replace("[", "")
-        .replace("]", "")
-        .split(", ")
-    )
-    print(index_names)
-    return [
-        get_item(
-            table=cst.TABLE_INDIZES,
-            column=cst.COLUMN_URI,
-            condition=[cst.COLUMN_INDEX_NAME, index_name],
-            database=database,
-        )
-        for index_name in index_names
-    ]
-
-
-# def is_small_cap(stock_uri, database=cst.DATABASE):
-#     with dataset.connect(database) as db:
-#         try:
-#             market_cap_results = db.query(
-#                 "SELECT * FROM %s WHERE AktienURI = '%s' ORDER BY Datum DESC"
-#                 % (cst.TABLE_COMPANY_DATA, stock_uri)
-#             )
-#             market_cap = float(
-#                 [item for item in market_cap_results][0][cst.COLUMN_MARKET_CAP]
-#             )
-#             if market_cap > cst.MARKET_CAP_THRESHOLD:
-#                 return False
-#             else:
-#                 indizes_list = get_indices_of_stock(stock_uri, database=database)
-#                 return not any(
-#                     i in indizes_list for i in cst.LARGE_CAPS_INDIZES
-#                 )
-#
-#         except:
-#             logger.exception("Unhandled Exception at is_small_cap for %s" % stock_uri)
-#             pass
 
 
 def is_small_cap(stock_uri, database=cst.DATABASE):
@@ -934,12 +865,7 @@ def is_small_cap(stock_uri, database=cst.DATABASE):
         )
     )
 
-    if market_cap > cst.MARKET_CAP_THRESHOLD:
-        return False
-    else:
-        indices_list = get_indices_of_stock(stock_uri, database=database)
-        # ToDO abhängig von Spalte LargeCapIndex machen, dann auch in Constants löschen
-        return not any(i in indices_list for i in cst.LARGE_CAPS_INDIZES)
+    return market_cap < cst.MARKET_CAP_THRESHOLD
 
 
 # Levermann 07

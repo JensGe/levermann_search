@@ -220,6 +220,7 @@ def insert_test_data():
              '["Telekommunikation", "Mobilkommunikation", "Netzbetreiber (Carrier)", "IT-Dienstleister"]', 
              '112.00', '286.00', '3871.00', '6087.00', '1441.00', '0.94', '1.47', '1.11', '0.62', '0.91', '0', '0', '0');
         
+        
         insert into Unternehmensdaten 
             (AktienURI, Datum, Marktkapitalisierung, 
              Indizes, Branchen)

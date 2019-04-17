@@ -274,26 +274,33 @@ def levermann_07():
     stock_list = db.get_list(table=cst.TABLE_STOCKS, columns=cst.COLUMN_URI)
     for stock in stock_list:
         logger.info("Calculating Lev07 for %s" % stock)
-        quaterly_date = db.get_quarterly_date(stock)
+        quarterly_date = db.get_quarterly_date(stock)
 
-        if quaterly_date is None:
+        if quarterly_date is None:
             logger.info("Calculate Lev07: Quaterly Date is None for stock: %s" % stock)
             db.save_quarterly_reaction_to_db(stock, 0, 0)
             continue
 
         index = db.get_main_index_of_stock(stock)
+        if index is None:
+            logger.info("Calculate Lev07: No Index found")
+            continue
 
-        quaterly_stock_pack = db.get_closing_stock_price(quaterly_date, stock)
-        quaterly_index_pack = db.get_closing_index_price(quaterly_date, index)
-        if quaterly_stock_pack is None or quaterly_index_pack is None:
+        quarterly_stock_pack = db.get_closing_stock_price(quarterly_date, stock)
+        quarterly_index_pack = db.get_closing_index_price(quarterly_date, index)
+        if quarterly_stock_pack is None or quarterly_index_pack is None:
             logger.info(
                 "Calculate Lev07: Quaterly Date Pack or Quaterly Index Pack is None for stock: %s"
                 % stock
             )
             continue
 
-        quaterly_stock_closing_price, quarterly_stock_actual_date = quaterly_stock_pack
-        quaterly_index_closing_price, quarterly_index_actual_date = quaterly_index_pack
+        quarterly_stock_closing_price, quarterly_stock_actual_date = (
+            quarterly_stock_pack
+        )
+        quarterly_index_closing_price, quarterly_index_actual_date = (
+            quarterly_index_pack
+        )
 
         day_before_actual_date_stock = date.edit_date(
             quarterly_stock_actual_date, cst.DT_MINUS, 1, cst.DT_DAY
@@ -320,8 +327,8 @@ def levermann_07():
                 % stock
             )
             continue
-        stock_diff = (quaterly_stock_closing_price / compare_price_stock) - 1
-        index_diff = (quaterly_index_closing_price / compare_price_index) - 1
+        stock_diff = (quarterly_stock_closing_price / compare_price_stock) - 1
+        index_diff = (quarterly_index_closing_price / compare_price_index) - 1
 
         if index_diff == 0:
             continue
@@ -469,6 +476,10 @@ def levermann_12():
             ]
 
             index = db.get_main_index_of_stock(stock)
+            if index is None:
+                logger.info("Calculate Lev12: No Index found")
+                continue
+
             last_index_prices_of_month = [
                 db.get_closing_index_price(r_date, index)[0]
                 for r_date in last_days_of_month
