@@ -4,7 +4,6 @@ from utils import date_op as date
 from utils import constants as cst
 from sqlalchemy.exc import IntegrityError
 
-import re
 import dataset
 
 
@@ -66,7 +65,7 @@ def get_item(table, column, condition=None, order=None, database=cst.DATABASE):
 
     with dataset.connect(database) as db:
         results = db.query(
-            "SELECT %s as result " "FROM %s %s %s" % (column, table, where, order_by)
+            "SELECT %s as result FROM %s %s %s" % (column, table, where, order_by)
         )
         result = [item for item in results][0]
     return result["result"]
@@ -90,6 +89,7 @@ def upsert_item(
     active=None,
     large_cap=None,
     index_uri=None,
+    index_name=None,
     pages=None,
     stock_uri=None,
     equity_capital=None,
@@ -149,6 +149,7 @@ def upsert_item(
                 active,
                 large_cap,
                 index_uri,
+                index_name,
                 pages,
                 stock_uri,
                 earnings_after_tax,
@@ -821,6 +822,7 @@ def get_analyst_ratings(stock_uri, database=cst.DATABASE):
 #  get the real main Index of a stock, its the first of the indices
 #  scraped from overview -> the first Index in Table Company Data > Indizes
 
+
 def get_main_index_of_stock(stock_uri, database=cst.DATABASE):
     # with dataset.connect(database) as db:
     #     try:
@@ -835,15 +837,27 @@ def get_main_index_of_stock(stock_uri, database=cst.DATABASE):
     #             "Unhandled Exception at get_index_of_stock for %s" % stock_uri
     #         )
     #         pass
-    index = get_item(
-        table=cst.TABLE_COMPANY_DATA,
-        column=cst.COLUMN_INDICES,
-        condition=[cst.COLUMN_STOCK_URI, stock_uri],
-        order=[cst.COLUMN_DATE, cst.DESC],
-        database=database,
-    ).replace("'", "").replace('"', '').replace("[", "").replace("]","").split(", ")
+    index_names = (
+        get_item(
+            table=cst.TABLE_COMPANY_DATA,
+            column=cst.COLUMN_INDICES,
+            condition=[cst.COLUMN_STOCK_URI, stock_uri],
+            order=[cst.COLUMN_DATE, cst.DESC],
+            database=database,
+        )
+        .replace("'", "")
+        .replace('"', "")
+        .replace("[", "")
+        .replace("]", "")
+        .split(", ")
+    )
 
-    return index[0]
+    return get_item(
+        table=cst.TABLE_INDIZES,
+        column=cst.COLUMN_URI,
+        condition=[cst.COLUMN_INDEX_NAME, index_names[0]],
+        database=database,
+    )
 
 
 def get_indices_of_stock(stock_uri, database=cst.DATABASE):
@@ -860,12 +874,31 @@ def get_indices_of_stock(stock_uri, database=cst.DATABASE):
     #             "Unhandled Exception at get_indizes_of_stock for %s" % stock_uri
     #         )
     #         pass
-    return get_list(
-        table=cst.TABLE_INDEX_CONTENTS,
-        columns=cst.COLUMN_INDEX_URI,
-        condition=[cst.COLUMN_STOCK_URI, stock_uri],
-        database=database,
+    index_names = (
+        get_item(
+            table=cst.TABLE_COMPANY_DATA,
+            column=cst.COLUMN_INDICES,
+            condition=[cst.COLUMN_STOCK_URI, stock_uri],
+            order=[cst.COLUMN_DATE, cst.DESC],
+            database=database,
+        )
+        .replace("'", "")
+        .replace('"', "")
+        .replace("[", "")
+        .replace("]", "")
+        .split(", ")
     )
+    print(index_names)
+    return [
+        get_item(
+            table=cst.TABLE_INDIZES,
+            column=cst.COLUMN_URI,
+            condition=[cst.COLUMN_INDEX_NAME, index_name],
+            database=database,
+        )
+        for index_name in index_names
+    ]
+
 
 # def is_small_cap(stock_uri, database=cst.DATABASE):
 #     with dataset.connect(database) as db:
