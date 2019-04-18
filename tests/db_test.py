@@ -238,7 +238,13 @@ def insert_test_data():
             values
             ('ab_inbev-Aktie', '2019-03-23', '0.06', '-1', '0.31', '1', 
              '0.31', '1', '24.91', '-1', '17.77', '-1', '1.25', '-1', '0.05', '1', 
-             '0.00', '0', '-0.06', '-1', '-0.16', '-1', '0', '0.00', '0', '0.08', '1')
+             '0.00', '0', '-0.06', '-1', '-0.16', '-1', '0', '0.00', '0', '0.08', '1');
+             
+        insert into Aktientermine
+            (AktienURI, Datum, Terminart, Status)
+            values 
+            ('ab_inbev-Aktie', '2019-02-01', 'Quarterly/Yearly', 'new'),
+            ('ab_inbev-Aktie', '2019-03-21', 'Quarterly/Yearly', 'new');
         """
         )
 

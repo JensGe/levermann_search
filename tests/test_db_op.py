@@ -734,6 +734,19 @@ class TestDatabase(unittest.TestCase):
             ),
         )
 
+    def test_get_quarterly_date(self):
+        asserted_date = date.string_to_date("21.03.2019")
+        self.assertEqual(
+            asserted_date,
+            db.get_item(
+                table=cst.TABLE_STOCK_DATES,
+                column=cst.COLUMN_DATE,
+                condition=[cst.COLUMN_STOCK_URI, "ab_inbev-Aktie"],
+                order=[cst.COLUMN_DATE, cst.DESC],
+                database=cst.TEST_DATABASE
+            ),
+        )
+
     #
     #
     #

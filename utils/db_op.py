@@ -864,30 +864,28 @@ def is_small_cap(stock_uri, database=cst.DATABASE):
             database=database,
         )
     )
-
     return market_cap < cst.MARKET_CAP_THRESHOLD
 
 
 # Levermann 07
 
 
-def get_quarterly_date(stock_uri, database=cst.DATABASE):
-    with dataset.connect(database) as db:
-        try:
-            results = db.query(
-                "SELECT * FROM %s WHERE AktienURI = '%s'"
-                % (cst.TABLE_STOCK_DATES, stock_uri)
-            )
-            quarterly_date = [item for item in results][0][cst.COLUMN_DATE]
-            return quarterly_date
-        except TypeError:
-            logger.error("TypeError in get_quaterly_date at %s" % stock_uri)
-        except:
-            logger.exception("Exception at get_quarterly_date for %s" % stock_uri)
-            pass
+# def get_quarterly_date(stock_uri, database=cst.DATABASE):
+#     with dataset.connect(database) as db:
+#         try:
+#             results = db.query(
+#                 "SELECT * FROM %s WHERE AktienURI = '%s'"
+#                 % (cst.TABLE_STOCK_DATES, stock_uri)
+#             )
+#             quarterly_date = [item for item in results][0][cst.COLUMN_DATE]
+#             return quarterly_date
+#         except TypeError:
+#             logger.error("TypeError in get_quarterly_date at %s" % stock_uri)
+#         except:
+#             logger.exception("Exception at get_quarterly_date for %s" % stock_uri)
+#             pass
 
-
-def get_closing_stock_price(request_date, stock_uri, database=cst.DATABASE):
+def get_closing_stock_price_2(request_date, stock_uri, database=cst.DATABASE):
     with dataset.connect(database) as db:
         try:
             results = db.query(

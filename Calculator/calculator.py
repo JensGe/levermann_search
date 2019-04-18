@@ -274,7 +274,13 @@ def levermann_07():
     stock_list = db.get_list(table=cst.TABLE_STOCKS, columns=cst.COLUMN_URI)
     for stock in stock_list:
         logger.info("Calculating Lev07 for %s" % stock)
-        quarterly_date = db.get_quarterly_date(stock)
+        # quarterly_date = db.get_quarterly_date(stock)
+
+        quarterly_date = db.get_item(table=cst.TABLE_STOCK_DATES,
+                                     column=cst.COLUMN_DATE,
+                                     condition=[cst.COLUMN_STOCK_URI, stock],
+                                     order=[cst.COLUMN_DATE, cst.DESC],
+                                     )
 
         if quarterly_date is None:
             logger.info("Calculate Lev07: Quaterly Date is None for stock: %s" % stock)
