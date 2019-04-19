@@ -885,51 +885,77 @@ def is_small_cap(stock_uri, database=cst.DATABASE):
 #             logger.exception("Exception at get_quarterly_date for %s" % stock_uri)
 #             pass
 
-def get_closing_stock_price_2(request_date, stock_uri, database=cst.DATABASE):
-    with dataset.connect(database) as db:
-        try:
-            results = db.query(
-                "SELECT * FROM %s "
-                "WHERE AktienURI = '%s' and Datum <= '%s' "
-                "ORDER BY Datum DESC"
-                % (cst.TABLE_STOCKS_HISTORIES, stock_uri, request_date)
-            )
-            result = [item for item in results][0]
-            closing_price = result[cst.COLUMN_CLOSING_VALUE]
-            actual_date = result[cst.COLUMN_DATE]
-            return closing_price, actual_date
-        except IndexError:
-            logger.error(
-                "IndexError while getting closing_stock_price for %s. "
-                "The sql_query returns an empty result."
-                "Probably is there no date in database before request_date"
-            )
-            pass
-        except:
-            logger.exception(
-                "Unhandled Exception at get_closing_stock_price for %s" % stock_uri
-            )
-            pass
+
+# def get_closing_stock_price(request_date, stock_uri, database=cst.DATABASE):
+#     with dataset.connect(database) as db:
+#         try:
+#             results = db.query(
+#                 "SELECT * FROM %s "
+#                 "WHERE AktienURI = '%s' and Datum <= '%s' "
+#                 "ORDER BY Datum DESC"
+#                 % (cst.TABLE_STOCKS_HISTORIES, stock_uri, request_date)
+#             )
+#             result = [item for item in results][0]
+#             closing_price = result[cst.COLUMN_CLOSING_VALUE]
+#             actual_date = result[cst.COLUMN_DATE]
+#             return closing_price, actual_date
+#         except IndexError:
+#             logger.error(
+#                 "IndexError while getting closing_stock_price for %s. "
+#                 "The sql_query returns an empty result."
+#                 "Probably is there no date in database before request_date"
+#             )
+#             pass
+#         except:
+#             logger.exception(
+#                 "Unhandled Exception at get_closing_stock_price for %s" % stock_uri
+#             )
+#             pass
+
+def get_closing_stock_price(request_date, stock_uri, database=cst.DATABASE):
+    closing_prices = get_list(
+        table=cst.TABLE_STOCKS_HISTORIES,
+        columns=[cst.COLUMN_CLOSING_VALUE, cst.COLUMN_DATE],
+        condition=[cst.COLUMN_STOCK_URI, stock_uri],
+        order=[cst.COLUMN_DATE, cst.DESC],
+        database=database,
+    )
+    for items in closing_prices:
+        if str(items[1]) <= request_date:
+            return items[0], items[1]
 
 
 def get_closing_index_price(request_date, index_uri, database=cst.DATABASE):
-    with dataset.connect(database) as db:
-        try:
-            results = db.query(
-                "SELECT * FROM %s "
-                "WHERE IndexURI = '%s' and Datum <= '%s' "
-                "ORDER BY Datum DESC"
-                % (cst.TABLE_INDEX_HISTORIES, index_uri, request_date)
-            )
-            result = [item for item in results][0]
-            closing_price = result[cst.COLUMN_CLOSING_VALUE]
-            actual_date = result[cst.COLUMN_DATE]
-            return closing_price, actual_date
-        except:
-            logger.exception(
-                "Unhandled Exception at get_closing_index_price for %s" % index_uri
-            )
-            pass
+    closing_prices = get_list(
+        table=cst.TABLE_INDEX_HISTORIES,
+        columns=[cst.COLUMN_CLOSING_VALUE, cst.COLUMN_DATE],
+        condition=[cst.COLUMN_INDEX_URI, index_uri],
+        order=[cst.COLUMN_DATE, cst.DESC],
+        database=database,
+    )
+    for items in closing_prices:
+        if str(items[1]) <= request_date:
+            return items[0], items[1]
+
+
+# def get_closing_index_price_old(request_date, index_uri, database=cst.DATABASE):
+#     with dataset.connect(database) as db:
+#         try:
+#             results = db.query(
+#                 "SELECT * FROM %s "
+#                 "WHERE IndexURI = '%s' and Datum <= '%s' "
+#                 "ORDER BY Datum DESC"
+#                 % (cst.TABLE_INDEX_HISTORIES, index_uri, request_date)
+#             )
+#             result = [item for item in results][0]
+#             closing_price = result[cst.COLUMN_CLOSING_VALUE]
+#             actual_date = result[cst.COLUMN_DATE]
+#             return closing_price, actual_date
+#         except:
+#             logger.exception(
+#                 "Unhandled Exception at get_closing_index_price for %s" % index_uri
+#             )
+#             pass
 
 
 def save_quarterly_reaction_to_db(

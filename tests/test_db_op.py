@@ -743,7 +743,7 @@ class TestDatabase(unittest.TestCase):
                 column=cst.COLUMN_DATE,
                 condition=[cst.COLUMN_STOCK_URI, "ab_inbev-Aktie"],
                 order=[cst.COLUMN_DATE, cst.DESC],
-                database=cst.TEST_DATABASE
+                database=cst.TEST_DATABASE,
             ),
         )
 
@@ -791,7 +791,7 @@ class TestDatabase(unittest.TestCase):
         )
         self.assertTrue(is_small_cap)
 
-    def test_get_closing_stock_price_weekday(self):
+    def test_get_closing_stock_price_with_date_available(self):
         stock_uri = "adidas-Aktie"
         quarterly = "2019-01-29"
         closing_price, actual_date = db.get_closing_stock_price(
@@ -799,7 +799,7 @@ class TestDatabase(unittest.TestCase):
         )
         self.assertEqual(204.90, float(closing_price))
 
-    def test_get_closing_stock_price_weekend(self):
+    def test_get_closing_stock_price_with_date_not_available(self):
         stock_uri = "adidas-Aktie"
         quarterly_we = "2019-02-03"
         closing_price, actual_date = db.get_closing_stock_price(
@@ -807,6 +807,23 @@ class TestDatabase(unittest.TestCase):
         )
         self.assertEqual(199.40, float(closing_price))
         self.assertEqual("01.02.2019", date.date_to_string(actual_date))
+
+    def test_get_closing_index_price_with_date_available(self):
+        index_uri = "dax"
+        quarterly = "2019-03-07"
+        closing_price, actual_date = db.get_closing_index_price(
+            quarterly, index_uri, database=cst.TEST_DATABASE
+        )
+        self.assertEqual(11546.42, float(closing_price))
+
+    def test_get_closing_index_price_with_date_not_available(self):
+        index_uri = "dax"
+        quarterly_we = "2019-03-10"
+        closing_price, actual_date = db.get_closing_index_price(
+            quarterly_we, index_uri, database=cst.TEST_DATABASE
+        )
+        self.assertEqual(11429.77, float(closing_price))
+        self.assertEqual("08.03.2019", date.date_to_string(actual_date))
 
     def test_get_main_index_of_stock(self):
         stock_uri = "3i-Aktie"
