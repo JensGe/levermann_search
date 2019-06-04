@@ -169,21 +169,24 @@ def levermann_04_05():
             condition=[cst.COLUMN_STOCK_URI, stock],
             order=[cst.COLUMN_DATE, cst.DESC],
         )
-        eps = db.get_current_eps(stock)
+        eps = db.get_latest_eps(stock)
 
         if current_stock_price is None or eps is None:
-            logger.info(
-                "Calculate Lev04/05: Current Stockprice or EPS is None for stock: %s"
-                % stock
-            )
+            logger.info("Calculate Lev04/05: Current Stockprice is None: %s" % stock)
+            continue
+        if eps is None:
+            logger.info("Calculate Lev04/05: EPS is None for stock: %s" % stock)
+            continue
+        if None in eps:
+            logger.info("Calculate Lev04/05: Any Nones in EPS for stock: %s" % stock)
             continue
 
         eps_0 = eps[3]
 
-        kgv5 = current_stock_price / (sum(eps) / 5) if sum(eps) != 0 else 9999.99
+        kgv5 = float(current_stock_price) / (sum(eps) / 5) if sum(eps) != 0 else 9999.99
         kgv5 = 9999.99 if kgv5 > 9999.99 else kgv5
 
-        kgv0 = current_stock_price / eps_0 if eps_0 != 0 else 14
+        kgv0 = float(current_stock_price) / eps_0 if eps_0 != 0 else 14
         kgv0 = 9999.99 if kgv0 > 9999.99 else kgv0
 
         if 0 < kgv5 < 12:
@@ -276,11 +279,12 @@ def levermann_07():
         logger.info("Calculating Lev07 for %s" % stock)
         # quarterly_date = db.get_quarterly_date(stock)
 
-        quarterly_date = db.get_item(table=cst.TABLE_STOCK_DATES,
-                                     column=cst.COLUMN_DATE,
-                                     condition=[cst.COLUMN_STOCK_URI, stock],
-                                     order=[cst.COLUMN_DATE, cst.DESC],
-                                     )
+        quarterly_date = db.get_item(
+            table=cst.TABLE_STOCK_DATES,
+            column=cst.COLUMN_DATE,
+            condition=[cst.COLUMN_STOCK_URI, stock],
+            order=[cst.COLUMN_DATE, cst.DESC],
+        )
 
         if quarterly_date is None:
             logger.info("Calculate Lev07: Quaterly Date is None for stock: %s" % stock)
@@ -317,24 +321,32 @@ def levermann_07():
 
         compare_price_stock = db.get_closing_stock_price(
             day_before_actual_date_stock, stock
-        )[0]
+        )
         compare_price_index = db.get_closing_index_price(
             day_before_actual_date_index, index
-        )[0]
+        )
 
-        if (
-            compare_price_stock is None
-            or compare_price_index == 0
-            or compare_price_index is None
-            or compare_price_index == 0
-        ):
+        if compare_price_stock is None:
+            logger.info("Calc Lev07: Compare Price Stock is None for stock: %s" % stock)
+            continue
+        if compare_price_index is None:
+            logger.info("Calc Lev07: Compare Price Index is None for stock: %s" % stock)
+            continue
+        if compare_price_stock[0] is None or compare_price_stock[0] == 0:
             logger.info(
-                "Calculate Lev07: Compare Price Stock or Index is None or 0 for stock: %s"
+                "Calculate Lev07: First Item in Compare Price Stock is None or 0: %s"
                 % stock
             )
             continue
-        stock_diff = (quarterly_stock_closing_price / compare_price_stock) - 1
-        index_diff = (quarterly_index_closing_price / compare_price_index) - 1
+        if compare_price_index[0] is None or compare_price_index[0] == 0:
+            logger.info(
+                "Calculate Lev07: First Item in Compare Price Index is None or 0: %s"
+                % stock
+            )
+            continue
+
+        stock_diff = (quarterly_stock_closing_price / compare_price_stock[0]) - 1
+        index_diff = (quarterly_index_closing_price / compare_price_index[0]) - 1
 
         if index_diff == 0:
             continue
@@ -353,8 +365,8 @@ def levermann_07():
 def levermann_08():
     stock_list = db.get_list(table=cst.TABLE_STOCKS, columns=cst.COLUMN_URI)
     for stock in stock_list:
-        eps_current = db.get_current_eps(stock)
-        eps_last = db.get_last_eps(stock)
+        eps_current = db.get_latest_eps(stock)
+        eps_last = db.get_second_latest_eps(stock)
 
         if eps_current is None:
             logger.info("Calculate Lev08: Current EPS is None for stock: %s" % stock)
@@ -371,7 +383,18 @@ def levermann_08():
         eps_0_l = eps_last[3]
         eps_1_l = eps_last[4]
 
-        if eps_0_l == 0 or eps_1_l == 0:
+        if eps_0_l == 0 or eps_1_l == 0 or eps_0_l is None or eps_1_l is None:
+            logger.info(
+                "Calculate Lev08: eps_0_l or eps_1_l EPS is None or 0 "
+                "for stock: %s" % stock
+            )
+            continue
+
+        if eps_0_c == 0 or eps_1_c == 0 or eps_0_c is None or eps_1_c is None:
+            logger.info(
+                "Calculate Lev08: eps_0_c or eps_1_c EPS is None or 0 "
+                "for stock: %s" % stock
+            )
             continue
 
         eps_0_ratio = (eps_0_c / eps_0_l) - 1
@@ -516,9 +539,12 @@ def levermann_12():
 def levermann_13():
     stock_list = db.get_list(table=cst.TABLE_STOCKS, columns=cst.COLUMN_URI)
     for stock in stock_list:
-        eps = db.get_current_eps(stock)
+        eps = db.get_latest_eps(stock)
         if eps is None:
             logger.info("Calculate Lev13: EPS is None for stock: %s" % stock)
+            continue
+        if None in eps:
+            logger.info("Calculate Lev13: Any EPS is None for stock: %s" % stock)
             continue
         if eps[3] != 0:
             eps_ratio = round((eps[4] / eps[3]) - 1, 2)

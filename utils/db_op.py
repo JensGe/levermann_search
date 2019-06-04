@@ -216,8 +216,8 @@ def upsert_item(
         try:
             db[table].upsert(upsert_dict, primary_keys)
 
-        except:
-            logger.warning("Unhandled Upsert Error")
+        except Exception as e:
+            logger.warning("Unhandled Upsert Error: %s" % e.args)
     pass
 
 
@@ -704,7 +704,7 @@ def check_is_financial_company(stock_uri, database=cst.DATABASE):
 #             pass
 
 
-def get_current_eps(stock_uri, database=cst.DATABASE):
+def get_latest_eps(stock_uri, database=cst.DATABASE):
 
     eps_s = get_list(
         table=cst.TABLE_COMPANY_DATA,
@@ -719,10 +719,14 @@ def get_current_eps(stock_uri, database=cst.DATABASE):
         order=[cst.COLUMN_DATE, cst.DESC],
         database=database,
     )
-    return [float(i) for i in eps_s[0]]
+    latest_eps = [float(i) if i is not None else i for i in eps_s[0]]
+    if latest_eps == [None, None, None, None, None]:
+        return None
+    else:
+        return latest_eps
 
 
-def get_last_eps(stock_uri, database=cst.DATABASE):
+def get_second_latest_eps(stock_uri, database=cst.DATABASE):
     eps_s = get_list(
         table=cst.TABLE_COMPANY_DATA,
         columns=[
@@ -736,7 +740,11 @@ def get_last_eps(stock_uri, database=cst.DATABASE):
         order=[cst.COLUMN_DATE, cst.DESC],
         database=database,
     )
-    return [float(i) for i in eps_s[1]]
+    sec_latest_eps = [float(i) if i is not None else i for i in eps_s[1]]
+    if sec_latest_eps == [None, None, None, None, None]:
+        return None
+    else:
+        return sec_latest_eps
 
 
 # def save_kgv5_to_db(stock_uri, kgv5, kgv5_score, database=cst.DATABASE):
@@ -920,8 +928,9 @@ def get_closing_stock_price(request_date, stock_uri, database=cst.DATABASE):
         order=[cst.COLUMN_DATE, cst.DESC],
         database=database,
     )
+
     for items in closing_prices:
-        if str(items[1]) <= request_date:
+        if items[1] <= request_date:
             return items[0], items[1]
 
 
@@ -934,7 +943,7 @@ def get_closing_index_price(request_date, index_uri, database=cst.DATABASE):
         database=database,
     )
     for items in closing_prices:
-        if str(items[1]) <= request_date:
+        if items[1] <= request_date:
             return items[0], items[1]
 
 

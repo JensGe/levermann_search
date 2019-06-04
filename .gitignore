@@ -1,0 +1,402 @@
+# Created by .ignore support plugin (hsz.mobi)
+### Python template
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+#   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
+#   However, in case of collaboration, if having platform-specific dependencies or dependencies
+#   having no cross-platform support, pipenv may install dependencies that don't work, or not
+#   install all needed dependencies.
+#Pipfile.lock
+
+# celery beat schedule file
+celerybeat-schedule
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+Würde .idea/dataSources.local.xml löschen
+Würde .idea/dataSources/ löschen
+Würde .idea/inspectionProfiles/ löschen
+Würde .idea/vcs.xml löschen
+Würde .idea/workspace.xml löschen
+Würde Calculator/__pycache__/ löschen
+Würde Displayer/__pycache__/ löschen
+Würde Parser/__pycache__/ löschen
+Würde Scraper/__pycache__/ löschen
+Würde __pycache__/ löschen
+Würde data/indizes/content/aex.html löschen
+Würde data/indizes/content/atx.html löschen
+Würde data/indizes/content/bovespa.html löschen
+Würde data/indizes/content/bsx.html löschen
+Würde data/indizes/content/bux.html löschen
+Würde data/indizes/content/egx30.html löschen
+Würde data/indizes/content/hang_seng.html löschen
+Würde data/indizes/content/ibex_35.html löschen
+Würde data/indizes/content/ise_100.html löschen
+Würde data/indizes/content/kospi.html löschen
+Würde data/indizes/content/mdax.html löschen
+Würde data/indizes/content/merval_25.html löschen
+Würde data/indizes/content/nasdaq_100.html löschen
+Würde data/indizes/content/nikkei_225.html löschen
+Würde data/indizes/content/omx.html löschen
+Würde data/indizes/content/osebx.html löschen
+Würde data/indizes/content/prime_all_share.html löschen
+Würde data/indizes/content/rts.html löschen
+Würde data/indizes/content/s&p_500.html löschen
+Würde data/indizes/content/sdax.html löschen
+Würde data/indizes/content/sensex.html löschen
+Würde data/indizes/content/smim.html löschen
+Würde data/indizes/content/sofix.html löschen
+Würde data/indizes/content/spi.html löschen
+Würde data/indizes/content/ta_100.html löschen
+Würde data/indizes/content/tecdax.html löschen
+Würde data/indizes/content/wig-20.html löschen
+Würde data/indizes/history/ löschen
+Würde data/stocks/ löschen
+Würde geckodriver.log löschen
+Würde logs/ löschen
+Würde stock_search/bin/black löschen
+Würde stock_search/bin/blackd löschen
+Würde stock_search/bin/dotenv löschen
+Würde stock_search/bin/pygmentize löschen
+Würde stock_search/include/ löschen
+Würde stock_search/lib/python3.7/site-packages/Flask_WTF-0.14.2.dist-info/ löschen
+Würde stock_search/lib/python3.7/site-packages/MySQLdb/ löschen
+Würde stock_search/lib/python3.7/site-packages/OpenSSL/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/PyMySQL-0.9.2.dist-info/ löschen
+Würde stock_search/lib/python3.7/site-packages/PyMysqlDB-0.0.2-py3.7.egg-info/ löschen
+Würde stock_search/lib/python3.7/site-packages/PyTools/ löschen
+Würde stock_search/lib/python3.7/site-packages/Pygments-2.3.1.dist-info/ löschen
+Würde stock_search/lib/python3.7/site-packages/WTForms-2.2.1.dist-info/ löschen
+Würde stock_search/lib/python3.7/site-packages/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/_mysql.cpython-37m-x86_64-linux-gnu.so löschen
+Würde stock_search/lib/python3.7/site-packages/_mysql_exceptions.py löschen
+Würde stock_search/lib/python3.7/site-packages/alembic/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/alembic/autogenerate/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/alembic/ddl/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/alembic/operations/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/alembic/runtime/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/alembic/script/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/alembic/templates/generic/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/alembic/templates/multidb/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/alembic/templates/pylons/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/alembic/testing/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/alembic/testing/plugin/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/alembic/util/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/ansimarkup-1.4.0.dist-info/ löschen
+Würde stock_search/lib/python3.7/site-packages/ansimarkup/ löschen
+Würde stock_search/lib/python3.7/site-packages/appdirs-1.4.3.dist-info/ löschen
+Würde stock_search/lib/python3.7/site-packages/appdirs.py löschen
+Würde stock_search/lib/python3.7/site-packages/asn1crypto/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/asn1crypto/_perf/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/attr/ löschen
+Würde stock_search/lib/python3.7/site-packages/attrs-19.1.0.dist-info/ löschen
+Würde stock_search/lib/python3.7/site-packages/banal/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/better_exceptions/ löschen
+Würde stock_search/lib/python3.7/site-packages/better_exceptions_fork-0.2.1.post6-py3.7.egg-info/ löschen
+Würde stock_search/lib/python3.7/site-packages/better_exceptions_fork/ löschen
+Würde stock_search/lib/python3.7/site-packages/better_exceptions_hook.pth löschen
+Würde stock_search/lib/python3.7/site-packages/black-18.9b0.dist-info/ löschen
+Würde stock_search/lib/python3.7/site-packages/black.py löschen
+Würde stock_search/lib/python3.7/site-packages/blackd.py löschen
+Würde stock_search/lib/python3.7/site-packages/blib2to3/ löschen
+Würde stock_search/lib/python3.7/site-packages/blinker/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/bs4/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/bs4/builder/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/bs4/tests/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/certifi/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/cffi/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/chardet/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/chardet/cli/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/click/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/colorama-0.4.1.dist-info/ löschen
+Würde stock_search/lib/python3.7/site-packages/colorama/ löschen
+Würde stock_search/lib/python3.7/site-packages/cryptography/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/cryptography/hazmat/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/cryptography/hazmat/backends/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/cryptography/hazmat/backends/openssl/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/cryptography/hazmat/bindings/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/cryptography/hazmat/bindings/openssl/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/cryptography/hazmat/primitives/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/cryptography/hazmat/primitives/asymmetric/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/cryptography/hazmat/primitives/ciphers/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/cryptography/hazmat/primitives/kdf/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/cryptography/hazmat/primitives/twofactor/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/cryptography/x509/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/dataset/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/dateutil/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/dateutil/parser/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/dateutil/tz/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/dateutil/zoneinfo/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/dotenv/ löschen
+Würde stock_search/lib/python3.7/site-packages/flask/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/flask/json/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/flask_wtf/ löschen
+Würde stock_search/lib/python3.7/site-packages/h11/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/h11/tests/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/h2/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/hpack/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/hyperframe/__pycache__/ löschen
+Würde stock_search/li
+b/python3.7/site-packages/idna/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/jinja2/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/loguru-0.2.4.dist-info/ löschen
+Würde stock_search/lib/python3.7/site-packages/loguru/ löschen
+Würde stock_search/lib/python3.7/site-packages/mako/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/mako/ext/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/markupsafe/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/mitmproxy/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/mitmproxy/addons/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/mitmproxy/addons/onboardingapp/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/mitmproxy/contentviews/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/mitmproxy/contentviews/image/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/mitmproxy/contrib/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/mitmproxy/contrib/kaitaistruct/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/mitmproxy/contrib/wbxml/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/mitmproxy/coretypes/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/mitmproxy/io/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/mitmproxy/net/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/mitmproxy/net/http/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/mitmproxy/net/http/http1/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/mitmproxy/net/http/http2/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/mitmproxy/net/websockets/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/mitmproxy/platform/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/mitmproxy/proxy/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/mitmproxy/proxy/modes/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/mitmproxy/proxy/protocol/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/mitmproxy/script/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/mitmproxy/test/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/mitmproxy/tools/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/mitmproxy/tools/console/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/mitmproxy/tools/console/commander/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/mitmproxy/tools/console/grideditor/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/mitmproxy/tools/web/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/mitmproxy/utils/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/mysqlclient-1.3.13-py3.7.egg-info/ löschen
+Würde stock_search/lib/python3.7/site-packages/normality/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/passlib/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/passlib/crypto/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/passlib/crypto/_blowfish/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/passlib/crypto/scrypt/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/passlib/ext/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/passlib/ext/django/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/passlib/handlers/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/passlib/tests/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/passlib/utils/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/passlib/utils/compat/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pathod/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pathod/language/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pathod/protocols/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pip/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pip/_internal/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pip/_internal/cli/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pip/_internal/commands/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pip/_internal/models/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pip/_internal/operations/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pip/_internal/req/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pip/_internal/utils/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pip/_internal/vcs/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pip/_vendor/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pip/_vendor/cachecontrol/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pip/_vendor/cachecontrol/caches/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pip/_vendor/certifi/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pip/_vendor/chardet/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pip/_vendor/chardet/cli/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pip/_vendor/colorama/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pip/_vendor/distlib/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pip/_vendor/distlib/_backport/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pip/_vendor/html5lib/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pip/_vendor/html5lib/_trie/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pip/_vendor/html5lib/filters/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pip/_vendor/html5lib/treeadapters/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pip/_vendor/html5lib/treebuilders/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pip/_vendor/html5lib/treewalkers/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pip/_vendor/idna/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pip/_vendor/lockfile/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pip/_vendor/msgpack/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pip/_vendor/packaging/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pip/_vendor/pep517/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pip/_vendor/pkg_resources/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pip/_vendor/progress/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pip/_vendor/pytoml/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pip/_vendor/requests/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pip/_vendor/urllib3/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pip/_vendor/urllib3/contrib/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pip/_vendor/urllib3/contrib/_securetransport/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pip/_vendor/urllib3/packages/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pip/_vendor/urllib3/packages/backports/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pip/_vendor/urllib3/packages/ssl_match_hostname/__pycache__/ löschen
+Wür
+de stock_search/lib/python3.7/site-packages/pip/_vendor/urllib3/util/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pip/_vendor/webencodings/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pyasn1/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pyasn1/codec/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pyasn1/codec/ber/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pyasn1/codec/cer/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pyasn1/codec/der/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pyasn1/codec/native/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pyasn1/compat/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pyasn1/type/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/pygments/ löschen
+Würde stock_search/lib/python3.7/site-packages/pymysql/ löschen
+Würde stock_search/lib/python3.7/site-packages/python_dotenv-0.9.1.dist-info/ löschen
+Würde stock_search/lib/python3.7/site-packages/ruamel/yaml/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/ruamel/yaml/data/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/selenium/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/selenium/common/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/selenium/webdriver/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/selenium/webdriver/android/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/selenium/webdriver/blackberry/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/selenium/webdriver/chrome/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/selenium/webdriver/common/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/selenium/webdriver/common/actions/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/selenium/webdriver/common/html5/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/selenium/webdriver/edge/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/selenium/webdriver/firefox/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/selenium/webdriver/ie/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/selenium/webdriver/opera/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/selenium/webdriver/phantomjs/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/selenium/webdriver/remote/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/selenium/webdriver/safari/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/selenium/webdriver/support/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/selenium/webdriver/webkitgtk/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/sortedcontainers/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/sqlalchemy/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/sqlalchemy/connectors/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/sqlalchemy/dialects/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/sqlalchemy/dialects/mysql/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/sqlalchemy/dialects/postgresql/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/sqlalchemy/dialects/sqlite/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/sqlalchemy/engine/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/sqlalchemy/event/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/sqlalchemy/ext/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/sqlalchemy/sql/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/sqlalchemy/util/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/tests/
+__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/toml-0.10.0.dist-info/ löschen
+Würde stock_search/lib/python3.7/site-packages/toml.py löschen
+Würde stock_search/lib/python3.7/site-packages/toml/ löschen
+Würde stock_search/lib/python3.7/site-packages/urllib3/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/urllib3/contrib/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/urllib3/contrib/_securetransport/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/urllib3/packages/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/urllib3/packages/backports/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/urllib3/packages/ssl_match_hostname/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/urllib3/util/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/werkzeug/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/werkzeug/contrib/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/werkzeug/debug/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/wsproto/__pycache__/ löschen
+Würde stock_search/lib/python3.7/site-packages/wtforms/ löschen
+Würde utils/__pycache__/ löschen

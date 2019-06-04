@@ -156,8 +156,8 @@ def insert_test_data():
             
         insert into Aktien (Name, URI, Aktiv) 
             values
-            ('Afyon Cimento Sanayii TAS', 'afyon_cimento_sanayii_tas-Aktie', 1);
-            
+            ('Afyon Cimento Sanayii TAS', 'afyon_cimento_sanayii_tas-Aktie', 1), 
+            ('Empty-Test Aktie', 'empty-Aktie', 1);           
         
         insert into Aktienindizes 
             values 
@@ -228,6 +228,12 @@ def insert_test_data():
             ('ab_inbev-Aktie', '2019-03-09', '121540.00',
              '["EURO STOXX 50", "STOXX 50", "BEL 20", "EURONEXT 100", "EURO STOXX", "Next CAC 70", "BX Swiss -  EMEA"]', 
              '["Getränke / Tabak"]');
+             
+        insert into Unternehmensdaten 
+            (AktienURI, Datum)
+            values 
+             ('empty-Aktie', '2019-01-01');
+            
              
         insert into Levermannscores
             (AktienURI, Datum, Lev01_Wert, Lev01_Score, Lev02_Wert, Lev02_Score, 

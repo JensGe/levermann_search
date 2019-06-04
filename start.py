@@ -146,22 +146,28 @@ def main():
                         cst.URL_STOCK_OVERVIEW, cst.PATH_STOCK_OVERVIEW
                     )
                     parser.write_stock_overview_data_to_db()
+
                     scraper.scrap_stock_histories()
                     parser.write_stock_histories_from_html_to_db()
+
                     scraper.scrap_stock_info(
                         cst.URL_STOCK_BALANCE, cst.PATH_STOCK_BALANCE
                     )
                     parser.write_stock_balance_data_to_db()
+
                     scraper.scrap_stock_info(
                         cst.URL_STOCK_ESTIMATES, cst.PATH_STOCK_ESTIMATES
                     )
                     parser.write_stock_estimates_data_to_db()
+
                     scraper.scrap_stock_info(
                         cst.URL_STOCK_TARGETS, cst.PATH_STOCK_TARGETS
                     )
                     parser.write_stock_targets_data_to_db()
+
                     scraper.scrap_stock_info(cst.URL_STOCK_DATES, cst.PATH_STOCK_DATES)
                     parser.write_stock_last_quarterly_figures_date_to_db()
+
                 elif menu_2_selection == "s":
                     scraper.scrap_stock_infos()
                 elif menu_2_selection == "p":

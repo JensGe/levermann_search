@@ -228,6 +228,7 @@ def write_stock_targets_data_to_db():
             db.upsert_item(table=cst.TABLE_COMPANY_DATA,
                            primary_keys=[cst.COLUMN_STOCK_URI, cst.COLUMN_DATE],
                            current_date=date.get_current_date(),
+                           stock_uri=stock_uri,
                            analyst_buy=buy,
                            analyst_hold=hold,
                            analyst_sell=sell,
@@ -238,6 +239,7 @@ def write_stock_targets_data_to_db():
             logger.exception(
                 "Write Stock Targets Data to DB: Exception for stock: %s" % stock_uri
             )
+
 
 # ToDo write all Dates, not only latest
 def write_stock_last_quarterly_figures_date_to_db():
@@ -262,7 +264,7 @@ def write_stock_last_quarterly_figures_date_to_db():
             if last_figures_date is None:
                 continue
             else:
-                db.write_single_stock_dates_data_to_db(stock_uri, last_figures_date)
+                # db.write_single_stock_dates_data_to_db(stock_uri, last_figures_date)
                 db.upsert_item(table=cst.TABLE_STOCK_DATES,
                                primary_keys=[cst.COLUMN_STOCK_URI, cst.COLUMN_DATE],
                                current_date=last_figures_date,

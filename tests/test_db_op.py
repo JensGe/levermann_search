@@ -497,6 +497,52 @@ class TestDatabase(unittest.TestCase):
             ),
         )
 
+    def test_upsert_new_targets(self):
+        current_date = "2019-03-09"
+        stock_uri = "ab_inbev-Aktie"
+        buy, hold, sell = 7, 1, 0
+
+        db.upsert_item(
+            table=cst.TABLE_COMPANY_DATA,
+            primary_keys=[cst.COLUMN_STOCK_URI, cst.COLUMN_DATE],
+            stock_uri=stock_uri,
+            current_date=current_date,
+            analyst_buy=buy,
+            analyst_hold=hold,
+            analyst_sell=sell,
+            database=cst.TEST_DATABASE,
+        )
+
+        self.assertEqual(
+            buy,
+            db.get_item(
+                table=cst.TABLE_COMPANY_DATA,
+                column=cst.COLUMN_ANALYST_BUY,
+                condition=[cst.COLUMN_DATE, "2019-03-09"],
+                database=cst.TEST_DATABASE,
+            ),
+        )
+
+        self.assertEqual(
+            hold,
+            db.get_item(
+                table=cst.TABLE_COMPANY_DATA,
+                column=cst.COLUMN_ANALYST_HOLD,
+                condition=[cst.COLUMN_DATE, "2019-03-09"],
+                database=cst.TEST_DATABASE,
+            ),
+        )
+
+        self.assertEqual(
+            sell,
+            db.get_item(
+                table=cst.TABLE_COMPANY_DATA,
+                column=cst.COLUMN_ANALYST_SELL,
+                condition=[cst.COLUMN_DATE, "2019-03-09"],
+                database=cst.TEST_DATABASE,
+            ),
+        )
+
     #
     #
     #
@@ -768,11 +814,15 @@ class TestDatabase(unittest.TestCase):
     # Get_list Tests
 
     def test_get_current_eps_s(self):
-        eps_s = db.get_current_eps("ab_inbev-Aktie", database=cst.TEST_DATABASE)
+        eps_s = db.get_latest_eps("ab_inbev-Aktie", database=cst.TEST_DATABASE)
         self.assertEqual([0.65, 3.60, 1.87, 4.13, 4.48], eps_s)
 
+    def test_get_current_eps_s_if_is_none(self):
+        eps_s = db.get_latest_eps("empty-Aktie", database=cst.TEST_DATABASE)
+        self.assertIsNone(eps_s)
+
     def test_get_last_eps_s(self):
-        eps_s = db.get_last_eps("ab_inbev-Aktie", database=cst.TEST_DATABASE)
+        eps_s = db.get_second_latest_eps("ab_inbev-Aktie", database=cst.TEST_DATABASE)
         self.assertEqual([0.65, 3.60, 1.87, 4.11, 4.49], eps_s)
 
     def test_ratings(self):
@@ -793,7 +843,7 @@ class TestDatabase(unittest.TestCase):
 
     def test_get_closing_stock_price_with_date_available(self):
         stock_uri = "adidas-Aktie"
-        quarterly = "2019-01-29"
+        quarterly = date.string_to_date("29.01.2019")
         closing_price, actual_date = db.get_closing_stock_price(
             quarterly, stock_uri, database=cst.TEST_DATABASE
         )

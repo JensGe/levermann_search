@@ -253,6 +253,16 @@ class TestScrapping(unittest.TestCase):
         self.assertEqual(asserted_no_hold, no_hold)
         self.assertEqual(asserted_no_sell, no_sell)
 
+    def test_get_analyst_ratings_new(self):
+        soup = scrap.get_soup_code_from_file("data/bo_alphabet_a_kursziele.html")
+        no_buy, no_hold, no_sell = parse.get_analyst_ratings(soup)
+        asserted_no_buy = 12
+        asserted_no_hold = 0
+        asserted_no_sell = 1
+        self.assertEqual(asserted_no_buy, no_buy)
+        self.assertEqual(asserted_no_hold, no_hold)
+        self.assertEqual(asserted_no_sell, no_sell)
+
     def test_get_closing_price_from_date(self):
         soup = scrap.get_soup_code_from_file("data/bo_kurse.html")
         closing_price = parse.get_closing_price_from_date(soup, "09.08.2018")
