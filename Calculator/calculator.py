@@ -268,8 +268,8 @@ def levermann_06():
             primary_keys=[cst.COLUMN_STOCK_URI, cst.COLUMN_DATE],
             current_date=date.get_current_date(),
             stock_uri=stock,
-            lev_05_val=round(rating, 2),
-            lev_05_sco=lev_06_score,
+            lev_06_val=round(rating, 2),
+            lev_06_sco=lev_06_score,
         )
 
 
