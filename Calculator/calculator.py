@@ -562,13 +562,23 @@ def levermann_13():
 
 
 def run_all():
+    print("||| LEV ||| Next Step: Calculate Lev Score 1")
     levermann_01()
+    print("||| LEV ||| Next Step: Calculate Lev Score 2")
     levermann_02()
+    print("||| LEV ||| Next Step: Calculate Lev Score 3")
     levermann_03()
+    print("||| LEV ||| Next Step: Calculate Lev Score 4 and 5")
     levermann_04_05()
+    print("||| LEV ||| Next Step: Calculate Lev Score 6")
     levermann_06()
+    print("||| LEV ||| Next Step: Calculate Lev Score 7")
     levermann_07()
+    print("||| LEV ||| Next Step: Calculate Lev Score 8")
     levermann_08()
+    print("||| LEV ||| Next Step: Calculate Lev Score 9, 10 and 11")
     levermann_09_10_11()
+    print("||| LEV ||| Next Step: Calculate Lev Score 12")
     levermann_12()
+    print("||| LEV ||| Next Step: Calculate Lev Score 13")
     levermann_13()

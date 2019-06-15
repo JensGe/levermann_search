@@ -48,22 +48,26 @@ def main():
         menu_selection = str(input("> "))
 
         if menu_selection == "0":
-            print("Next Step: Scrap Index Histories")
+            print("||| LEV ||| Next Step: Scrap Index Histories")
             scraper.scrap_index_histories()
-            print("Next Step: Parse Index Histories")
+            print("||| LEV ||| Next Step: Parse Index Histories")
             parser.write_index_histories_from_html_to_db()
 
-            print("Next Step: Scrap Stock Infos")
             scraper.scrap_stock_infos()
-            print("Next Step: Parse Stock Infos")
+            print("||| LEV ||| Next Step: Parse & Write Overview")
             parser.write_stock_overview_data_to_db()
+            print("||| LEV ||| Next Step: Parse & Write Balance")
             parser.write_stock_balance_data_to_db()
+            print("||| LEV ||| Next Step: Parse & Write Estimates")
             parser.write_stock_estimates_data_to_db()
+            print("||| LEV ||| Next Step: Parse & Write Targets")
             parser.write_stock_targets_data_to_db()
+            print("||| LEV ||| Next Step: Parse & Write Dates")
             parser.write_stock_last_quarterly_figures_date_to_db()
 
-            print("Next Step: Calculate Levermann Scores")
+            print("||| LEV ||| Next Step: Calculate Levermann Scores")
             calculator.run_all()
+            print("||| LEV ||| Finito")
 
         elif menu_selection == "1":
             menu_1 = True
