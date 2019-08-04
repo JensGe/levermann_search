@@ -107,15 +107,15 @@ def scrap_stock_info(scrap_url, save_path):
 
 
 def scrap_stock_infos():
-    print("||| LEV ||| Next Step: Parse & Write Overview")
+    print("||| LEV ||| Next Step: Scrap Overview")
     scrap_stock_info(cst.URL_STOCK_OVERVIEW, cst.PATH_STOCK_OVERVIEW)
-    print("||| LEV ||| Next Step: Parse & Write Balance")
+    print("||| LEV ||| Next Step: Scrap Balance")
     scrap_stock_info(cst.URL_STOCK_BALANCE, cst.PATH_STOCK_BALANCE)
-    print("||| LEV ||| Next Step: Parse & Write Dates")
+    print("||| LEV ||| Next Step: Scrap Dates")
     scrap_stock_info(cst.URL_STOCK_DATES, cst.PATH_STOCK_DATES)
-    print("||| LEV ||| Next Step: Parse & Write Estimates")
+    print("||| LEV ||| Next Step: Scrap Estimates")
     scrap_stock_info(cst.URL_STOCK_ESTIMATES, cst.PATH_STOCK_ESTIMATES)
-    print("||| LEV ||| Next Step: Parse & Write Targets")
+    print("||| LEV ||| Next Step: Scrap Targets")
     scrap_stock_info(cst.URL_STOCK_TARGETS, cst.PATH_STOCK_TARGETS)
 
 
